@@ -1,0 +1,1 @@
+getData({'data':null,'url':urlgetdatauser});
