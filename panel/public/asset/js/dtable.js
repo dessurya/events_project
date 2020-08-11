@@ -149,24 +149,29 @@ function getData(arr) {
 
     $(document).on('submit', 'form.postData', function(){
         var input = {};
+        input['form_id'] = $(this).attr('id');
         $.each($('.input'), function(){
             input[$(this).attr('name')] = $(this).val();
             if ($(this).attr('type') == 'file' && $(this).hasClass('file')) {
-                let attrNameInput = $(this).attr('name');
                 var thisFile = $(this).prop('files')[0];
-                var reader = new FileReader();
-                reader.readAsArrayBuffer(thisFile);
-                reader.onloadend = function(oFREvent) {
-                    var byteArray = new Uint8Array(oFREvent.target.result);
-                    var len = byteArray.byteLength;
-                    var binary = '';
-                    for (var i = 0; i < len; i++) {
-                        binary += String.fromCharCode(byteArray[i]);
-                    }
-                    byteArray = window.btoa(binary);
-                    input[attrNameInput+'_encode'] = byteArray;
-                    input[attrNameInput+'_path'] = thisFile.name;
-                };
+                if (thisFile != null) {
+                    let attrNameInput = $(this).attr('name');
+                    var reader = new FileReader();
+                    reader.readAsArrayBuffer(thisFile);
+                    reader.onloadend = function(oFREvent) {
+                        var byteArray = new Uint8Array(oFREvent.target.result);
+                        var len = byteArray.byteLength;
+                        var binary = '';
+                        for (var i = 0; i < len; i++) {
+                            binary += String.fromCharCode(byteArray[i]);
+                        }
+                        byteArray = window.btoa(binary);
+                        input[attrNameInput+'_encode'] = byteArray;
+                        input[attrNameInput+'_path'] = thisFile.name;
+                    };
+                }
+            }else if($(this).hasClass('select')){
+                input[$(this).attr('name')] = $(this).find('option:selected').val();
             }
         });
         pnotifyConfirm({

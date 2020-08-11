@@ -5,11 +5,9 @@
 @endsection
 
 @push('link')
-@include('_componen.summernote_link')
 @endpush
 
 @push('script')
-@include('_componen.summernote_script', ['config' => $config['dtable']])
 @include('_componen.dtables_script', ['config' => $config['dtable']])
 @endpush
 
@@ -19,7 +17,6 @@
 
 @push('script.responsePostData')
 @include('_componen.dtables_script_responsePostData')
-@include('_componen.summernote_script_responsePostData')
 @endpush
 
 @push('content')

@@ -37,7 +37,7 @@ class RunningTextController extends Controller
     {
         return [
             'get_data_route' => 'interface.runningtext.getData',
-            'table_id' => 'd_tables_user',
+            'table_id' => 'd_tables_runningtext',
             'componen' => [
                 ["data"=>"text","name"=>"text","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"order","name"=>"order","searchable"=>true,"searchtype"=>"text","orderable"=>true],

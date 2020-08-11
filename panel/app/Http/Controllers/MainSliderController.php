@@ -39,7 +39,7 @@ class MainSliderController extends Controller
     {
         return [
             'get_data_route' => 'interface.mainslider.getData',
-            'table_id' => 'd_tables_user',
+            'table_id' => 'd_tables_mainslider',
             'componen' => [
                 ["data"=>"name","name"=>"name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"order","name"=>"order","searchable"=>true,"searchtype"=>"text","orderable"=>true],

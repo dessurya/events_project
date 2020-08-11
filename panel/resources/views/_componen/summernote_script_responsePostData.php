@@ -1,0 +1,1 @@
+if(data.summernote == true) { summernote(data.summernote_target); }

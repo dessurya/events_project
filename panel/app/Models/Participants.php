@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class MasterWebsite extends Model
+class Participants extends Model
 {
-	protected $table = 'website';
+	protected $table = 'participants';
 	public function getCreatedAtAttribute($date)
     {
         return Carbon::parse($date)->format('Y-m-d');

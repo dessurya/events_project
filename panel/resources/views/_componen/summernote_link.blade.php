@@ -1,0 +1,1 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('vendors/summernote/summernote-bs4.min.css') }}">

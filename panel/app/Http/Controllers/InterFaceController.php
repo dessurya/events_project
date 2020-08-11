@@ -40,7 +40,7 @@ class InterFaceController extends Controller
     {
         return [
             'get_data_route' => 'interface.getData',
-            'table_id' => 'd_tables_user',
+            'table_id' => 'd_tables_interface',
             'componen' => [
                 ["data"=>"name","name"=>"name","searchable"=>false,"searchtype"=>false,"orderable"=>true],
                 ["data"=>"type","name"=>"type","searchable"=>false,"searchtype"=>false,"orderable"=>true],

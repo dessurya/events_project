@@ -37,7 +37,7 @@ class MasterWebsiteController extends Controller
     {
         return [
             'get_data_route' => 'master.website.getData',
-            'table_id' => 'd_tables_user',
+            'table_id' => 'd_tables_website',
             'componen' => [
                 ["data"=>"name","name"=>"name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"url","name"=>"url","searchable"=>true,"searchtype"=>"text","orderable"=>true],
@@ -78,7 +78,7 @@ class MasterWebsiteController extends Controller
             "page" => $this->pageConfig(),
             "dtable" => $this->dtableConfig()
         ];
-        return view('_pages.runningtext.index', compact('config'));
+        return view('_pages.master.website.index', compact('config'));
     }
 
     public function getData(Request $input)

@@ -20,11 +20,13 @@ class CreateEventTournamentTable extends Migration
             $table->date('end_activity')->nullable();
             $table->date('start_registration')->nullable();
             $table->date('end_registration')->nullable();
+            $table->text('description')->nullable();
             $table->text('terms_and_conditions')->nullable();
             $table->text('picture')->nullable();
             $table->text('leaderboard')->nullable();
-            $table->integer('flag_status')->default('1');
             $table->integer('prize')->nullable();
+            $table->integer('flag_status')->default('1');
+            $table->integer('website_id')->nullable();
             $table->timestamps();
         });
     }

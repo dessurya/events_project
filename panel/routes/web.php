@@ -45,6 +45,12 @@ Route::middleware('users')->group(function() {
             Route::post('/store', 'MasterWebsiteController@store')->name('store');
             Route::post('/delete', 'MasterWebsiteController@delete')->name('delete');
         });
+
+        Route::name('participants.')->prefix('participants/')->group(function(){
+            Route::get('/list', 'ParticipantsController@list')->name('list');
+            Route::post('/list', 'ParticipantsController@getData')->name('getData');
+            Route::post('/show', 'ParticipantsController@show')->name('show');
+        });
     });
 
     Route::name('interface.')->prefix('interface/')->group(function(){
@@ -73,12 +79,32 @@ Route::middleware('users')->group(function() {
     Route::name('event.')->prefix('event/')->group(function(){
         Route::name('tournament.')->prefix('tournament/')->group(function(){
             Route::get('/list', 'EventTournamentController@list')->name('list');
+            Route::post('/list', 'EventTournamentController@getData')->name('getData');
+            Route::post('/form', 'EventTournamentController@form')->name('form');
+            Route::post('/store', 'EventTournamentController@store')->name('store');
+            Route::post('/delete', 'EventTournamentController@delete')->name('delete');
+            Route::post('/leaderboard', 'EventTournamentController@leaderboard')->name('leaderboard');
         });
         Route::name('coupon.')->prefix('coupon/')->group(function(){
             Route::get('/list', 'EventCouponController@list')->name('list');
         });
         Route::name('other.')->prefix('other/')->group(function(){
             Route::get('/list', 'EventOtherController@list')->name('list');
+        });
+    });
+
+    Route::name('register.')->prefix('register/')->group(function(){
+        Route::name('tournament.')->prefix('tournament/')->group(function(){
+            Route::get('/list', 'RegisterTournamentController@list')->name('list');
+            Route::post('/list', 'RegisterTournamentController@getData')->name('getData');
+            Route::post('/form', 'RegisterTournamentController@form')->name('form');
+            Route::post('/store', 'RegisterTournamentController@store')->name('store');
+        });
+        Route::name('coupon.')->prefix('coupon/')->group(function(){
+            Route::get('/list', 'RegisterCouponController@list')->name('list');
+        });
+        Route::name('other.')->prefix('other/')->group(function(){
+            Route::get('/list', 'RegisterOtherController@list')->name('list');
         });
     });
 

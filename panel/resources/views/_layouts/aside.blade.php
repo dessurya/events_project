@@ -54,6 +54,12 @@
     							<p>Website</p>
     						</a>
     					</li>
+						<li class="nav-item">
+    						<a href="{{ route('master.participants.list') }}" class="nav-link {{ Route::is('master.participants.list') ? 'active' : '' }}">
+    							<i class="far fa-circle nav-icon"></i>
+    							<p>Participants</p>
+    						</a>
+    					</li>
     				</ul>
     			</li>
 				
@@ -103,6 +109,32 @@
     					</li>
 						<li class="nav-item">
     						<a href="{{ route('event.other.list') }}" class="nav-link {{ Route::is('event.other.list') ? 'active' : '' }}">
+    							<i class="far fa-circle nav-icon"></i>
+    							<p>Other</p>
+    						</a>
+    					</li>
+    				</ul>
+    			</li>
+				<li class="nav-item">
+    				<a href="#" class="nav-link {{ Route::is('register*') ? 'active' : '' }} ">
+    					<i class="nav-icon fas fa-file-alt"></i>
+    					<p>Register Management<i class="fas fa-angle-left right"></i></p>
+    				</a>
+    				<ul class="nav nav-treeview">
+    					<li class="nav-item">
+    						<a href="{{ route('register.tournament.list') }}" class="nav-link {{ Route::is('register.tournament.list') ? 'active' : '' }}">
+    							<i class="far fa-circle nav-icon"></i>
+    							<p>Tournament TO</p>
+    						</a>
+    					</li>
+    					<li class="nav-item">
+    						<a href="{{ route('register.coupon.list') }}" class="nav-link {{ Route::is('register.coupon.list') ? 'active' : '' }}">
+    							<i class="far fa-circle nav-icon"></i>
+    							<p>Coupon</p>
+    						</a>
+    					</li>
+						<li class="nav-item">
+    						<a href="{{ route('register.other.list') }}" class="nav-link {{ Route::is('register.other.list') ? 'active' : '' }}">
     							<i class="far fa-circle nav-icon"></i>
     							<p>Other</p>
     						</a>

@@ -28,7 +28,9 @@
 			table .icon{
 				height: 20px;
 			}
-
+			.table.table-head-fixed thead tr th{
+				min-width : 150px !important;
+			}
 			/* loading page */
 		        #loading-page{
 		            position: fixed;
@@ -137,6 +139,7 @@
 					data: data,
 					beforeSend: function() {
 						$('#loading-page').show();
+						@stack('script.postDataBeforeSend')
 					},
 					success: function(data) {
 						responsePostData(data);
@@ -146,7 +149,6 @@
 			}
 
 			function responsePostData(data) {
-				console.log(data);
 				@stack('script.responsePostData')
 				if (data.pnotify === true) { pnotify({"title":"info","type":data.pnotify_type,"text":data.pnotify_text}); }
 				if (data.render == true) { render(data); }

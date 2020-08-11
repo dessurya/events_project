@@ -8,6 +8,7 @@ panel/bootstrap/compiled.php
 panel/app/storage/
 
 # Laravel 5 & Lumen specific
+panel/public/asset/picture
 panel/public/storage
 panel/public/hot
 
