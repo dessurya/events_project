@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use App\Models\EventTournament;
+use App\Models\EventTournamentRegistration;
 use App\Models\ViewEventTournament;
 use App\Models\ViewEventTournamentParticipants;
 use App\Models\MasterWebsite;
@@ -50,10 +52,14 @@ class EventTournamentController extends Controller
         return [
             'get_data_route' => 'event.tournament.getData',
             'table_id' => 'd_tables_tournament_to',
+            'order' => [
+                'key' => 'created_at',
+                'value' => 'desc'
+            ],
             'componen' => [
                 ["data"=>"title","name"=>"title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"website","name"=>"website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"prize","name"=>"prize","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"start_activity","name"=>"start_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"end_activity","name"=>"end_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
@@ -111,7 +117,8 @@ class EventTournamentController extends Controller
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
-            $data->orderBy('title', 'asc');
+            $order = $this->dtableConfig()['order'];
+            $data->orderBy($order['key'], $order['value']);
         }
         if (isset($input->from_created_at) and !empty($input->from_created_at)) {
             $data->whereDate('created_at', '>=', $input->from_created_at);
@@ -254,7 +261,7 @@ class EventTournamentController extends Controller
     private function getDataIn($stringId)
     {
         $ids = explode('^', $stringId);
-        return MasterWebsite::whereIn('id', $ids)->get();
+        return EventTournament::whereIn('id', $ids)->get();
     }
 
     public function delete(Request $input)
@@ -298,8 +305,43 @@ class EventTournamentController extends Controller
 	        'buildInLeaderboard_config' => [
 	        	'target' => $target,
 	        	'event' => EventTournament::select('id','title')->find($input->id),
-	        	'data' => ViewEventTournamentParticipants::where('event_id',$input->id)->orderBy('participants_rank_board', 'asc')->orderBy('participants_point_board', 'desc')->orderBy('created_at', 'asc')->limit(50)->get()
+	        	'data' => ViewEventTournamentParticipants::where([
+                    'event_id' => $input->id,
+                    'participants_status' => 'PARTICIPATE'
+                    ])->orderBy('participants_rank_board', 'asc')->orderBy('created_at', 'asc')->get()
 	        ]
 		];
+    }
+
+    public function leaderboardAddPoint(Request $input)
+    {
+        $event = EventTournament::find($input->event_id);
+        if (!in_array($event->flag_status,[4,5])) {
+            return [
+		    	'pnotify' => true,
+		        'pnotify_type' => 'dangger',
+		        'pnotify_text' => 'Fail! event not start!'
+    		];
+        }
+        foreach ($input->points as $point) {
+            $participant = EventTournamentRegistration::find($point['id']);
+            $participant->participants_point_board += $point['point'];
+            $participant->save();
+        }
+        return [
+            'preparePostData' => true,
+            'preparePostData_target' => $input->target
+        ];
+    }
+
+    public function leaderboardGenerateRank(Request $input)
+    {
+        Artisan::call('tourneTo:leaderboard_rank', [
+            '--event' => $input->id
+        ]);
+        return [
+            'preparePostData' => true,
+            'preparePostData_target' => $input->target
+        ];
     }
 }

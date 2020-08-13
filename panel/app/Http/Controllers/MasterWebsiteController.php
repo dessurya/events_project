@@ -38,6 +38,10 @@ class MasterWebsiteController extends Controller
         return [
             'get_data_route' => 'master.website.getData',
             'table_id' => 'd_tables_website',
+            'order' => [
+                'key' => 'name',
+                'value' => 'asc'
+            ],
             'componen' => [
                 ["data"=>"name","name"=>"name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"url","name"=>"url","searchable"=>true,"searchtype"=>"text","orderable"=>true],
@@ -91,7 +95,8 @@ class MasterWebsiteController extends Controller
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
-            $data->orderBy('name', 'asc');
+            $order = $this->dtableConfig()['order'];
+            $data->orderBy($order['key'], $order['value']);
         }
         if (isset($input->from_created_at) and !empty($input->from_created_at)) {
             $data->whereDate('created_at', '>=', $input->from_created_at);

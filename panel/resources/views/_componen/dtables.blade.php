@@ -37,12 +37,12 @@
                     </select> entries || Order By <select name="order_key" class="rebuildTable">
                         @foreach($config['componen'] as $list)
                         @if($list['orderable'] == true)
-                        <option value="{{$list['name']}}">{{$list['name']}}</option>
+                        <option {{ $config['order']['key'] == $list['name'] ? 'selected' : '' }} value="{{$list['name']}}">{{ str_replace('_',' ',Str::title($list['name'])) }}</option>
                         @endif
                         @endforeach
                     </select> : <select name="order_val" class="rebuildTable">
-                        <option value="asc">ASC</option>
-                        <option value="desc">DESC</option>
+                        <option {{ $config['order']['value'] == 'asc' ? 'selected' : '' }} value="asc">ASC</option>
+                        <option {{ $config['order']['value'] == 'desc' ? 'selected' : '' }} value="desc">DESC</option>
                     </select></label>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                             <form class="getData">
                             @foreach($config['componen'] as $list)
                             <th>
-                                {{ Str::title($list['name']) }}
+                                {{ str_replace('_',' ',Str::title($list['name'])) }}
                                 @if($list['searchable'] == true)
                                 @if($list['searchtype'] == 'date')
                                 <input 
@@ -71,7 +71,7 @@
                                     type="{{$list['searchtype']}}" 
                                     name="{{$list['name']}}" 
                                     class="form-control rebuildTable hide" 
-                                    placeholder="Search {{ Str::title($list['name']) }}">
+                                    placeholder="Search {{ str_replace('_',' ',Str::title($list['name'])) }}">
                                 @endif
                                 @endif
                             </th>

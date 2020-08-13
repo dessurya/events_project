@@ -5,11 +5,28 @@
       <ul class="pagination pagination-sm float-right">
         <li class="page-item">
           <a 
-              onclick="preparePostData('.preparePostData.leaderboard')" 
+              onclick="preparePostData('.preparePostData.leaderboard')"
               class="page-link preparePostData leaderboard"
               data-id=""
+              title="refresh"
               href="{{ route('event.tournament.leaderboard') }}"><i class="fas fa-sync-alt"></i></a>
-          </li>
+        </li>
+        <li class="page-item">
+          <a 
+              onclick="prepareGenerateRank('.prepareGenerateRank.leaderboard','.preparePostData.leaderboard')" 
+              class="page-link prepareGenerateRank leaderboard"
+              data-id=""
+              title="Generate Ranks"
+              href="{{ route('event.tournament.leaderboardGenerateRank') }}"><i class="fas fa-medal"></i></a>
+        </li>
+        <li class="page-item">
+          <a 
+              onclick="prepareAddPoint('.prepareAddPoint.leaderboard','.preparePostData.leaderboard')" 
+              class="page-link prepareAddPoint leaderboard"
+              data-id=""
+              title="Add Points"
+              href="{{ route('event.tournament.leaderboardAddPoint') }}"><i class="fas fa-save"></i></a>
+        </li>
       </ul>
     </div>
   </div>
@@ -22,9 +39,10 @@
           <th>Name</th>
           <th>Point</th>
           <th>Rank</th>
+          <th width="150px"></th>
         </tr>
       </thead>
-      <tbody><tr><td colspan="5" class="text-center">-</td></tr></tbody>
+      <tbody><tr><td colspan="6" class="text-center">-</td></tr></tbody>
     </table>
   </div>
 </div>

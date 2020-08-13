@@ -41,6 +41,10 @@ class InterFaceController extends Controller
         return [
             'get_data_route' => 'interface.getData',
             'table_id' => 'd_tables_interface',
+            'order' => [
+                'key' => 'name',
+                'value' => 'asc'
+            ],
             'componen' => [
                 ["data"=>"name","name"=>"name","searchable"=>false,"searchtype"=>false,"orderable"=>true],
                 ["data"=>"type","name"=>"type","searchable"=>false,"searchtype"=>false,"orderable"=>true],
@@ -88,7 +92,8 @@ class InterFaceController extends Controller
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
-            $data->orderBy('name', 'asc');
+            $order = $this->dtableConfig()['order'];
+            $data->orderBy($order['key'], $order['value']);
         }
         $data = $data->paginate(300);
         return [

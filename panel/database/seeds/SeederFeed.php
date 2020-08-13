@@ -6,6 +6,9 @@ use App\Models\Participants;
 use App\Models\InterfaceConfig;
 use App\Models\EventStatus;
 use App\Models\MasterWebsite;
+use App\Models\EventTournament;
+use App\Models\EventTournamentRegistration;
+use Carbon\Carbon;
 
 class SeederFeed extends Seeder
 {
@@ -68,7 +71,8 @@ class SeederFeed extends Seeder
             ['name' => 'Start Registration'],
             ['name' => 'End Registration'],
             ['name' => 'Start Event'],
-            ['name' => 'End Event']
+            ['name' => 'End Event'],
+            ['name' => 'Close']
         ];
 
         foreach ($eventStatus as $store) {
@@ -97,6 +101,171 @@ class SeederFeed extends Seeder
 
         foreach ($MasterWebsite as $store) {
             MasterWebsite::create($store);
+        }
+
+        $EventTournament = [
+            [
+                'title' => 'event 001',
+                'website_id' => 1,
+                'prize' => 2000,
+                'start_registration' => (new Carbon('2020-01-01'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-01-07'))->format('Y-m-d'),
+                'start_activity' => (new Carbon('2020-01-10'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-01-17'))->format('Y-m-d'),
+                'flag_status' => 6
+            ],[
+                'title' => 'event 002',
+                'website_id' => 2,
+                'prize' => 2000,
+                'start_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-08-17'))->format('Y-m-d'),
+                'start_activity' => (new Carbon('2020-08-20'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-08-27'))->format('Y-m-d'),
+                'flag_status' => 2
+            ],[
+                'title' => 'event 003',
+                'website_id' => 3,
+                'prize' => 2000,
+                'start_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
+                'start_activity' => (new Carbon('2020-08-11'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-08-27'))->format('Y-m-d'),
+                'flag_status' => 3
+            ],[
+                'title' => 'event 004',
+                'website_id' => 3,
+                'prize' => 2000,
+                'start_registration' => (new Carbon('2020-08-01'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
+                'start_activity' => (new Carbon('2020-08-10'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-08-16'))->format('Y-m-d'),
+                'flag_status' => 4
+            ],[
+                'title' => 'event 005',
+                'website_id' => 2,
+                'prize' => 2000,
+                'start_registration' => (new Carbon('2020-08-01'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
+                'start_activity' => (new Carbon('2020-08-10'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-08-12'))->format('Y-m-d'),
+                'flag_status' => 5
+            ],[
+                'title' => 'event 006',
+                'website_id' => 1,
+                'prize' => 2000,
+                'start_registration' => (new Carbon('2020-09-01'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-09-05'))->format('Y-m-d'),
+                'start_activity' => (new Carbon('2020-09-10'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-09-12'))->format('Y-m-d'),
+                'flag_status' => 1
+            ]
+            
+        ];
+
+        foreach ($EventTournament as $store) {
+            EventTournament::create($store);
+        }
+
+        $EventTournamentRegistration = [
+            [
+                'participants_username'=>'participants01',
+                'participants_id'=>1,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>1,
+                'participants_point_board'=>100
+            ],[
+                'participants_username'=>'participants02',
+                'participants_id'=>2,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>1,
+                'participants_point_board'=>200
+            ],[
+                'participants_username'=>'participants03',
+                'participants_id'=>3,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>1,
+                'participants_point_board'=>300
+            ],
+            [
+                'participants_username'=>'participants01',
+                'participants_id'=>1,
+                'status'=>'WAITING',
+                'event_tournament_id'=>2,
+                'participants_point_board'=>0
+            ],[
+                'participants_username'=>'participants02',
+                'participants_id'=>2,
+                'status'=>'WAITING',
+                'event_tournament_id'=>2,
+                'participants_point_board'=>0
+            ],[
+                'participants_username'=>'participants03',
+                'participants_id'=>3,
+                'status'=>'WAITING',
+                'event_tournament_id'=>2,
+                'participants_point_board'=>0
+            ],
+            [
+                'participants_username'=>'participants01',
+                'participants_id'=>1,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>3,
+                'participants_point_board'=>0
+            ],[
+                'participants_username'=>'participants02',
+                'participants_id'=>2,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>3,
+                'participants_point_board'=>0
+            ],[
+                'participants_username'=>'participants03',
+                'participants_id'=>3,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>3,
+                'participants_point_board'=>0
+            ],
+            [
+                'participants_username'=>'participants01',
+                'participants_id'=>1,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>4,
+                'participants_point_board'=>100
+            ],[
+                'participants_username'=>'participants02',
+                'participants_id'=>2,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>4,
+                'participants_point_board'=>200
+            ],[
+                'participants_username'=>'participants03',
+                'participants_id'=>3,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>4,
+                'participants_point_board'=>300
+            ],
+            [
+                'participants_username'=>'participants01',
+                'participants_id'=>1,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>5,
+                'participants_point_board'=>100
+            ],[
+                'participants_username'=>'participants02',
+                'participants_id'=>2,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>5,
+                'participants_point_board'=>200
+            ],[
+                'participants_username'=>'participants03',
+                'participants_id'=>3,
+                'status'=>'PARTICIPATE',
+                'event_tournament_id'=>5,
+                'participants_point_board'=>300
+            ]
+        ];
+
+        foreach ($EventTournamentRegistration as $store) {
+            EventTournamentRegistration::create($store);
         }
 
         

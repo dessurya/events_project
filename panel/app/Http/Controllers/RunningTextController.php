@@ -38,9 +38,13 @@ class RunningTextController extends Controller
         return [
             'get_data_route' => 'interface.runningtext.getData',
             'table_id' => 'd_tables_runningtext',
+            'order' => [
+                'key' => 'order',
+                'value' => 'asc'
+            ],
             'componen' => [
                 ["data"=>"text","name"=>"text","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"order","name"=>"order","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"order","name"=>"order","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"created_at","name"=>"created_at","searchable"=>true,"searchtype"=>"date","orderable"=>true]
             ],
             'action' => [
@@ -91,7 +95,8 @@ class RunningTextController extends Controller
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
-            $data->orderBy('text', 'asc');
+            $order = $this->dtableConfig()['order'];
+            $data->orderBy($order['key'], $order['value']);
         }
         if (isset($input->from_created_at) and !empty($input->from_created_at)) {
             $data->whereDate('created_at', '>=', $input->from_created_at);

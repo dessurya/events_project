@@ -22,26 +22,6 @@
     					<p>Dashboard</p>
     				</a>
     			</li>
-    			<li class="nav-item">
-    				<a href="#" class="nav-link {{ Route::is('user*') ? 'active' : '' }} ">
-    					<i class="nav-icon fas fa-cogs"></i>
-    					<p>User Management<i class="fas fa-angle-left right"></i></p>
-    				</a>
-    				<ul class="nav nav-treeview">
-    					<li class="nav-item">
-    						<a href="{{ route('user.list') }}" class="nav-link {{ Route::is('user.list') ? 'active' : '' }}">
-    							<i class="far fa-circle nav-icon"></i>
-    							<p>List</p>
-    						</a>
-    					</li>
-    					<li class="nav-item">
-    						<a href="{{ route('user.logs') }}" class="nav-link {{ Route::is('user.logs') ? 'active' : '' }}">
-    							<i class="far fa-circle nav-icon"></i>
-    							<p>Logs</p>
-    						</a>
-    					</li>
-    				</ul>
-    			</li>
 				<li class="nav-item">
     				<a href="#" class="nav-link {{ Route::is('master*') ? 'active' : '' }} ">
     					<i class="nav-icon fas fa-database"></i>
@@ -62,11 +42,64 @@
     					</li>
     				</ul>
     			</li>
-				
+    			<li class="nav-item">
+    				<a href="#" class="nav-link {{ Route::is('event*') ? 'active' : '' }} ">
+    					<i class="nav-icon fas fa-chess-rook"></i>
+    					<p>Event Management<i class="fas fa-angle-left right"></i></p>
+    				</a>
+    				<ul class="nav nav-treeview">
+    					<li class="nav-item">
+							<a href="#" class="nav-link">
+								<i class="nav-icon fas fa-circle"></i>
+								<p>Event<i class="right fas fa-angle-left"></i></p>
+							</a>
+							<ul class="nav nav-treeview">
+								<li class="nav-item">
+									<a href="{{ route('event.tournament.list') }}" class="nav-link {{ Route::is('event.tournament.list') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Tournament TO</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('event.coupon.list') }}" class="nav-link {{ Route::is('event.coupon.list') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Coupon</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('event.other.list') }}" class="nav-link {{ Route::is('event.other.list') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Other</p>
+									</a>
+								</li>
+							</ul>
+    					</li>
+						<li class="nav-item">
+							<a href="#" class="nav-link">
+								<i class="nav-icon fas fa-circle"></i>
+								<p>Register<i class="right fas fa-angle-left"></i></p>
+							</a>
+							<ul class="nav nav-treeview">
+								<li class="nav-item">
+									<a href="{{ route('register.tournament.list') }}" class="nav-link {{ Route::is('register.tournament.list') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Tournament TO</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('register.coupon.list') }}" class="nav-link {{ Route::is('register.coupon.list') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Coupon</p>
+									</a>
+								</li>
+							</ul>
+    					</li>
+    				</ul>
+    			</li>
 				<li class="nav-item">
     				<a href="#" class="nav-link {{ Route::is('interface*') ? 'active' : '' }} ">
     					<i class="nav-icon fas fa-solar-panel"></i>
-    					<p>Interface Management<i class="fas fa-angle-left right"></i></p>
+    					<p>Setting Interface<i class="fas fa-angle-left right"></i></p>
     				</a>
 					<ul class="nav nav-treeview">
     					<li class="nav-item">
@@ -90,57 +123,26 @@
 					</ul>
     			</li>
 				<li class="nav-item">
-    				<a href="#" class="nav-link {{ Route::is('event*') ? 'active' : '' }} ">
-    					<i class="nav-icon fas fa-chess-rook"></i>
-    					<p>Event Management<i class="fas fa-angle-left right"></i></p>
+    				<a href="#" class="nav-link {{ Route::is('user*') ? 'active' : '' }} ">
+    					<i class="nav-icon fas fa-cogs"></i>
+    					<p>User Management<i class="fas fa-angle-left right"></i></p>
     				</a>
     				<ul class="nav nav-treeview">
     					<li class="nav-item">
-    						<a href="{{ route('event.tournament.list') }}" class="nav-link {{ Route::is('event.tournament.list') ? 'active' : '' }}">
+    						<a href="{{ route('user.list') }}" class="nav-link {{ Route::is('user.list') ? 'active' : '' }}">
     							<i class="far fa-circle nav-icon"></i>
-    							<p>Tournament TO</p>
+    							<p>List</p>
     						</a>
     					</li>
     					<li class="nav-item">
-    						<a href="{{ route('event.coupon.list') }}" class="nav-link {{ Route::is('event.coupon.list') ? 'active' : '' }}">
+    						<a href="{{ route('user.logs') }}" class="nav-link {{ Route::is('user.logs') ? 'active' : '' }}">
     							<i class="far fa-circle nav-icon"></i>
-    							<p>Coupon</p>
-    						</a>
-    					</li>
-						<li class="nav-item">
-    						<a href="{{ route('event.other.list') }}" class="nav-link {{ Route::is('event.other.list') ? 'active' : '' }}">
-    							<i class="far fa-circle nav-icon"></i>
-    							<p>Other</p>
+    							<p>Logs</p>
     						</a>
     					</li>
     				</ul>
     			</li>
-				<li class="nav-item">
-    				<a href="#" class="nav-link {{ Route::is('register*') ? 'active' : '' }} ">
-    					<i class="nav-icon fas fa-file-alt"></i>
-    					<p>Register Management<i class="fas fa-angle-left right"></i></p>
-    				</a>
-    				<ul class="nav nav-treeview">
-    					<li class="nav-item">
-    						<a href="{{ route('register.tournament.list') }}" class="nav-link {{ Route::is('register.tournament.list') ? 'active' : '' }}">
-    							<i class="far fa-circle nav-icon"></i>
-    							<p>Tournament TO</p>
-    						</a>
-    					</li>
-    					<li class="nav-item">
-    						<a href="{{ route('register.coupon.list') }}" class="nav-link {{ Route::is('register.coupon.list') ? 'active' : '' }}">
-    							<i class="far fa-circle nav-icon"></i>
-    							<p>Coupon</p>
-    						</a>
-    					</li>
-						<li class="nav-item">
-    						<a href="{{ route('register.other.list') }}" class="nav-link {{ Route::is('register.other.list') ? 'active' : '' }}">
-    							<i class="far fa-circle nav-icon"></i>
-    							<p>Other</p>
-    						</a>
-    					</li>
-    				</ul>
-    			</li>
+				<div id="render_notif_register"></div>
     		</ul>
     	</nav>
     </div>

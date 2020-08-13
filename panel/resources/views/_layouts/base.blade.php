@@ -69,6 +69,7 @@
 			</div>
 
 			@include('_layouts.footer')
+			<aside class="control-sidebar control-sidebar-dark"></aside>
 		</div>
 		<div id="loading-page">
             <div class="dis-table">
@@ -80,16 +81,36 @@
             </div>
         </div>
 		<script type="text/javascript" src="{{ asset('vendors/jquery/jquery.min.js') }}"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/@popperjs/core@2"></script>
 		<script type="text/javascript" src="{{ asset('vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/bootstrap/js/bootstrap.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/adminlte-dist/js/adminlte.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/pnotify/pnotify.custom.min.js') }}"></script>
 		<script type="text/javascript">
 			$( document ).ready(function() {
-				$('#loading-page').hide();
+				cekNewRegister();
+				// $('#loading-page').hide();
 				@stack('script.documentreadyfunction')
 			});
+
+			function cekNewRegister() {
+				var url = '{!! route("newRegisterEventCheck") !!}';
+				postData(null,url);
+				window.setTimeout(function() { 
+					cekNewRegister();
+				// }, 5000); // 5 second waiting end run again
+				}, 30000); // 30 second waiting end run again
+				// }, 600000); // 1 menit waiting end run again
+				// }, 1200000); // 2 menit waiting end run again
+				// }, 300000); // 5 menit waiting end run again
+			}
+
+			function playAudioApplauses() { 
+				var audio = new Audio('{!! asset('asset/applauses.mp3') !!}');
+				audio.play();
+			} 
+
+
 			$.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 			function pnotify(data) {
 				new PNotify({
@@ -97,6 +118,11 @@
 					text: data.text,
 					type: data.type,
 					delay: 3000
+				});
+			}
+			function pnotify_arr(data) {
+				$.each(data, function (idx, val) {
+					pnotify({"title":"info","type":val.type,"text":val.text});
 				});
 			}
 			function pnotifyConfirm(data) {
@@ -119,7 +145,8 @@
 						{ text: 'No', addClass: 'false'}
 						]
 					}
-				}).get().on('pnotify.confirm', function(){
+				}).get().on('pnotify.confirm', function(ui){
+					$(".true", ui.container).hide();
 					if (data.formData == true) {
 						postFormData(data.data,data.url);
 					}else{
@@ -151,11 +178,13 @@
 			function responsePostData(data) {
 				@stack('script.responsePostData')
 				if (data.pnotify === true) { pnotify({"title":"info","type":data.pnotify_type,"text":data.pnotify_text}); }
-				if (data.render == true) { render(data); }
+				if (data.pnotify_arr === true) { pnotify_arr(data.pnotify_arr_data); }
+				if (data.render == true) { render(data.render_config); }
+				if (data.playAudioApplauses == true) { playAudioApplauses(); }
 			}
 
 			function render(data) {
-				$(data.render_config.target).html(atob(data.render_config.content));
+				$(data.target).html(atob(data.content));
 			}
 		</script>
 		@stack('script')

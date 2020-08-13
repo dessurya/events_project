@@ -1,0 +1,6 @@
+# for auto allow notification sound on chrome
+Open chrome://settings/content/sound
+turn on *allow site to play sound*
+add your site url to allow
+go config thats url and make sure sound its allow
+Relaunch your site

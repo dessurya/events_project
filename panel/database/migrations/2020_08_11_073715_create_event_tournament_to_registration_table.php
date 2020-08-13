@@ -16,10 +16,11 @@ class CreateEventTournamentToRegistrationTable extends Migration
         Schema::create('event_tournament_to_registration', function (Blueprint $table) {
             $table->id();
             $table->string('status')->default('WAITING');
+            $table->string('registration_ip')->nullable();
             $table->string('participants_username')->nullable();
             $table->integer('participants_id')->nullable();
             $table->integer('event_tournament_id')->nullable();
-            $table->biginteger('participants_point_board')->default(0);
+            $table->double('participants_point_board')->default(0);
             $table->integer('participants_rank_board')->nullable();
             $table->timestamps();
         });

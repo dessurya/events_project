@@ -20,7 +20,7 @@
 		var end_activity = new Date(data.end_activity);
 		var today = new Date();
 
-		if (data.id == null && today > start_registration) {
+		if (data.id == null && today >= start_registration) {
 			error.push('start_registration must greater than today');
 		}
 		if (start_registration > end_registration) {
@@ -41,20 +41,72 @@
 		return false;
 	}
 
-	function preparePostData(target) {
-		event.preventDefault();
+	function checkPrepareId(target) {
 		var tId = $(target).data('id');
 		if (tId == "" || tId == null) {
 			pnotify({"title":"info","type":"dangger","text":"Warning! not selected event!"});
 			return false;
 		}
+		return true;
+	}
+
+	function preparePostData(target) {
+		event.preventDefault();
+		var tId = $(target).data('id');
+		if (checkPrepareId(target) == false) { return false; }
 		postData({"id":tId}, $(target).attr('href'));
+	}
+
+	function prepareGenerateRank(target,refresh) {
+		event.preventDefault();
+		var tId = $(target).data('id');
+		if (checkPrepareId(target) == false) { return false; }
+		pnotifyConfirm({
+            "title" : "Warning",
+            "type" : "info",
+            "text" : "Are You Sure Regenerate Ranks?",
+            "formData" : false,
+            "data" : {'id':tId,'target':refresh},
+            "url" : $(target).attr('href')
+        });
+	}
+
+	function prepareAddPoint(target,refresh) {
+		event.preventDefault();
+		if ($(target).hasClass('process')) { return false; }
+		$(target).toggleClass('process');
+		var tId = $(target).data('id');
+		if (checkPrepareId(target) == false) { return false; }
+		var points = [];
+		$.each($('.leaderboard.add-point'), function () {
+			if ($(this).val() != 0 && $(this).val() != '' && $(this).val() != undefined) {
+				var point = {};
+				point['id'] = $(this).data('id');
+				point['point'] = $(this).val();
+				points.push(point);
+			}
+		});
+		if(points.length == 0){
+			$(target).toggleClass('process');
+			pnotify({"title":"info","type":"info","text":"Not Add Points"});
+			return false;
+		}
+		$('.leaderboard.add-point').val(null);
+		pnotifyConfirm({
+            "title" : "Warning",
+            "type" : "info",
+            "text" : "Are You Sure Add All Points?",
+            "formData" : false,
+            "data" : {'event_id':tId,'points':points,'target':refresh},
+            "url" : $(target).attr('href')
+        });
+		$(target).toggleClass('process');
 	}
 
 	function buildInLeaderboard(config) {
 		var result = '';
         if (config.data.length == 0) {
-            result += '<tr><td colspan="5" class="text-center">Not data found!</td></tr>';
+            result += '<tr><td colspan="6" class="text-center">Not data found!</td></tr>';
         }else{
         	var loop = 0;
             $.each(config.data, function(index, val){
@@ -65,6 +117,7 @@
                 result += '<td>'+val.participants_name+'</td>';
                 result += '<td>'+val.participants_point_board+'</td>';
                 result += '<td>'+val.participants_rank_board+'</td>';
+                result += '<td><input data-id="'+val.id+'" class="leaderboard add-point form-control" type="number" placeholder="add point" ></td>';
                 result += '</tr>';
             });
         }
@@ -83,12 +136,13 @@
 @include('_componen.dtables_script_responsePostData')
 @include('_componen.summernote_script_responsePostData')
 if(data.buildInLeaderboard == true){ buildInLeaderboard(data.buildInLeaderboard_config); }
+if(data.preparePostData == true){ preparePostData(data.preparePostData_target); }
 @endpush
 
 @push('script.postDataBeforeSend')
 if(url == "{!! $config['route_validate'] !!}"){
 	var checkValidate = validateForm(data);
-	if(checkValidate.error == true){
+	if(checkValidate == true){
 		return false;
 	}
 }

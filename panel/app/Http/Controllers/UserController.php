@@ -40,6 +40,10 @@ class UserController extends Controller
         return [
             'get_data_route' => 'user.getData',
             'table_id' => 'd_tables_user',
+            'order' => [
+                'key' => 'name',
+                'value' => 'asc'
+            ],
             'componen' => [
                 ["data"=>"username","name"=>"username","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"name","name"=>"name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
@@ -96,7 +100,8 @@ class UserController extends Controller
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
-            $data->orderBy('username', 'asc');
+            $order = $this->dtableConfig()['order'];
+            $data->orderBy($order['key'], $order['value']);
         }
         if (isset($input->from_created_at) and !empty($input->from_created_at)) {
             $data->whereDate('created_at', '>=', $input->from_created_at);

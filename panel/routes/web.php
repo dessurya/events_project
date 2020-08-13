@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    // $data = DB::select(DB::raw('select sum(participants_point_board) as points from v_event_tournament_to_participants where event_id = 1'));
+    // return $data[0]->points;
     return redirect()->route('login');
 });
-
 
 Route::get('login', 'AuthController@login')->name('login');
 Route::post('sign-in', 'AuthController@signin')->name('signin');
@@ -25,6 +26,8 @@ Route::middleware('users')->group(function() {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
     Route::get('/self-data', 'UserController@index')->name('self-data');
+    Route::post('/new-register/event/check', 'NotificationController@newRegister')->name('newRegisterEventCheck');
+
 
     Route::name('user.')->prefix('user/')->group(function(){
         Route::get('/list', 'UserController@list')->name('list');
@@ -84,6 +87,8 @@ Route::middleware('users')->group(function() {
             Route::post('/store', 'EventTournamentController@store')->name('store');
             Route::post('/delete', 'EventTournamentController@delete')->name('delete');
             Route::post('/leaderboard', 'EventTournamentController@leaderboard')->name('leaderboard');
+            Route::post('/leaderboard/add-point', 'EventTournamentController@leaderboardAddPoint')->name('leaderboardAddPoint');
+            Route::post('/leaderboard/generate-rank', 'EventTournamentController@leaderboardGenerateRank')->name('leaderboardGenerateRank');
         });
         Route::name('coupon.')->prefix('coupon/')->group(function(){
             Route::get('/list', 'EventCouponController@list')->name('list');
@@ -97,14 +102,11 @@ Route::middleware('users')->group(function() {
         Route::name('tournament.')->prefix('tournament/')->group(function(){
             Route::get('/list', 'RegisterTournamentController@list')->name('list');
             Route::post('/list', 'RegisterTournamentController@getData')->name('getData');
-            Route::post('/form', 'RegisterTournamentController@form')->name('form');
-            Route::post('/store', 'RegisterTournamentController@store')->name('store');
+            Route::post('/confirm', 'RegisterTournamentController@confirm')->name('confirm');
+            Route::post('/reject', 'RegisterTournamentController@reject')->name('reject');
         });
         Route::name('coupon.')->prefix('coupon/')->group(function(){
             Route::get('/list', 'RegisterCouponController@list')->name('list');
-        });
-        Route::name('other.')->prefix('other/')->group(function(){
-            Route::get('/list', 'RegisterOtherController@list')->name('list');
         });
     });
 

@@ -40,9 +40,13 @@ class MainSliderController extends Controller
         return [
             'get_data_route' => 'interface.mainslider.getData',
             'table_id' => 'd_tables_mainslider',
+            'order' => [
+                'key' => 'order',
+                'value' => 'asc'
+            ],
             'componen' => [
                 ["data"=>"name","name"=>"name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"order","name"=>"order","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"order","name"=>"order","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"created_at","name"=>"created_at","searchable"=>true,"searchtype"=>"date","orderable"=>true]
             ],
             'action' => [
@@ -93,7 +97,8 @@ class MainSliderController extends Controller
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
-            $data->orderBy('name', 'asc');
+            $order = $this->dtableConfig()['order'];
+            $data->orderBy($order['key'], $order['value']);
         }
         if (isset($input->from_created_at) and !empty($input->from_created_at)) {
             $data->whereDate('created_at', '>=', $input->from_created_at);

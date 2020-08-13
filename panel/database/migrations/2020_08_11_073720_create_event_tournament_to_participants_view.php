@@ -16,6 +16,7 @@ class CreateEventTournamentToParticipantsView extends Migration
         DB::statement("CREATE OR REPLACE VIEW v_event_tournament_to_participants AS (
                 SELECT 
                     ettr.id as id,
+                    ettr.registration_ip as registration_ip,
                     p.id as participants_id,
                     participants_username,
                     p.name as participants_name,
@@ -28,6 +29,7 @@ class CreateEventTournamentToParticipantsView extends Migration
                     event_tournament_id as event_id,
                     ett.title as event_tittle,
                     es.name as event_status,
+                    es.id as event_status_id,
                     w.name as event_website,
                     ettr.created_at as created_at
                 FROM event_tournament_to_registration ettr

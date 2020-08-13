@@ -24,7 +24,7 @@ class CreateEventTournamentTable extends Migration
             $table->text('terms_and_conditions')->nullable();
             $table->text('picture')->nullable();
             $table->text('leaderboard')->nullable();
-            $table->integer('prize')->nullable();
+            $table->double('prize')->nullable();
             $table->integer('flag_status')->default('1');
             $table->integer('website_id')->nullable();
             $table->timestamps();
