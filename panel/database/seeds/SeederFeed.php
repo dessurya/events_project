@@ -8,6 +8,9 @@ use App\Models\EventStatus;
 use App\Models\MasterWebsite;
 use App\Models\EventTournament;
 use App\Models\EventTournamentRegistration;
+use App\Models\EventOther;
+use App\Models\EventCoupon;
+use App\Models\EventCouponRegistration;
 use Carbon\Carbon;
 
 class SeederFeed extends Seeder
@@ -268,6 +271,95 @@ class SeederFeed extends Seeder
             EventTournamentRegistration::create($store);
         }
 
+        $EventOther = [
+            [
+                'title' => 'event 001',
+                'website_id' => 1,
+                'start_activity' => (new Carbon('2020-06-10'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-06-17'))->format('Y-m-d'),
+                'flag_status' => 6
+            ],
+            [
+                'title' => 'event 002',
+                'website_id' => 2,
+                'start_activity' => (new Carbon('2020-08-01'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-08-13'))->format('Y-m-d'),
+                'flag_status' => 5
+            ],
+            [
+                'title' => 'event 003',
+                'website_id' => 3,
+                'start_activity' => (new Carbon('2020-08-10'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-08-17'))->format('Y-m-d'),
+                'flag_status' => 4
+            ],
+            [
+                'title' => 'event 004',
+                'website_id' => 4,
+                'start_activity' => (new Carbon('2020-10-10'))->format('Y-m-d'),
+                'end_activity' => (new Carbon('2020-10-17'))->format('Y-m-d'),
+                'flag_status' => 1
+            ],
+        ];
         
+        foreach ($EventOther as $store) {
+            EventOther::create($store);
+        }
+
+        $EventCoupon = [
+            [
+                'title' => 'coupon 001',
+                'website_id' => 1,
+                'start_registration' => (new Carbon('2020-01-01'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-01-07'))->format('Y-m-d'),
+                'start_active' => (new Carbon('2020-01-10'))->format('Y-m-d'),
+                'end_active' => (new Carbon('2020-01-17'))->format('Y-m-d'),
+                'flag_status' => 6
+            ],[
+                'title' => 'coupon 002',
+                'website_id' => 2,
+                'start_registration' => (new Carbon('2020-07-03'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-07-07'))->format('Y-m-d'),
+                'start_active' => (new Carbon('2020-07-10'))->format('Y-m-d'),
+                'end_active' => (new Carbon('2020-08-12'))->format('Y-m-d'),
+                'flag_status' => 5
+            ],[
+                'title' => 'coupon 003',
+                'website_id' => 3,
+                'start_registration' => (new Carbon('2020-07-03'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-07-20'))->format('Y-m-d'),
+                'start_active' => (new Carbon('2020-08-10'))->format('Y-m-d'),
+                'end_active' => (new Carbon('2020-09-12'))->format('Y-m-d'),
+                'flag_status' => 4
+            ],[
+                'title' => 'coupon 004',
+                'website_id' => 2,
+                'start_registration' => (new Carbon('2020-08-03'))->format('Y-m-d'),
+                'end_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
+                'start_active' => (new Carbon('2020-09-10'))->format('Y-m-d'),
+                'end_active' => (new Carbon('2020-10-12'))->format('Y-m-d'),
+                'flag_status' => 3
+            ]
+            
+        ];
+
+        foreach ($EventCoupon as $store) {
+            EventCoupon::create($store);
+        }
+
+        $EventCouponRegistration = [
+            [ 'participants_username'=>'participants01', 'participants_id'=>1, 'event_coupon_id'=>4 ],
+            [ 'participants_username'=>'participants02', 'participants_id'=>2, 'event_coupon_id'=>4 ],
+            [ 'participants_username'=>'participants03', 'participants_id'=>3, 'event_coupon_id'=>4 ],
+            [ 'participants_username'=>'participants04', 'participants_id'=>4, 'event_coupon_id'=>4 ],
+            [ 'participants_username'=>'participants05', 'participants_id'=>5, 'event_coupon_id'=>4 ],
+            [ 'participants_username'=>'participants06', 'participants_id'=>6, 'event_coupon_id'=>4 ],
+            [ 'participants_username'=>'participants07', 'participants_id'=>7, 'event_coupon_id'=>4 ],
+            [ 'participants_username'=>'participants08', 'participants_id'=>8, 'event_coupon_id'=>4 ]
+        ];
+
+        foreach ($EventCouponRegistration as $store) {
+            EventCouponRegistration::create($store);
+        }
     }
 }

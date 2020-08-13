@@ -92,9 +92,18 @@ Route::middleware('users')->group(function() {
         });
         Route::name('coupon.')->prefix('coupon/')->group(function(){
             Route::get('/list', 'EventCouponController@list')->name('list');
+            Route::post('/list', 'EventCouponController@getData')->name('getData');
+            Route::post('/form', 'EventCouponController@form')->name('form');
+            Route::post('/store', 'EventCouponController@store')->name('store');
+            Route::post('/delete', 'EventCouponController@delete')->name('delete');
+            Route::post('/gift', 'EventCouponController@gift')->name('gift');
         });
         Route::name('other.')->prefix('other/')->group(function(){
             Route::get('/list', 'EventOtherController@list')->name('list');
+            Route::post('/list', 'EventOtherController@getData')->name('getData');
+            Route::post('/form', 'EventOtherController@form')->name('form');
+            Route::post('/store', 'EventOtherController@store')->name('store');
+            Route::post('/delete', 'EventOtherController@delete')->name('delete');
         });
     });
 
@@ -107,6 +116,9 @@ Route::middleware('users')->group(function() {
         });
         Route::name('coupon.')->prefix('coupon/')->group(function(){
             Route::get('/list', 'RegisterCouponController@list')->name('list');
+            Route::post('/list', 'RegisterCouponController@getData')->name('getData');
+            Route::post('/gift', 'RegisterCouponController@gift')->name('gift');
+            Route::post('/reject', 'RegisterCouponController@reject')->name('reject');
         });
     });
 

@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\EventTournamentRegistration;
-use App\Models\ViewEventTournamentParticipants;
+use App\Models\EventCouponRegistration;
+use App\Models\ViewEventCouponRegistration;
 use Carbon\Carbon;
 
-class RegisterTournamentController extends Controller
+class RegisterCouponController extends Controller
 {
     private function pageConfig(){
 		return [
-            'title' => 'Event Tournament TO Registration Management',
+            'title' => 'Event Coupon Registration Management',
             'tabs' => [
                 'id_head' => 'custom-tabs-tab',
                 'id_content' => 'custom-tabs-tabContent',
@@ -32,8 +32,8 @@ class RegisterTournamentController extends Controller
     private function dtableConfig()
     {
         return [
-            'get_data_route' => 'register.tournament.getData',
-            'table_id' => 'd_tables_tournament_to_register',
+            'get_data_route' => 'register.coupon.getData',
+            'table_id' => 'd_tables_coupon_register',
             'order' => [
                 'key' => 'created_at',
                 'value' => 'desc'
@@ -48,8 +48,8 @@ class RegisterTournamentController extends Controller
                 ["data"=>"event_website","name"=>"event_website","searchable"=>true,"searchtype"=>"text","orderable"=>true]
             ],
             'action' => [
-                ["route" => "register.tournament.confirm", "title" => "Confirm Participants", "action" => "confirm", "select" => true, "confirm" => true, "multiple" => true],
-                ["route" => "register.tournament.reject", "title" => "Reject Participants", "action" => "reject", "select" => true, "confirm" => true, "multiple" => true]
+                ["route" => "register.coupon.gift", "title" => "Gift Coupon", "action" => "confirm", "select" => true, "confirm" => true, "multiple" => true],
+                ["route" => "register.coupon.reject", "title" => "Reject Coupon", "action" => "reject", "select" => true, "confirm" => true, "multiple" => true]
             ]
         ];
     }
@@ -65,7 +65,7 @@ class RegisterTournamentController extends Controller
             "page" => $this->pageConfig(),
             "dtable" => $this->dtableConfig()
         ];
-        return view('_pages.register.tournament.index', compact('config'));
+        return view('_pages.register.coupon.index', compact('config'));
     }
 
     public function getData(Request $input)
@@ -74,7 +74,7 @@ class RegisterTournamentController extends Controller
         if (isset($input->show) and !empty($input->show)) {
             $paginate = $input->show;
         }
-        $data = ViewEventTournamentParticipants::select('*');
+        $data = ViewEventCouponRegistration::select('*');
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
@@ -115,22 +115,23 @@ class RegisterTournamentController extends Controller
     private function getDataIn($stringId)
     {
         $ids = explode('^', $stringId);
-        return ViewEventTournamentParticipants::whereIn('id', $ids)->get();
+        return ViewEventCouponRegistration::whereIn('id', $ids)->get();
     }
 
-    public function confirm(Request $input)
+    public function gift(Request $input)
     {
         $ret = ['rebuildTable' => true];
         $pnotify_arr_data = [];
         foreach ($this->getDataIn($input->id) as $list) {
-        	if ($list->event_status_id == 2 and $list->participants_status == 'WAITING') {
-                $store = EventTournamentRegistration::find($list->id);
-                $store->status = 'PARTICIPATE';
+        	if (in_array($list->event_status_id, [2,3,4]) and $list->participants_status == 'WAITING') {
+                $store = EventCouponRegistration::find($list->id);
+                $store->confirm_at = Carbon::now()->format('Y-m-d H:i:s');
+                $store->status = 'GIFT';
                 $store->save();
             }else{
                 $pnotify_arr_data[] = [
                     'type' => 'error',
-                    'text' => 'Fail, '.$list->participants_name.' ( '.$list->participants_username.' ) cannot confirm cause event : '.$list->event_tittle.' on '.$list->event_website.' website its not Start Registration or participants status its not WAITING'
+                    'text' => 'Fail, '.$list->participants_name.' ( '.$list->participants_username.' ) cannot gift cause coupon : '.$list->event_tittle.' on '.$list->event_website.' website its not On Registration and Active or participants status its not WAITING'
                 ];
             }
         }
@@ -140,7 +141,7 @@ class RegisterTournamentController extends Controller
         }else{
             $ret['pnotify'] = true;
             $ret['pnotify_type'] = 'success';
-            $ret['pnotify_text'] = 'Success! confirm participants!';
+            $ret['pnotify_text'] = 'Success! gift coupon!';
         }
         return $ret;
     }
@@ -150,14 +151,15 @@ class RegisterTournamentController extends Controller
         $ret = ['rebuildTable' => true];
         $pnotify_arr_data = [];
         foreach ($this->getDataIn($input->id) as $list) {
-        	if ($list->event_status_id == 2 and $list->participants_status == 'WAITING') {
-                $store = EventTournamentRegistration::find($list->id);
-                $store->status = 'REJECTED';
+        	if (in_array($list->event_status_id, [2,3,4]) and $list->participants_status == 'WAITING') {
+                $store = EventCouponRegistration::find($list->id);
+                $store->confirm_at = Carbon::now()->format('Y-m-d H:i:s');
+                $store->status = 'REJECT';
                 $store->save();
             }else{
                 $pnotify_arr_data[] = [
                     'type' => 'error',
-                    'text' => 'Fail, '.$list->participants_name.' ( '.$list->participants_username.' ) cannot reject cause event : '.$list->event_tittle.' on '.$list->event_website.' website its not Start Registration or participants status its not WAITING'
+                    'text' => 'Fail, '.$list->participants_name.' ( '.$list->participants_username.' ) cannot reject cause coupon : '.$list->event_tittle.' on '.$list->event_website.' website its not On Registration and Active or participants status its not WAITING'
                 ];
             }
         }
@@ -167,7 +169,7 @@ class RegisterTournamentController extends Controller
         }else{
             $ret['pnotify'] = true;
             $ret['pnotify_type'] = 'success';
-            $ret['pnotify_text'] = 'Success! confirm participants!';
+            $ret['pnotify_text'] = 'Success! not gift coupon!';
         }
         return $ret;
     }

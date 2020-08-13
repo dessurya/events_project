@@ -48,6 +48,6 @@ class CreateEventTournamentToParticipantsView extends Migration
      */
     public function down()
     {
-        DB::statement("DROP VIEW IF EXISTS v_event_tournament_to");
+        DB::statement("DROP VIEW IF EXISTS v_event_tournament_to_participants");
     }
 }

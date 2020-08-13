@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        'App\Console\Commands\EventOtherUpStatusCommand',
         'App\Console\Commands\EventTournamentToUpStatusCommand',
         'App\Console\Commands\EventTournamantToLeaderboardRankCommand'
     ];
@@ -25,6 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('EventOther:status_update')->dailyAt('0:03');
         $schedule->command('tourneTo:status_update')->dailyAt('0:10');
         $schedule->command('tourneTo:leaderboard_rank')->cron('0 */3 * * *'); // every 3 hour
     }

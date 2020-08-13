@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\EventTournamentRegistration;
+use App\Models\EventCouponRegistration;
 
 class NotificationController extends Controller
 {
@@ -11,7 +12,7 @@ class NotificationController extends Controller
     {
         $return = [];
     	$tourne = EventTournamentRegistration::where('status','WAITING')->count();
-    	$coupon = 0;
+    	$coupon = EventCouponRegistration::where('status','WAITING')->count();
 
     	if ($tourne > 0 or $coupon > 0) {
             $return['playAudioApplauses'] = true;
@@ -23,10 +24,10 @@ class NotificationController extends Controller
                 'content' => base64_encode(view('_componen.newRegister', compact('tourne','coupon')))
             ];
             if ($tourne > 0) {
-                $return['pnotify_arr_data'][] = ['type'=>'danger', 'text' => 'Event Tournament TO New Register : '.$tourne ];
+                $return['pnotify_arr_data'][] = ['type'=>'error', 'text' => 'Event Tournament TO New Register : '.$tourne ];
             }
             if ($coupon > 0) {
-                $return['pnotify_arr_data'][] = ['type'=>'danger', 'text' => 'Event Coupon New Register : '.$coupon ];
+                $return['pnotify_arr_data'][] = ['type'=>'error', 'text' => 'Event Coupon New Register : '.$coupon ];
             }
     	}
         return $return;

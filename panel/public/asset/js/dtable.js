@@ -8,7 +8,9 @@ function renderGetData(data) {
     $('.tabel-info #to').html(data.to);
     $('.tabel-info #total').html(data.total);
     $('.tabel-info #last_page').html(data.last_page);
-    $('.tabel-info select[name=page]').html(buildPagesOpt(data.current_page, data.last_page));
+    // $('.tabel-info select[name=page]').html(buildPagesOpt(data.current_page, data.last_page));
+    $('.tabel-info input[name=page]').attr('max', data.last_page);
+    $('.tabel-info input[name=page]').val(data.current_page);
     var renderThis = buildTbody(data.data, componenTable);
     $(rendorTableBodyOn).html(renderThis);
 }
@@ -103,6 +105,8 @@ function fill_form(data) {
         var inputTarget = data.target + ' [name=' + key + ']';
         if ($(inputTarget).hasClass('file')) {
             $('img.' + key).attr('src', val).show();
+        } else if ($(inputTarget).is('textarea')) {
+            $(inputTarget).data('text', val);
         } else {
             $(inputTarget).val(val);
         }
@@ -126,6 +130,10 @@ function rebuildTable() {
     var input = {};
     $.each($('.rebuildTable'), function(e) {
         input[$(this).attr('name')] = $(this).val();
+        if ($(this).attr('name') == 'page' && parseInt($(this).val()) > parseInt($(this).attr('max'))) {
+            pnotify({ "title": "info", "type": "error", "text": 'Sorry page not found!' });
+            throw "exit";
+        }
     });
     getData({ 'data': input, 'url': urlgetdatauser });
 }

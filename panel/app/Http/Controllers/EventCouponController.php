@@ -3,18 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
-use App\Models\EventTournament;
-use App\Models\EventTournamentRegistration;
-use App\Models\ViewEventTournament;
-use App\Models\ViewEventTournamentParticipants;
+use App\Models\EventCoupon;
+use App\Models\EventCouponRegistration;
+use App\Models\ViewEventCoupon;
+use App\Models\ViewEventCouponRegistration;
 use App\Models\MasterWebsite;
 use Carbon\Carbon;
 
-class EventTournamentController extends Controller
+class EventCouponController extends Controller
 {
-	private function pageConfig(){
+    private function pageConfig(){
 		return [
             'title' => 'Event Tournament TO Management',
             'tabs' => [
@@ -37,10 +36,10 @@ class EventTournamentController extends Controller
                     ],
                     [ 
                         'active' => false,
-                        'id' => 'custom-tabs-leaderboard-tab', 
-                        'href' => 'custom-tabs-leaderboard',
-                        'name' => 'Leader Board',
-                        'content' => view('_pages.event.tournament.leaderboard')->render()
+                        'id' => 'custom-tabs-gift-tab', 
+                        'href' => 'custom-tabs-gift',
+                        'name' => 'Gift List',
+                        'content' => view('_pages.event.coupon.gift')->render()
                     ]
                 ]
             ]
@@ -50,8 +49,8 @@ class EventTournamentController extends Controller
     private function dtableConfig()
     {
         return [
-            'get_data_route' => 'event.tournament.getData',
-            'table_id' => 'd_tables_tournament_to',
+            'get_data_route' => 'event.coupon.getData',
+            'table_id' => 'd_tables_coupon',
             'order' => [
                 'key' => 'created_at',
                 'value' => 'desc'
@@ -60,18 +59,17 @@ class EventTournamentController extends Controller
                 ["data"=>"title","name"=>"title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"website","name"=>"website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
-                ["data"=>"prize","name"=>"prize","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"start_activity","name"=>"start_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
-                ["data"=>"end_activity","name"=>"end_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
+                ["data"=>"start_active","name"=>"start_active","searchable"=>true,"searchtype"=>"date","orderable"=>true],
+                ["data"=>"end_active","name"=>"end_active","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"start_registration","name"=>"start_registration","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"end_registration","name"=>"end_registration","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"created_at","name"=>"created_at","searchable"=>false,"searchtype"=>"date","orderable"=>true]
             ],
             'action' => [
-                ["route" => "event.tournament.leaderboard", "title" => "Show Leader Board", "action" => "leaderboard", "select" => true, "confirm" => false, "multiple" => false],
-                ["route" => "event.tournament.form", "title" => "Add Tournament TO", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
-                ["route" => "event.tournament.form", "title" => "Update Tournament TO", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
-                ["route" => "event.tournament.delete", "title" => "Delete Tournament TO", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true]
+                ["route" => "event.coupon.gift", "title" => "Show Gift List", "action" => "gift_list", "select" => true, "confirm" => false, "multiple" => false],
+                ["route" => "event.coupon.form", "title" => "Add Event Coupon", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
+                ["route" => "event.coupon.form", "title" => "Update Event Coupon", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
+                ["route" => "event.coupon.delete", "title" => "Delete Event Coupon", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true]
             ]
         ];
     }
@@ -79,11 +77,11 @@ class EventTournamentController extends Controller
     private function formConfig()
     {
         return [
-            'id' => 'tournament_to_form',
-            'title' => 'Form Tournament TO',
-            'action' => 'event.tournament.store',
+            'id' => 'event_coupon_form',
+            'title' => 'Form Event Coupon',
+            'action' => 'event.coupon.store',
             'readonly' => [],
-            'required' => ['title', 'prize', 'website_id', 'start_activity', 'start_registration', 'end_activity', 'end_registration']
+            'required' => ['title', 'website_id', 'start_active', 'start_registration', 'end_active', 'end_registration']
         ];
     }
 
@@ -94,9 +92,9 @@ class EventTournamentController extends Controller
 
     private function getForm()
     {
-        return view('_pages.event.tournament.form', ['config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get()])->render();
+        return view('_pages.event.coupon.form', ['config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get()])->render();
     }
-    
+
     public function list(Request $input)
     {
         $config = [
@@ -104,7 +102,7 @@ class EventTournamentController extends Controller
             "route_validate" => route($this->formConfig()['action']),
             "dtable" => $this->dtableConfig()
         ];
-        return view('_pages.event.tournament.index', compact('config'));
+        return view('_pages.event.coupon.index', compact('config'));
     }
 
     public function getData(Request $input)
@@ -113,7 +111,7 @@ class EventTournamentController extends Controller
         if (isset($input->show) and !empty($input->show)) {
             $paginate = $input->show;
         }
-        $data = ViewEventTournament::select('*');
+        $data = ViewEventCoupon::select('*');
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
@@ -126,17 +124,17 @@ class EventTournamentController extends Controller
         if (isset($input->to_created_at) and !empty($input->to_created_at)) {
             $data->whereDate('created_at', '<=', $input->to_created_at);
         }
-        if (isset($input->from_start_activity) and !empty($input->from_start_activity)) {
-            $data->whereDate('start_activity', '>=', $input->from_start_activity);
+        if (isset($input->from_start_active) and !empty($input->from_start_active)) {
+            $data->whereDate('start_active', '>=', $input->from_start_active);
         }
-        if (isset($input->to_start_activity) and !empty($input->to_start_activity)) {
-            $data->whereDate('start_activity', '<=', $input->to_start_activity);
+        if (isset($input->to_start_active) and !empty($input->to_start_active)) {
+            $data->whereDate('start_active', '<=', $input->to_start_active);
         }
-        if (isset($input->from_end_activity) and !empty($input->from_end_activity)) {
-            $data->whereDate('end_activity', '>=', $input->from_end_activity);
+        if (isset($input->from_end_active) and !empty($input->from_end_active)) {
+            $data->whereDate('end_active', '>=', $input->from_end_active);
         }
-        if (isset($input->to_end_activity) and !empty($input->to_end_activity)) {
-            $data->whereDate('end_activity', '<=', $input->to_end_activity);
+        if (isset($input->to_end_active) and !empty($input->to_end_active)) {
+            $data->whereDate('end_active', '<=', $input->to_end_active);
         }
         if (isset($input->from_start_registration) and !empty($input->from_start_registration)) {
             $data->whereDate('start_registration', '>=', $input->from_start_registration);
@@ -156,9 +154,6 @@ class EventTournamentController extends Controller
         if (isset($input->status) and !empty($input->status)){
             $data->where('status', 'like', '%'.$input->status.'%');
         }
-        if (isset($input->prize) and !empty($input->prize)){
-            $data->where('prize', 'like', '%'.$input->prize.'%');
-        }
         if (isset($input->website) and !empty($input->website)){
             $data->where('website', 'like', '%'.$input->website.'%');
         }
@@ -176,7 +171,7 @@ class EventTournamentController extends Controller
         $tab_show = '#'.$tab_show['tabs']['tab'][1]['id'];
         $find = null;
         if ($input->id != "true") {
-            $find = EventTournament::find($input->id);
+            $find = EventCoupon::find($input->id);
         }
         return [
         	'summernote' => true,
@@ -197,9 +192,9 @@ class EventTournamentController extends Controller
     public function store(Request $input)
     {
         if (empty($input->id)) {
-            $store = new EventTournament;
+            $store = new EventCoupon;
         }else{
-            $store = EventTournament::find($input->id);
+            $store = EventCoupon::find($input->id);
         }
         if (!empty($input->picture)) {
         	if (!empty($store->picture) and !empty($input->id)) {
@@ -216,7 +211,7 @@ class EventTournamentController extends Controller
         	if (!file_exists($url)){
                 mkdir($url, 0777);
             }
-            $url .= 'event_tournament_to/';
+            $url .= 'event_coupon/';
         	if (!file_exists($url)){
                 mkdir($url, 0777);
             }
@@ -232,15 +227,14 @@ class EventTournamentController extends Controller
         }
         $store->title = $input->title;
         $store->website_id = $input->website_id;
-        $store->prize = $input->prize;
         $store->terms_and_conditions = $input->terms_and_conditions;
         $store->description = $input->description;
-        $store->end_activity = $input->end_activity;
+        $store->end_active = $input->end_active;
         $store->end_registration = $input->end_registration;
-        $store->start_activity = $input->start_activity;
+        $store->start_active = $input->start_active;
         $store->start_registration = $input->start_registration;
         $store->save();
-        $find = EventTournament::find($store->id);
+        $find = EventCoupon::find($store->id);
         $formConfig = $this->formConfig();
         $tab_show = $this->pageConfig();
         $tab_show = '#'.$tab_show['tabs']['tab'][0]['id'];
@@ -261,7 +255,7 @@ class EventTournamentController extends Controller
     private function getDataIn($stringId)
     {
         $ids = explode('^', $stringId);
-        return EventTournament::whereIn('id', $ids)->get();
+        return EventCoupon::whereIn('id', $ids)->get();
     }
 
     public function delete(Request $input)
@@ -282,11 +276,11 @@ class EventTournamentController extends Controller
             'rebuildTable' => true,
             'pnotify' => true,
             'pnotify_type' => 'success',
-            'pnotify_text' => 'Success delete event tournament TO'
+            'pnotify_text' => 'Success delete event coupon'
         ];
     }
 
-    public function leaderboard(Request $input)
+    public function gift(Request $input)
     {
     	if (!isset($input->id) or $input->id == null or $input->id == "") {
     		return [
@@ -301,47 +295,15 @@ class EventTournamentController extends Controller
     	return [
     		'show_tab' => true,
             'show_tab_target' => $tab_show,
-	    	'buildInLeaderboard' => true,
-	        'buildInLeaderboard_config' => [
+	    	'buildInGiftList' => true,
+	        'buildInGiftList_config' => [
 	        	'target' => $target,
-	        	'event' => EventTournament::select('id','title')->find($input->id),
-	        	'data' => ViewEventTournamentParticipants::where([
+	        	'event' => EventCoupon::select('id','title')->find($input->id),
+	        	'data' => ViewEventCouponRegistration::where([
                     'event_id' => $input->id,
-                    'participants_status' => 'PARTICIPATE'
-                    ])->orderBy('participants_rank_board', 'asc')->orderBy('created_at', 'asc')->get()
+                    'participants_status' => 'GIFT'
+                    ])->orderBy('confirm_at', 'asc')->get()
 	        ]
 		];
-    }
-
-    public function leaderboardAddPoint(Request $input)
-    {
-        $event = EventTournament::find($input->event_id);
-        if (!in_array($event->flag_status,[4,5])) {
-            return [
-		    	'pnotify' => true,
-		        'pnotify_type' => 'dangger',
-		        'pnotify_text' => 'Fail! event not start!'
-    		];
-        }
-        foreach ($input->points as $point) {
-            $participant = EventTournamentRegistration::find($point['id']);
-            $participant->participants_point_board += $point['point'];
-            $participant->save();
-        }
-        return [
-            'preparePostData' => true,
-            'preparePostData_target' => $input->target
-        ];
-    }
-
-    public function leaderboardGenerateRank(Request $input)
-    {
-        Artisan::call('tourneTo:leaderboard_rank', [
-            '--event' => $input->id
-        ]);
-        return [
-            'preparePostData' => true,
-            'preparePostData_target' => $input->target
-        ];
     }
 }

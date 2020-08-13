@@ -16,21 +16,21 @@
 		var error = [];
 		var start_registration = new Date(data.start_registration);
 		var end_registration = new Date(data.end_registration);
-		var start_activity = new Date(data.start_activity);
-		var end_activity = new Date(data.end_activity);
+		var start_active = new Date(data.start_active);
+		var end_active = new Date(data.end_active);
 		var today = new Date();
 
-		if (data.id == "" && today >= start_activity) {
+		if (data.id == "" && today >= start_active) {
 			error.push('start_registration must greater than today');
 		}
 		if (start_registration > end_registration) {
 			error.push('end_registration must greater than start_registration');
 		}
-		if (end_registration > start_activity) {
-			error.push('start_activity must greater than end_registration');
+		if (end_registration > start_active) {
+			error.push('start_active must greater than end_registration');
 		}
-		if (start_activity > end_activity) {
-			error.push('end_activity must greater than start_activity');
+		if (start_active > end_active) {
+			error.push('end_active must greater than start_active');
 		}
 		if(error.length > 0){
 			$.each(error, function(index, val){
@@ -57,67 +57,18 @@
 		postData({"id":tId}, $(target).attr('href'));
 	}
 
-	function prepareGenerateRank(target,refresh) {
-		event.preventDefault();
-		var tId = $(target).data('id');
-		if (checkPrepareId(target) == false) { return false; }
-		pnotifyConfirm({
-            "title" : "Warning",
-            "type" : "info",
-            "text" : "Are You Sure Regenerate Ranks?",
-            "formData" : false,
-            "data" : {'id':tId,'target':refresh},
-            "url" : $(target).attr('href')
-        });
-	}
-
-	function prepareAddPoint(target,refresh) {
-		event.preventDefault();
-		if ($(target).hasClass('process')) { return false; }
-		$(target).toggleClass('process');
-		var tId = $(target).data('id');
-		if (checkPrepareId(target) == false) { return false; }
-		var points = [];
-		$.each($('.leaderboard.add-point'), function () {
-			if ($(this).val() != 0 && $(this).val() != '' && $(this).val() != undefined) {
-				var point = {};
-				point['id'] = $(this).data('id');
-				point['point'] = $(this).val();
-				points.push(point);
-			}
-		});
-		if(points.length == 0){
-			$(target).toggleClass('process');
-			pnotify({"title":"info","type":"info","text":"Not Add Points"});
-			return false;
-		}
-		$('.leaderboard.add-point').val(null);
-		pnotifyConfirm({
-            "title" : "Warning",
-            "type" : "info",
-            "text" : "Are You Sure Add All Points?",
-            "formData" : false,
-            "data" : {'event_id':tId,'points':points,'target':refresh},
-            "url" : $(target).attr('href')
-        });
-		$(target).toggleClass('process');
-	}
-
-	function buildInLeaderboard(config) {
+	function buildInGiftList(config) {
 		var result = '';
         if (config.data.length == 0) {
-            result += '<tr><td colspan="6" class="text-center">Not data found!</td></tr>';
+            result += '<tr><td colspan="3" class="text-center">Not data found!</td></tr>';
         }else{
         	var loop = 0;
             $.each(config.data, function(index, val){
             	loop++;
                 result += '<tr id='+val.id+'>';
-                result += '<td>'+loop+'</td>';
+                result += '<td>'+val.confirm_at+'</td>';
                 result += '<td>'+val.participants_username+'</td>';
                 result += '<td>'+val.participants_name+'</td>';
-                result += '<td>'+val.participants_point_board+'</td>';
-                result += '<td>'+val.participants_rank_board+'</td>';
-                result += '<td><input data-id="'+val.id+'" class="leaderboard add-point form-control" type="number" placeholder="add point" ></td>';
                 result += '</tr>';
             });
         }
@@ -135,7 +86,7 @@
 @push('script.responsePostData')
 @include('_componen.dtables_script_responsePostData')
 @include('_componen.summernote_script_responsePostData')
-if(data.buildInLeaderboard == true){ buildInLeaderboard(data.buildInLeaderboard_config); }
+if(data.buildInGiftList == true){ buildInGiftList(data.buildInGiftList_config); }
 if(data.preparePostData == true){ preparePostData(data.preparePostData_target); }
 @endpush
 

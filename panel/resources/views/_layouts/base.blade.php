@@ -99,7 +99,8 @@
 				window.setTimeout(function() { 
 					cekNewRegister();
 				// }, 5000); // 5 second waiting end run again
-				}, 30000); // 30 second waiting end run again
+				// }, 30000); // 30 second waiting end run again
+				}, 50000); // 50 second waiting end run again
 				// }, 600000); // 1 menit waiting end run again
 				// }, 1200000); // 2 menit waiting end run again
 				// }, 300000); // 5 menit waiting end run again
@@ -165,8 +166,8 @@
 					dataType: 'json',
 					data: data,
 					beforeSend: function() {
-						$('#loading-page').show();
 						@stack('script.postDataBeforeSend')
+						$('#loading-page').show();
 					},
 					success: function(data) {
 						responsePostData(data);

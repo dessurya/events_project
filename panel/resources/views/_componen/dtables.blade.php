@@ -89,7 +89,7 @@
                     </span>
                 </div>
                 <div class="tabel-info" style="float: right;">
-                    <label>Pages <select name="page" class="rebuildTable"></select> from <strong id="last_page"></strong></label>
+                    <label>Pages <input type="number" name="page" class="rebuildTable" min="1"> from <strong id="last_page"></strong></label>
                 </div>
             </div>
         </div>
