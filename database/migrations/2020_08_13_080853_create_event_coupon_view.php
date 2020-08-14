@@ -18,13 +18,16 @@ class CreateEventCouponView extends Migration
                 SELECT 
                     ett.id as id,
                     title,
-                    count_gift,
+                    max_coupon,
+                    max_coupon-gifted_coupon as available_coupon,
+                    gifted_coupon,
                     w.name as website,
                     start_active,
                     end_active,
                     start_registration,
                     end_registration,
                     es.value as status,
+                    es.self_id as status_id,
                     ett.created_at as created_at
                 FROM event_coupon ett
                 LEFT JOIN master_status_self es ON es.self_id = ett.flag_status and es.parent_id = 1

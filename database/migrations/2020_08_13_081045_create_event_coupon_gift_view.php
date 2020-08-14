@@ -18,6 +18,7 @@ class CreateEventCouponGiftView extends Migration
                     ecr.id as id,
                     ecr.registration_ip as registration_ip,
                     ecr.confirm_at as confirm_at,
+                    ecr.have_coupon as have_coupon,
                     p.id as participants_id,
                     participants_username,
                     p.name as participants_name,

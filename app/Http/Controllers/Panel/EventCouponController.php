@@ -10,6 +10,7 @@ use App\Models\EventCouponRegistration;
 use App\Models\ViewEventCoupon;
 use App\Models\ViewEventCouponRegistration;
 use App\Models\MasterWebsite;
+use App\Models\ParticipantsCoupon;
 use Carbon\Carbon;
 
 class EventCouponController extends Controller
@@ -59,7 +60,9 @@ class EventCouponController extends Controller
             'componen' => [
                 ["data"=>"title","name"=>"title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"website","name"=>"website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"count_gift","name"=>"count_gift","searchable"=>false,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"max_coupon","name"=>"max_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"available_coupon","name"=>"available_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"gifted_coupon","name"=>"gifted_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"start_active","name"=>"start_active","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"end_active","name"=>"end_active","searchable"=>true,"searchtype"=>"date","orderable"=>true],
@@ -235,6 +238,7 @@ class EventCouponController extends Controller
         $store->end_registration = $input->end_registration;
         $store->start_active = $input->start_active;
         $store->start_registration = $input->start_registration;
+        $store->max_coupon = $input->max_coupon;
         $store->save();
         $find = EventCoupon::find($store->id);
         $formConfig = $this->formConfig();
@@ -307,5 +311,40 @@ class EventCouponController extends Controller
                     ])->orderBy('confirm_at', 'asc')->get()
 	        ]
 		];
+    }
+
+    public function gifted(Request $input)
+    {
+        $event = EventCoupon::find($input->event_id);
+        if (!in_array($event->flag_status,[2,3,4,5])) {
+            return [
+		    	'pnotify' => true,
+		        'pnotify_type' => 'error',
+		        'pnotify_text' => 'Fail! event not start!'
+    		];
+        }
+        foreach ($input->coupons as $coupon) {
+            $register = EventCouponRegistration::find($coupon['id']);
+            $gifts = explode('^',$coupon['coupon']);
+            foreach ($gifts as $gift) {
+                if (!empty($gift)) {
+                    $ParticipantsCoupon = new ParticipantsCoupon;
+                    $ParticipantsCoupon->coupon_code = $gift;
+                    $ParticipantsCoupon->participants_id = $register->participants_id;
+                    $ParticipantsCoupon->participants_username = $register->participants_username;
+                    $ParticipantsCoupon->event_coupon_id = $register->event_coupon_id;
+                    $ParticipantsCoupon->save();
+                    $event->gifted_coupon += 1;
+                    $event->save();
+                    $register->have_coupon += 1;
+                    $register->save();
+                }
+            }
+        }
+        return [
+            'rebuildTable' => true,
+            'preparePostData' => true,
+            'preparePostData_target' => $input->target
+        ];
     }
 }

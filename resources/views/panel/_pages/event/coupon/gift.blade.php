@@ -11,6 +11,14 @@
               title="refresh"
               href="{{ route('panel.event.coupon.gift') }}"><i class="fas fa-sync-alt"></i></a>
         </li>
+        <li class="page-item">
+          <a 
+              onclick="prepareGiftCoupon('.prepareGiftCoupon.giftList','.preparePostData.giftList')" 
+              class="page-link prepareGiftCoupon giftList"
+              data-id=""
+              title="Add Points"
+              href="{{ route('panel.event.coupon.gifted') }}"><i class="fas fa-save"></i></a>
+        </li>
       </ul>
     </div>
   </div>
@@ -21,9 +29,11 @@
           <th>Confirm At</th>
           <th>Username</th>
           <th>Name</th>
+          <th>Have Coupon</th>
+          <th></th>
         </tr>
       </thead>
-      <tbody><tr><td colspan="3" class="text-center">-</td></tr></tbody>
+      <tbody><tr><td colspan="5" class="text-center">-</td></tr></tbody>
     </table>
   </div>
 </div>

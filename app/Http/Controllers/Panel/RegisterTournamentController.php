@@ -124,7 +124,7 @@ class RegisterTournamentController extends Controller
         $ret = ['rebuildTable' => true];
         $pnotify_arr_data = [];
         foreach ($this->getDataIn($input->id) as $list) {
-        	if ($list->event_status_id == 2 and $list->participants_status_id == 1) {
+        	if (in_array($list->event_status_id, [2,3,4]) and $list->participants_status_id == 1) {
                 $store = EventTournamentRegistration::find($list->id);
                 $store->status = 3;
                 $store->save();
@@ -151,7 +151,7 @@ class RegisterTournamentController extends Controller
         $ret = ['rebuildTable' => true];
         $pnotify_arr_data = [];
         foreach ($this->getDataIn($input->id) as $list) {
-        	if ($list->event_status_id == 2 and $list->participants_status_id == 1) {
+        	if (in_array($list->event_status_id, [2,3,4,5,6]) and $list->participants_status_id == 1) {
                 $store = EventTournamentRegistration::find($list->id);
                 $store->status = 2;
                 $store->save();

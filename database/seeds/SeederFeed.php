@@ -316,6 +316,7 @@ class SeederFeed extends Seeder
                 'end_registration' => (new Carbon('2020-01-07'))->format('Y-m-d'),
                 'start_active' => (new Carbon('2020-01-10'))->format('Y-m-d'),
                 'end_active' => (new Carbon('2020-01-17'))->format('Y-m-d'),
+                'max_coupon' => 100,
                 'flag_status' => 6
             ],[
                 'title' => 'coupon 002',
@@ -324,6 +325,7 @@ class SeederFeed extends Seeder
                 'end_registration' => (new Carbon('2020-07-07'))->format('Y-m-d'),
                 'start_active' => (new Carbon('2020-07-10'))->format('Y-m-d'),
                 'end_active' => (new Carbon('2020-08-12'))->format('Y-m-d'),
+                'max_coupon' => 100,
                 'flag_status' => 5
             ],[
                 'title' => 'coupon 003',
@@ -332,6 +334,7 @@ class SeederFeed extends Seeder
                 'end_registration' => (new Carbon('2020-07-20'))->format('Y-m-d'),
                 'start_active' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'end_active' => (new Carbon('2020-09-12'))->format('Y-m-d'),
+                'max_coupon' => 100,
                 'flag_status' => 4
             ],[
                 'title' => 'coupon 004',
@@ -340,6 +343,7 @@ class SeederFeed extends Seeder
                 'end_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'start_active' => (new Carbon('2020-09-10'))->format('Y-m-d'),
                 'end_active' => (new Carbon('2020-10-12'))->format('Y-m-d'),
+                'max_coupon' => 100,
                 'flag_status' => 3
             ]
             
@@ -372,7 +376,8 @@ class SeederFeed extends Seeder
             ['id'=>1,'value'=>'Event Status'],
             ['id'=>2,'value'=>'Tournament TO Generate Ranks'],
             ['id'=>3,'value'=>'Event Tournament TO Register'],
-            ['id'=>4,'value'=>'Event Coupon Register']
+            ['id'=>4,'value'=>'Event Coupon Register'],
+            ['id'=>5,'value'=>'Participants Coupon Status']
         ];
         foreach ($MasterStatusParent as $store) {
             MasterStatusParent::create($store);
@@ -395,7 +400,11 @@ class SeederFeed extends Seeder
             ['parent_id'=>3,'self_id'=>3,'value'=>'Participate'],
             ['parent_id'=>4,'self_id'=>1,'value'=>'Waiting'],
             ['parent_id'=>4,'self_id'=>2,'value'=>'Rejected'],
-            ['parent_id'=>4,'self_id'=>3,'value'=>'Gifted']
+            ['parent_id'=>4,'self_id'=>3,'value'=>'Gifted'],
+            ['parent_id'=>5,'self_id'=>1,'value'=>'Available'],
+            ['parent_id'=>5,'self_id'=>2,'value'=>'Banned'],
+            ['parent_id'=>5,'self_id'=>3,'value'=>'Rejected'],
+            ['parent_id'=>5,'self_id'=>4,'value'=>'Used Up'],
         ];
         foreach ($MasterStatusSelf as $store) {
             MasterStatusSelf::create($store);

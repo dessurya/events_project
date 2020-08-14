@@ -57,10 +57,42 @@
 		postData({"id":tId}, $(target).attr('href'));
 	}
 
+	function prepareGiftCoupon(target,refresh) {
+		event.preventDefault();
+		if ($(target).hasClass('process')) { return false; }
+		$(target).toggleClass('process');
+		var tId = $(target).data('id');
+		if (checkPrepareId(target) == false) { return false; }
+		var coupons = [];
+		$.each($('.gift.gift-coupon'), function () {
+			if ($(this).val() != '' && $(this).val() != undefined) {
+				var coupon = {};
+				coupon['id'] = $(this).data('id');
+				coupon['coupon'] = $(this).val();
+				coupons.push(coupon);
+			}
+		});
+		if(coupons.length == 0){
+			$(target).toggleClass('process');
+			pnotify({"title":"info","type":"info","text":"Not Gift Coupon"});
+			return false;
+		}
+		$('.gift.gift-coupon').val(null);
+		pnotifyConfirm({
+            "title" : "Warning",
+            "type" : "info",
+            "text" : "Are You Sure Gift All Coupons?",
+            "formData" : false,
+            "data" : {'event_id':tId,'coupons':coupons,'target':refresh},
+            "url" : $(target).attr('href')
+        });
+		$(target).toggleClass('process');
+	}
+
 	function buildInGiftList(config) {
 		var result = '';
         if (config.data.length == 0) {
-            result += '<tr><td colspan="3" class="text-center">Not data found!</td></tr>';
+            result += '<tr><td colspan="5" class="text-center">Not data found!</td></tr>';
         }else{
         	var loop = 0;
             $.each(config.data, function(index, val){
@@ -69,6 +101,8 @@
                 result += '<td>'+val.confirm_at+'</td>';
                 result += '<td>'+val.participants_username+'</td>';
                 result += '<td>'+val.participants_name+'</td>';
+                result += '<td>'+val.have_coupon+'</td>';
+                result += '<td><input data-id="'+val.id+'" class="gift gift-coupon form-control" type="text" placeholder="Gift Coupon || exp : kode_1^kode_2^..." ></td>';
                 result += '</tr>';
             });
         }

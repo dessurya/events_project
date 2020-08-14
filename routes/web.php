@@ -21,19 +21,22 @@ Route::name('panel.')->prefix('panel/')->group(function(){
     Route::middleware('users')->group(function() {
         Route::get('/dashboard', 'Panel\DashboardController@index')->name('dashboard');
 
-        Route::get('/self-data', 'Panel\UserController@index')->name('self-data');
+        Route::get('/self-data', 'Panel\UserController@profile')->name('self-data');
+        Route::post('/self-data', 'Panel\UserController@profileStore')->name('self-data-store');
         Route::post('/new-register/event/check', 'Panel\NotificationController@newRegister')->name('newRegisterEventCheck');
 
 
         Route::name('user.')->prefix('user/')->group(function(){
             Route::get('/list', 'Panel\UserController@list')->name('list');
-            Route::get('/logs', 'Panel\UserController@index')->name('logs');
             Route::post('/store', 'Panel\UserController@store')->name('store');
-            
             Route::post('/list', 'Panel\UserController@getData')->name('getData');
             Route::post('/reset-password', 'Panel\UserController@resetPassword')->name('reset.password');
             Route::post('/form', 'Panel\UserController@form')->name('form');
             Route::post('/delete', 'Panel\UserController@delete')->name('delete');
+            
+            Route::get('/logs', 'Panel\UserHistoryController@logs')->name('logs');
+            Route::post('/logs-data', 'Panel\UserHistoryController@logsData')->name('logsData');
+
         });
 
         Route::name('master.')->prefix('master-data/')->group(function(){
@@ -49,6 +52,9 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::get('/list', 'Panel\ParticipantsController@list')->name('list');
                 Route::post('/list', 'Panel\ParticipantsController@getData')->name('getData');
                 Route::post('/show', 'Panel\ParticipantsController@show')->name('show');
+
+                Route::post('/tourne', 'Panel\ParticipantsController@tourne')->name('tourne');
+                Route::post('/coupon', 'Panel\ParticipantsController@coupon')->name('coupon');
             });
         });
 
@@ -93,6 +99,7 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/store', 'Panel\EventCouponController@store')->name('store');
                 Route::post('/delete', 'Panel\EventCouponController@delete')->name('delete');
                 Route::post('/gift', 'Panel\EventCouponController@gift')->name('gift');
+                Route::post('/gifted', 'Panel\EventCouponController@gifted')->name('gifted');
             });
             Route::name('other.')->prefix('other/')->group(function(){
                 Route::get('/list', 'Panel\EventOtherController@list')->name('list');
@@ -100,6 +107,10 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/form', 'Panel\EventOtherController@form')->name('form');
                 Route::post('/store', 'Panel\EventOtherController@store')->name('store');
                 Route::post('/delete', 'Panel\EventOtherController@delete')->name('delete');
+            });
+            Route::name('history.')->prefix('history/')->group(function(){
+                Route::get('/list', 'Panel\EventHistoryController@list')->name('list');
+                Route::post('/list', 'Panel\EventHistoryController@getData')->name('getData');
             });
         });
 
@@ -116,6 +127,14 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/gift', 'Panel\RegisterCouponController@gift')->name('gift');
                 Route::post('/reject', 'Panel\RegisterCouponController@reject')->name('reject');
             });
+        });
+
+        Route::name('coupon.')->prefix('coupon/')->group(function(){
+            Route::get('/list', 'Panel\CouponController@list')->name('list');
+            Route::post('/list', 'Panel\CouponController@getData')->name('getData');
+            Route::post('/used', 'Panel\CouponController@used')->name('used');
+            Route::post('/rejected', 'Panel\CouponController@rejected')->name('rejected');
+            Route::post('/banned', 'Panel\CouponController@banned')->name('banned');
         });
 
         Route::get('/sign-out', 'Panel\AuthController@logout')->name('signout');

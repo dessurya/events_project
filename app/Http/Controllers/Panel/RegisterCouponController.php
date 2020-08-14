@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Models\EventCoupon;
 use App\Models\EventCouponRegistration;
 use App\Models\ViewEventCouponRegistration;
 use Carbon\Carbon;
@@ -130,9 +128,6 @@ class RegisterCouponController extends Controller
                 $store->confirm_at = Carbon::now()->format('Y-m-d H:i:s');
                 $store->status = 3;
                 $store->save();
-                $EventCoupon = EventCoupon::find($store->event_coupon_id);
-                $EventCoupon->count_gift += 1;
-                $EventCoupon->save();
             }else{
                 $pnotify_arr_data[] = [
                     'type' => 'error',
@@ -156,7 +151,7 @@ class RegisterCouponController extends Controller
         $ret = ['rebuildTable' => true];
         $pnotify_arr_data = [];
         foreach ($this->getDataIn($input->id) as $list) {
-        	if (in_array($list->event_status_id, [2,3,4]) and $list->participants_status_id == 1) {
+        	if (in_array($list->event_status_id, [2,3,4,5,6]) and $list->participants_status_id == 1) {
                 $store = EventCouponRegistration::find($list->id);
                 $store->confirm_at = Carbon::now()->format('Y-m-d H:i:s');
                 $store->status = 2;

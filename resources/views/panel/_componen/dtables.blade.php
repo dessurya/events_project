@@ -5,6 +5,9 @@
                 <div class="card-title">
                     <div id="dTableAction" class="input-group input-group-sm" style="float:left;">
                         <div class="input-group-append">
+                            <button class="btn btn-info" onclick="rebuildTable()";>
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
                             <button class="btn btn-info" onclick="toogleClass('hide', '#{{ $config['table_id'] }} input')";>
                                 <i class="fas fa-search"></i>
                             </button>

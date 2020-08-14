@@ -8,6 +8,7 @@ use App\Models\EventTournament;
 use App\Models\EventTournamentRegistration;
 use App\Models\EventCoupon;
 use App\Models\EventCouponRegistration;
+use App\Models\ParticipantsCoupon;
 
 class DashboardController extends Controller
 {
@@ -96,16 +97,48 @@ class DashboardController extends Controller
     				'bg_class' => 'bg-danger',
     				'icon' => 'dizzy',
     				'name' => 'Rejected',
-    				'number' => EventCouponRegistration::where('status','REJECT')->count()
+    				'number' => EventCouponRegistration::where('status',2)->count()
     			],
     			[
     				'bg_class' => 'bg-success',
     				'icon' => 'grin-hearts',
-    				'name' => 'Given',
-    				'number' => EventCouponRegistration::where('status','GIFT')->count()
+    				'name' => 'Approved',
+    				'number' => EventCouponRegistration::where('status',3)->count()
 				]
 			],
-    		'new_regiter_coupon' => EventCouponRegistration::where('status','WAITING')->count()
+			'new_regiter_coupon' => EventCouponRegistration::where('status','WAITING')->count(),
+			'participate_coupon' => [
+				[
+    				'bg_class' => 'bg-secondary',
+    				'icon' => 'coffee',
+    				'name' => 'All Coupon',
+    				'number' => ParticipantsCoupon::count()
+				],
+				[
+    				'bg_class' => 'bg-secondary',
+					'icon' => 'coffee',
+					'name' => 'Coupon Available',
+    				'number' => ParticipantsCoupon::where('coupon_status', 1)->count()
+    			],
+				[
+    				'bg_class' => 'bg-secondary',
+    				'icon' => 'coffee',
+    				'name' => 'Coupon Used Up',
+    				'number' => ParticipantsCoupon::where('coupon_status', 4)->count()
+    			],
+				[
+    				'bg_class' => 'bg-secondary',
+    				'icon' => 'coffee',
+    				'name' => 'Coupon Rejected',
+    				'number' => ParticipantsCoupon::where('coupon_status', 3)->count()
+    			],
+				[
+    				'bg_class' => 'bg-secondary',
+    				'icon' => 'coffee',
+    				'name' => 'Coupon Banned',
+    				'number' => ParticipantsCoupon::where('coupon_status', 2)->count()
+    			]
+			]
     	];
         return view('panel._pages.dashboard.index', compact('config'));
     }

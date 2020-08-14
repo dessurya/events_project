@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Validator;
 use Auth;
+use Hash;
 
 class UserController extends Controller
 {
@@ -206,6 +207,14 @@ class UserController extends Controller
     }
     private function storeValidateUpdate($input){
         $result = ["validatorError" => false];
+        if ($input['id'] == Auth::guard('users')->user()->id) {
+            return [
+                "validatorError" => false,
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Fail, cant update your data from this form!'
+            ];
+        }
         $message = [];
         $validator = Validator::make($input, [
                 'username' => 'required|unique:users,username,'.$input['id'],
@@ -262,5 +271,39 @@ class UserController extends Controller
             'pnotify_type' => 'success',
             'pnotify_text' => 'Success delete users'
         ];
+    }
+
+    public function profile()
+    {
+        $data = Auth::guard('users')->user();
+        return view('panel._pages.user.profile', compact('data'));
+    }
+
+    public function profileStore(Request $input)
+    {
+        $me = User::find(Auth::guard('users')->user()->id);
+        if (User::where('username',$input->username)->whereNotIn('id',[$me->id])->count() > 0) {
+            return redirect()->back()->with('status', 'Sorry username has already been taken');
+        }
+        if (User::where('email',$input->email)->whereNotIn('id',[$me->id])->count() > 0) {
+            return redirect()->back()->with('status', 'Sorry email has already been taken');
+        }
+        if (Hash::check($input->old_password, $me->password)) {
+            if (!empty($input->new_password)) {
+                if ($input->new_password == $input->re_password) {
+                    $me->password = $input->new_password;
+                }else{
+                    return redirect()->back()->with('status', 'Sorry your new password not same with confirm password');
+                }
+            }
+            $me->name = $input->name;
+            $me->username = $input->username;
+            $me->email = $input->email;
+            $me->phone = $input->phone;
+            $me->save();
+            return redirect()->back()->with('status', 'Success update your profile data');
+        }else{
+            return redirect()->back()->with('status', 'Sorry your old password is wrong');
+        }
     }
 }

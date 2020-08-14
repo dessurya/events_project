@@ -321,7 +321,7 @@ class EventTournamentController extends Controller
         if (!in_array($event->flag_status,[4,5])) {
             return [
 		    	'pnotify' => true,
-		        'pnotify_type' => 'dangger',
+		        'pnotify_type' => 'error',
 		        'pnotify_text' => 'Fail! event not start!'
     		];
         }

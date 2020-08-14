@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Auth;
+use App\Models\HistoryUserLogin;
 
 class AuthController extends Controller
 {
@@ -27,6 +28,7 @@ class AuthController extends Controller
 
     public function signin(Request $Request){
         if (Auth::guard('users')->attempt(['username' => $Request->username, 'password' => $Request->password, 'flag_status' => 'Y' ])){
+            $this->recordINOUT('in', $Request->ip());
             return redirect()->route('panel.dashboard');
         }
         else{
@@ -34,7 +36,8 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(){
+    public function logout(Request $Request){
+        $this->recordINOUT('out', $Request->ip());
         auth()->guard('users')->logout();
         return redirect()->route('panel.login');
     }
@@ -42,5 +45,17 @@ class AuthController extends Controller
     public function redirectLogin()
     {
         return redirect()->route('panel.login');
+    }
+
+    private function recordINOUT($type,$ip)
+    {
+        $save = Auth::guard('users')->user();
+        HistoryUserLogin::create([
+            'username' => $save->username,
+            'name' => $save->name,
+            'email' => $save->email,
+            'type' => $type,
+            'ip' => $ip
+        ]);
     }
 }

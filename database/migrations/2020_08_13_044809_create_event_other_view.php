@@ -22,6 +22,7 @@ class CreateEventOtherView extends Migration
                     start_activity,
                     end_activity,
                     es.value as status,
+                    es.self_id as status_id,
                     ett.created_at as created_at
                 FROM event_other ett
                 LEFT JOIN master_status_self es ON es.self_id = ett.flag_status and es.parent_id = 1

@@ -94,7 +94,19 @@
 								</li>
 							</ul>
     					</li>
+						<li class="nav-item">
+    						<a href="{{ route('panel.event.history.list') }}" class="nav-link {{ Route::is('panel.event.history.list') ? 'active' : '' }}">
+    							<i class="far fa-circle nav-icon"></i>
+    							<p>History</p>
+    						</a>
+    					</li>
     				</ul>
+    			</li>
+				<li class="nav-item">
+    				<a href="{{ route('panel.coupon.list') }}" class="nav-link {{ Route::is('panel.coupon.list') ? 'active' : '' }} ">
+    					<i class="nav-icon fas fa-gifts"></i>
+    					<p>Coupon Management</p>
+    				</a>
     			</li>
 				<li class="nav-item">
     				<a href="#" class="nav-link {{ Route::is('panel.interface*') ? 'active' : '' }} ">

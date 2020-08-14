@@ -23,7 +23,8 @@ class CreateEventCouponTable extends Migration
             $table->text('description')->nullable();
             $table->text('terms_and_conditions')->nullable();
             $table->text('picture')->nullable();
-            $table->bigInteger('count_gift')->nullable();
+            $table->bigInteger('max_coupon')->nullable();
+            $table->bigInteger('gifted_coupon')->nullable();
             $table->integer('flag_status')->comment('master_status_parent : 1')->default('1');
             $table->integer('website_id')->nullable();
             $table->timestamps();

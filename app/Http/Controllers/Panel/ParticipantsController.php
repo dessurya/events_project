@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Participants;
 use App\Models\ViewEventTournamentParticipants;
+use App\Models\ViewParticipantsCoupon;
 
 class ParticipantsController extends Controller
 {
@@ -124,7 +125,8 @@ class ParticipantsController extends Controller
         $tab_show = '#'.$tab_show['tabs']['tab'][1]['id'];
         $config = [
         	'Participants' => Participants::find($input->id),
-        	'ViewEventTournamentParticipants' => ViewEventTournamentParticipants::where('participants_id',$input->id)->orderBy('created_at', 'desc')->get()
+            'ViewEventTournamentParticipants' => ViewEventTournamentParticipants::where('participants_id',$input->id)->orderBy('created_at', 'desc')->paginate(10),
+            'ViewParticipantsCoupon' => ViewParticipantsCoupon::where('participants_id',$input->id)->orderBy('created_at', 'desc')->paginate(10)
         ];
         return [
             'show_tab' => true,
@@ -135,5 +137,78 @@ class ParticipantsController extends Controller
                 'content' => base64_encode(view('panel._pages.master.participants.show', ['config' => $config])->render())
             ]
         ];
+    }
+
+    public function tourne(Request $input)
+    {
+        $data = ViewEventTournamentParticipants::where('participants_id',$input->id)->orderBy('created_at', 'desc')->paginate(10);
+        if (count($data) > 0) {
+            $html = "";
+            foreach ($data as $row) {
+                $html .= "<tr>";
+                $html .= "<td>".$row->event_status."</td>";
+                $html .= "<td>".$row->event_tittle."</td>";
+                $html .= "<td>".$row->event_website."</td>";
+                $html .= "<td>".$row->participants_status."</td>";
+                $html .= "<td>".$row->participants_point_board."</td>";
+                $html .= "<td>".$row->participants_rank_board."</td>";
+                $html .= "</tr>";
+            }
+            
+            return [
+                'append' => true,
+                'append_config' => [
+                    'target' => '#custom-tabs-tournament tbody',
+                    'content' => base64_encode($html)
+                ],
+                'change_page_tourne' => true,
+                'change_page_tourne_val' => $input->page
+            ];
+        }else{
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'not found data',
+                'change_page_tourne' => true,
+                'change_page_tourne_val' => $input->page-1
+            ];
+        }
+    }
+
+    public function coupon(Request $input)
+    {
+        $data = ViewParticipantsCoupon::where('participants_id',$input->id)->orderBy('created_at', 'desc')->paginate(10);
+        if (count($data) > 0) {
+            $html = "";
+            foreach ($data as $row) {
+                $html .= "<tr id='".$row->id."'>";
+                $html .= "<td>".$row->coupon_code."</td>";
+                $html .= "<td>".$row->coupon_status."</td>";
+                $html .= "<td>".$row->confirm_at."</td>";
+                $html .= "<td>".$row->event_coupon_title."</td>";
+                $html .= "<td>".$row->event_coupon_status."</td>";
+                $html .= "<td>".$row->event_coupon_website."</td>";
+                $html .= "<td>".$row->created_at."</td>";
+                $html .= "</tr>";
+            }
+            
+            return [
+                'append' => true,
+                'append_config' => [
+                    'target' => '#custom-tabs-coupon tbody',
+                    'content' => base64_encode($html)
+                ],
+                'change_page_coupon' => true,
+                'change_page_coupon_val' => $input->page
+            ];
+        }else{
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'not found data',
+                'change_page_coupon' => true,
+                'change_page_coupon_val' => $input->page-1
+            ];
+        }
     }
 }

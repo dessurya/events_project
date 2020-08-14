@@ -155,8 +155,14 @@
 					}
 				});
 			}
+
 			function toogleClass(param, target) {
-				$(target).toggleClass(param);
+				if(target== 'self'){
+					console.log(this);
+					// $(target).toggleClass(param);
+				}else{
+					$(target).toggleClass(param);
+				}
 			}
 
 			function postData(data,url) {
@@ -182,10 +188,18 @@
 				if (data.pnotify_arr === true) { pnotify_arr(data.pnotify_arr_data); }
 				if (data.render == true) { render(data.render_config); }
 				if (data.playAudioApplauses == true) { playAudioApplauses(); }
+				if (data.prepend == true) { prepend(data.prepend_config); }
+				if (data.append == true) { append(data.append_config); }
 			}
 
 			function render(data) {
 				$(data.target).html(atob(data.content));
+			}
+			function prepend(data) {
+				$(data.target).prepend(atob(data.content));
+			}
+			function append(data) {
+				$(data.target).append(atob(data.content));
 			}
 		</script>
 		@stack('script')

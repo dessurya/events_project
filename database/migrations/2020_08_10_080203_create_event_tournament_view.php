@@ -24,6 +24,7 @@ class CreateEventTournamentView extends Migration
                     start_registration,
                     end_registration,
                     es.value as status,
+                    es.self_id as status_id,
                     gr.value as generate_ranks,
                     prize,
                     ett.created_at as created_at
