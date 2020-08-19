@@ -58,7 +58,7 @@ class EventTournamantToLeaderboardRankCommand extends Command
         $rank_top_5 = [];
         $ranks = EventTournamentRegistration::where([
             'event_tournament_id'=>$event->id,
-            'status'=>'PARTICIPATE'
+            'status'=>3
         ])->orderBy('participants_point_board', 'desc')->get();
         foreach ($ranks as $rank) {
             $rank_order++;

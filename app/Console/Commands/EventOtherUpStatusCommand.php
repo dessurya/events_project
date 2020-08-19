@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\Models\EventStatus;
+use App\Models\MasterStatusSelf;
 use App\Models\EventOther;
 use Carbon\Carbon;
 
@@ -62,7 +62,10 @@ class EventOtherUpStatusCommand extends Command
             $event->flag_status += 1;
         }
         $event->save();
-        $newSt = EventStatus::find($event->flag_status)->name;
+        $newSt = MasterStatusSelf::where([
+            'parent_id'=>1,
+            'self_id'=>$event->flag_status
+        ])->first()->value;
         Log::notice('event other : '.$event->title.' become '.$newSt);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use App\Models\EventCoupon;
 use App\Models\EventCouponRegistration;
@@ -74,7 +75,8 @@ class EventCouponController extends Controller
                 ["route" => "panel.event.coupon.gift", "title" => "Show Gift List", "action" => "gift_list", "select" => true, "confirm" => false, "multiple" => false],
                 ["route" => "panel.event.coupon.form", "title" => "Add Event Coupon", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
                 ["route" => "panel.event.coupon.form", "title" => "Update Event Coupon", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
-                ["route" => "panel.event.coupon.delete", "title" => "Delete Event Coupon", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true]
+                ["route" => "panel.event.coupon.delete", "title" => "Delete Event Coupon", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true],
+                ["route" => "panel.event.coupon.generatestatus", "title" => "Generate Status Event Coupon", "action" => "generatestatus", "select" => false, "confirm" => false, "multiple" => false]
             ]
         ];
     }
@@ -86,7 +88,7 @@ class EventCouponController extends Controller
             'title' => 'Form Event Coupon',
             'action' => 'panel.event.coupon.store',
             'readonly' => [],
-            'required' => ['title', 'website_id', 'start_active', 'start_registration', 'end_active', 'end_registration']
+            'required' => ['title', 'website_id', 'start_active', 'start_registration', 'end_active', 'end_registration', 'max_coupon']
         ];
     }
 
@@ -231,6 +233,7 @@ class EventCouponController extends Controller
             $store->picture = $file_dir;
         }
         $store->title = $input->title;
+        $store->max_coupon = $input->max_coupon;
         $store->website_id = $input->website_id;
         $store->terms_and_conditions = $input->terms_and_conditions;
         $store->description = $input->description;
@@ -345,6 +348,17 @@ class EventCouponController extends Controller
             'rebuildTable' => true,
             'preparePostData' => true,
             'preparePostData_target' => $input->target
+        ];
+    }
+
+    public function generatestatus(Request $input)
+    {
+        Artisan::call('EventCoupon:status_update');
+        return [
+            'rebuildTable' => true,
+            'pnotify' => true,
+            'pnotify_type' => 'success',
+            'pnotify_text' => 'Success generate status event coupon'
         ];
     }
 }

@@ -10,7 +10,10 @@ class EventOther extends Model
     protected $table = 'event_other';
 	public function getPictureAttribute($pic)
     {
-        return asset($pic);
+        if (!empty($pic)) {
+            return asset($pic);
+        }
+        return null;
     }
 	public function getStartActivityAttribute($date)
     {

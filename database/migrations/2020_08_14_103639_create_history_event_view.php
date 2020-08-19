@@ -15,46 +15,67 @@ class CreateHistoryEventView extends Migration
     {
         DB::statement("CREATE OR REPLACE VIEW v_history_event AS (
                 SELECT
-                    id, 
-                    title, 
+                    a.id, 
+                    a.title, 
+                    1 as event_id,
                     'Tournament TO' as event,
                     website, 
-                    start_registration, 
-                    end_registration, 
-                    start_activity as start_event,
-                    end_activity as end_event,
+                    a.start_registration, 
+                    a.end_registration, 
+                    a.start_activity as start_event,
+                    a.end_activity as end_event,
                     status_id,
-                    status
+                    status,
+                    description,
+                    terms_and_conditions,
+                    picture,
+                    b.created_at
                 FROM
-                    v_event_tournament_to
+                    v_event_tournament_to a
+                LEFT JOIN
+                    event_tournament_to b on a.id = b.id
                 UNION ALL
                 SELECT
-                    id, 
-                    title, 
+                    a.id, 
+                    a.title, 
+                    2 as event_id,
                     'Coupon' as event,
                     website, 
-                    start_registration, 
-                    end_registration, 
-                    start_active as start_event,
-                    end_active as end_event,
+                    a.start_registration, 
+                    a.end_registration, 
+                    a.start_active as start_event,
+                    a.end_active as end_event,
                     status_id,
-                    status
+                    status,
+                    description,
+                    terms_and_conditions,
+                    picture,
+                    b.created_at
                 FROM
-                    v_event_coupon
+                    v_event_coupon a
+                LEFT JOIN
+                    event_coupon b on a.id = b.id
                 UNION ALL
                 SELECT
-                    id, 
-                    title, 
+                    a.id, 
+                    a.title, 
+                    3 as event_id,
                     'Other Event' as event,
                     website, 
                     '' as start_registration, 
                     '' as end_registration, 
-                    start_activity as start_event,
-                    end_activity as end_event,
+                    a.start_activity as start_event,
+                    a.end_activity as end_event,
                     status_id,
-                    status
+                    status,
+                    description,
+                    terms_and_conditions,
+                    picture,
+                    b.created_at
                 FROM
-                    v_event_other
+                    v_event_other a
+                LEFT JOIN
+                    event_other b on a.id = b.id
             )
         ");
     }

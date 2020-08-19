@@ -5,31 +5,26 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="{{ App\Http\Controllers\Site\HomeController::interfaceGetDescription() }}">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<title>Panel Page - @yield('title')</title>
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+		<title>{{ App\Http\Controllers\Site\HomeController::interfaceGetTitle() }} - @yield('title')</title>
+        <link rel="icon" type="image/png" href="{{ App\Http\Controllers\Site\HomeController::interfaceGetIcon() }}" />
 		<link rel="stylesheet" type="text/css" href="{{ asset('vendors/fontawesome-free/css/all.min.css') }}">
-		<link rel="stylesheet" href=" {{ asset('vendors/overlayScrollbars/css/OverlayScrollbars.min.css')}} ">
-		<link rel="stylesheet" type="text/css" href="{{ asset('vendors/adminlte-dist/css/adminlte.min.css') }}">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 		<link rel="stylesheet" href="{{ asset('vendors/pnotify/pnotify.custom.min.css') }}">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@1,600&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
 		<style type="text/css">
+            body{
+				font-family: 'Roboto Slab', serif;
+                background: #f2f2f2;
+            }
+			nav, h1, h2, h3, h4, h5, h6{
+				/* font-family: 'Public Sans', sans-serif; */
+				font-family: 'Roboto Slab', serif;
+			}
 			.hide{
 				display :none;
-			}
-
-			table.selected-table tbody tr{
-				cursor: pointer
-			}
-
-			table.selected-table tbody tr.selected{
-				background-color: #aab7d1;
-			}
-			
-			table .icon{
-				height: 20px;
-			}
-			.table.table-head-fixed thead tr th{
-				min-width : 150px !important;
 			}
 			/* loading page */
 		        #loading-page{
@@ -50,27 +45,10 @@
 		</style>
 		@stack('link')
 	</head>
-	<body class="hold-transition sidebar-mini">
-		<div class="wrapper">
-			@include('panel._layouts.nav')
-			@include('panel._layouts.aside')
-
-			<div class="content-wrapper">
-			<section class="content-header">
-				<div class="container-fluid">
-					<div class="row mb-2">
-						<div class="col-sm-6">
-							<h1>@yield('title')</h1>
-						</div>
-					</div>
-				</div>
-			</section>
-				@stack('content')
-			</div>
-
-			@include('panel._layouts.footer')
-			<aside class="control-sidebar control-sidebar-dark"></aside>
-		</div>
+	<body>
+        @include('site._layouts.navbar')
+        {{ App\Http\Controllers\Site\HomeController::runningTextGet() }}
+        @stack('content')
 		<div id="loading-page">
             <div class="dis-table">
                 <div class="row">
@@ -81,36 +59,20 @@
             </div>
         </div>
 		<script type="text/javascript" src="{{ asset('vendors/jquery/jquery.min.js') }}"></script>
-		<script type="text/javascript" src="{{ asset('vendors/popper.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/bootstrap/js/bootstrap.min.js') }}"></script>
-		<script type="text/javascript" src="{{ asset('vendors/adminlte-dist/js/adminlte.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/pnotify/pnotify.custom.min.js') }}"></script>
 		<script type="text/javascript">
 			$( document ).ready(function() {
-				cekNewRegister();
-				// $('#loading-page').hide();
+                $('#loading-page').hide();
+                $.each($('.carousel .carousel-inner'), function(){
+                    $(this).find('.carousel-item').first().addClass('active');
+                });
+                $('.carousel').carousel({
+                    interval: 4000
+                });
 				@stack('script.documentreadyfunction')
 			});
-
-			function cekNewRegister() {
-				var url = '{!! route("panel.newRegisterEventCheck") !!}';
-				postData(null,url);
-				window.setTimeout(function() { 
-					cekNewRegister();
-				// }, 5000); // 5 second waiting end run again
-				// }, 30000); // 30 second waiting end run again
-				}, 50000); // 50 second waiting end run again
-				// }, 600000); // 1 menit waiting end run again
-				// }, 1200000); // 2 menit waiting end run again
-				// }, 300000); // 5 menit waiting end run again
-			}
-
-			function playAudioApplauses() { 
-				var audio = new Audio('{!! asset('asset/applauses.mp3') !!}');
-				audio.play();
-			} 
-
 
 			$.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 			function pnotify(data) {

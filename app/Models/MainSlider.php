@@ -10,7 +10,10 @@ class MainSlider extends Model
 	protected $table = 'main_slider';
 	public function getPictureAttribute($pic)
     {
-        return asset($pic);
+        if (!empty($pic)) {
+            return asset($pic);
+        }
+        return null;
     }
 	public function getCreatedAtAttribute($date)
     {

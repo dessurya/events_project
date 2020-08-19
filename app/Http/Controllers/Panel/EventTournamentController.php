@@ -73,7 +73,8 @@ class EventTournamentController extends Controller
                 ["route" => "panel.event.tournament.leaderboard", "title" => "Show Leader Board", "action" => "leaderboard", "select" => true, "confirm" => false, "multiple" => false],
                 ["route" => "panel.event.tournament.form", "title" => "Add Tournament TO", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
                 ["route" => "panel.event.tournament.form", "title" => "Update Tournament TO", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
-                ["route" => "panel.event.tournament.delete", "title" => "Delete Tournament TO", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true]
+                ["route" => "panel.event.tournament.delete", "title" => "Delete Tournament TO", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true],
+                ["route" => "panel.event.tournament.generatestatus", "title" => "Generate Status Event Tournament TO", "action" => "generatestatus", "select" => false, "confirm" => false, "multiple" => false]
             ]
         ];
     }
@@ -346,6 +347,17 @@ class EventTournamentController extends Controller
         return [
             'preparePostData' => true,
             'preparePostData_target' => $input->target
+        ];
+    }
+
+    public function generatestatus(Request $input)
+    {
+        Artisan::call('tourneTo:status_update');
+        return [
+            'rebuildTable' => true,
+            'pnotify' => true,
+            'pnotify_type' => 'success',
+            'pnotify_text' => 'Success generate status event tournamen to'
         ];
     }
 }

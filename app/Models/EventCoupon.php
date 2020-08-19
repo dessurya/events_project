@@ -10,7 +10,10 @@ class EventCoupon extends Model
     protected $table = 'event_coupon';
 	public function getPictureAttribute($pic)
     {
-        return asset($pic);
+        if (!empty($pic)) {
+            return asset($pic);
+        }
+        return null;
     }
 	public function getStartActiveAttribute($date)
     {

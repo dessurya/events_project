@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use App\Models\EventOther;
 use App\Models\ViewEventOther;
@@ -58,7 +59,8 @@ class EventOtherController extends Controller
             'action' => [
                 ["route" => "panel.event.other.form", "title" => "Add Event Other", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
                 ["route" => "panel.event.other.form", "title" => "Update Event Other", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
-                ["route" => "panel.event.other.delete", "title" => "Delete Event Other", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true]
+                ["route" => "panel.event.other.delete", "title" => "Delete Event Other", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true],
+                ["route" => "panel.event.other.generatestatus", "title" => "Generate Status Event Other", "action" => "generatestatus", "select" => false, "confirm" => false, "multiple" => false]
             ]
         ];
     }
@@ -252,6 +254,17 @@ class EventOtherController extends Controller
             'pnotify' => true,
             'pnotify_type' => 'success',
             'pnotify_text' => 'Success delete event Other'
+        ];
+    }
+
+    public function generatestatus(Request $input)
+    {
+        Artisan::call('EventOther:status_update');
+        return [
+            'rebuildTable' => true,
+            'pnotify' => true,
+            'pnotify_type' => 'success',
+            'pnotify_text' => 'Success generate status event other'
         ];
     }
 }

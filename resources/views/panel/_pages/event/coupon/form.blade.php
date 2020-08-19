@@ -6,10 +6,16 @@
 		<input type="hidden" name="id" class="input">
 		<div class="card-body">
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-12">
 					<div class="form-group">
 						<label>Title</label>
 						<input readonly name="title" type="text" class="form-control input">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>Max Coupon</label>
+						<input readonly name="max_coupon" type="number" min="1" class="form-control input">
 					</div>
 				</div>
 				<div class="col-sm-6">

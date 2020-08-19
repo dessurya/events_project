@@ -76,7 +76,9 @@ class SeederFeed extends Seeder
     private function interfaceConfig(){
         $interfaceConfig = [
             ['type' => 'picture', 'name' => 'logo', 'key' => 'logo'],
+            ['type' => 'picture', 'name' => 'icon', 'key' => 'icon'],
             ['type' => 'text', 'name' => 'title', 'key' => 'title'],
+            ['type' => 'text', 'name' => 'description', 'key' => 'description'],
             ['type' => 'content', 'name' => 'about us', 'key' => 'about_us'],
             ['type' => 'content', 'name' => 'contact us', 'key' => 'contact_us'],
             ['type' => 'content', 'name' => 'footer', 'key' => 'footer']

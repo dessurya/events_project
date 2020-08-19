@@ -13,6 +13,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::name('site.')->group(function(){
+    Route::get('/', 'Site\HomeController@index')->name('home.index');
+
+    Route::name('event.')->prefix('event/')->group(function(){
+        Route::get('/', 'Site\EventController@index')->name('index');
+        Route::get('/ongoing', 'Site\EventController@ongoing')->name('ongoing');
+        Route::post('/ongoing/load', 'Site\EventController@ongoingLoad')->name('ongoingLoad');
+        Route::get('/upcomming', 'Site\EventController@upcomming')->name('upcomming');
+        Route::post('/upcomming/load', 'Site\EventController@upcommingLoad')->name('upcommingLoad');
+        Route::get('/past', 'Site\EventController@past')->name('past');
+        Route::post('/past/load', 'Site\EventController@pastLoad')->name('pastLoad');
+        Route::get('/find', 'Site\EventController@search')->name('search');
+        Route::post('/find', 'Site\EventController@searchLoad')->name('searchLoad');
+        Route::get('/{type}/{encode}', 'Site\EventController@show')->name('show');
+        Route::post('/registration', 'Site\EventController@registration')->name('registration');
+    });
+    Route::get('/contact-us', 'Site\HomeController@contact')->name('contact.index');
+});
+
 Route::name('panel.')->prefix('panel/')->group(function(){
     Route::get('/', 'Panel\AuthController@redirectLogin');
     Route::get('login', 'Panel\AuthController@login')->name('login');
@@ -91,6 +110,7 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/leaderboard', 'Panel\EventTournamentController@leaderboard')->name('leaderboard');
                 Route::post('/leaderboard/add-point', 'Panel\EventTournamentController@leaderboardAddPoint')->name('leaderboardAddPoint');
                 Route::post('/leaderboard/generate-rank', 'Panel\EventTournamentController@leaderboardGenerateRank')->name('leaderboardGenerateRank');
+                Route::post('/generatestatus', 'Panel\EventTournamentController@generatestatus')->name('generatestatus');
             });
             Route::name('coupon.')->prefix('coupon/')->group(function(){
                 Route::get('/list', 'Panel\EventCouponController@list')->name('list');
@@ -100,6 +120,7 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/delete', 'Panel\EventCouponController@delete')->name('delete');
                 Route::post('/gift', 'Panel\EventCouponController@gift')->name('gift');
                 Route::post('/gifted', 'Panel\EventCouponController@gifted')->name('gifted');
+                Route::post('/generatestatus', 'Panel\EventCouponController@generatestatus')->name('generatestatus');
             });
             Route::name('other.')->prefix('other/')->group(function(){
                 Route::get('/list', 'Panel\EventOtherController@list')->name('list');
@@ -107,6 +128,7 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/form', 'Panel\EventOtherController@form')->name('form');
                 Route::post('/store', 'Panel\EventOtherController@store')->name('store');
                 Route::post('/delete', 'Panel\EventOtherController@delete')->name('delete');
+                Route::post('/generatestatus', 'Panel\EventOtherController@generatestatus')->name('generatestatus');
             });
             Route::name('history.')->prefix('history/')->group(function(){
                 Route::get('/list', 'Panel\EventHistoryController@list')->name('list');

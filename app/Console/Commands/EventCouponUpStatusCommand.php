@@ -5,24 +5,24 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use App\Models\MasterStatusSelf;
-use App\Models\EventTournament;
+use App\Models\EventCoupon;
 use Carbon\Carbon;
 
-class EventTournamentToUpStatusCommand extends Command
+class EventCouponUpStatusCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'tourneTo:status_update';
+    protected $signature = 'EventCoupon:status_update';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Event Tournamen TO Generate Status';
+    protected $description = 'Event Coupon Generate Status';
 
     /**
      * Create a new command instance.
@@ -42,14 +42,14 @@ class EventTournamentToUpStatusCommand extends Command
     public function handle()
     {
         $date = Carbon::now()->format('Y-m-d');
-        $events = EventTournament::whereNotIn('flag_status', [6])->get();
+        $events = EventCoupon::whereNotIn('flag_status', [6])->get();
         foreach ($events as $event) {
             if (
                 ($event->flag_status == 1 and $date >= $event->start_registration) or
                 ($event->flag_status == 2 and $date >= $event->end_registration) or
-                ($event->flag_status == 3 and $date >= $event->start_activity) or
-                ($event->flag_status == 4 and $date >= $event->end_activity) or
-                ($event->flag_status == 5 and $date >= (new Carbon($event->end_activity))->addDays(1)->format('Y-m-d'))
+                ($event->flag_status == 3 and $date >= $event->start_active) or
+                ($event->flag_status == 4 and $date >= $event->end_active) or
+                ($event->flag_status == 5 and $date >= (new Carbon($event->end_active))->addDays(1)->format('Y-m-d'))
             ) {
                 $this->nextStatus($event);
             }
@@ -64,6 +64,6 @@ class EventTournamentToUpStatusCommand extends Command
             'parent_id'=>1,
             'self_id'=>$event->flag_status
         ])->first()->value;
-        Log::notice('event tournament to : '.$event->title.' become '.$newSt);
+        Log::notice('event coupon : '.$event->title.' become '.$newSt);
     }
 }
