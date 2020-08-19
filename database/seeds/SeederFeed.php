@@ -389,10 +389,10 @@ class SeederFeed extends Seeder
     private function MasterStatusSelf(){
         $MasterStatusSelf = [
             ['parent_id'=>1,'self_id'=>1,'value'=>'Waiting'],
-            ['parent_id'=>1,'self_id'=>2,'value'=>'Start Registration'],
-            ['parent_id'=>1,'self_id'=>3,'value'=>'End Registration'],
-            ['parent_id'=>1,'self_id'=>4,'value'=>'Start Event'],
-            ['parent_id'=>1,'self_id'=>5,'value'=>'End Event'],
+            ['parent_id'=>1,'self_id'=>2,'value'=>'Registration Start'],
+            ['parent_id'=>1,'self_id'=>3,'value'=>'Registration End'],
+            ['parent_id'=>1,'self_id'=>4,'value'=>'Event Start'],
+            ['parent_id'=>1,'self_id'=>5,'value'=>'Event End'],
             ['parent_id'=>1,'self_id'=>6,'value'=>'Close'],
             ['parent_id'=>2,'self_id'=>1,'value'=>'Not Start'],
             ['parent_id'=>2,'self_id'=>2,'value'=>'Waiting'],

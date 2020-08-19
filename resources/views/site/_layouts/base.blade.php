@@ -23,6 +23,12 @@
 				/* font-family: 'Public Sans', sans-serif; */
 				font-family: 'Roboto Slab', serif;
 			}
+			#footer{
+				padding: 16px 0;
+			}
+			#footer p{
+				margin: 0;
+			}
 			.hide{
 				display :none;
 			}
@@ -49,6 +55,11 @@
         @include('site._layouts.navbar')
         {{ App\Http\Controllers\Site\HomeController::runningTextGet() }}
         @stack('content')
+		<div id="footer" class="bg-dark text-white">
+			<div class="container">
+			{!! App\Http\Controllers\Site\HomeController::interfaceGetFooter() !!}
+			</div>
+		</div>
 		<div id="loading-page">
             <div class="dis-table">
                 <div class="row">

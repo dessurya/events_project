@@ -44,6 +44,13 @@
     #title{
         padding : 5px 0;
     }
+
+    @media (max-width: 812px) { /* Mobile landscape and potrait */
+        .grid-container{
+            display: block;
+            grid-template-columns: none;
+        }
+    }
 </style>
 @endpush
 
@@ -89,7 +96,7 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
             <h5 class="text-center">{{ Str::title($data->website) }}</h5>
         </div>
         <div class="img d-block w-100" title="{{ $data->title }}"
-        @if(!empty($event->picture))
+        @if(!empty($data->picture))
         style="background-image : url({{ $data->picture }})"
         @else
         style="background-image : url({{ asset('images/manandapple.jpg') }})"

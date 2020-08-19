@@ -191,7 +191,7 @@ class EventController extends Controller
             $param['participants'] = ViewEventTournamentParticipants::where([
                 'event_id' => base64_decode($encode),
                 'participants_status_id' => 3
-                ])->orderBy('participants_rank_board', 'asc')->orderBy('created_at', 'asc')->get();
+                ])->whereNotNull('participants_rank_board')->orderBy('participants_rank_board', 'asc')->orderBy('created_at', 'asc')->get();
         } else if (base64_decode($type) == 2) {
             $param['participants'] = ViewEventCouponRegistration::where([
                 'event_id' => base64_decode($encode),
@@ -204,6 +204,19 @@ class EventController extends Controller
 
     public function registration(Request $input)
     {
+        $data = ViewHistoryEvent::where([
+            'event_id' => $input->event_type,
+            'id' => $input->event_id
+        ])->first();
+
+        if (in_array($data->status_id, [5,6])) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'This event is close or end'
+            ];
+        }
+
         if ($input->form == 'find') {
             $Participants = Participants::where('username', $input->username)->get();
             if (count($Participants) == 1) {

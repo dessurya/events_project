@@ -28,9 +28,12 @@
         event.preventDefault();
         var input = {};
         input['page'] = parseInt($(this).data('page'))+1;
-        var search = window.location.href.split('?')[1].split('=')[1];
-        if (search.length > 0) {
-            input['search'] = search;
+        var search = window.location.href.split('?')
+        if (search.length == 2) {
+            search = search[1].split('=')[1];
+            if (search.length > 0) {
+                input['search'] = search;
+            }
         }
         postData(input, $(this).attr('href'));
     });

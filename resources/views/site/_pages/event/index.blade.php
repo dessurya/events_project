@@ -19,6 +19,9 @@ Our Event
         background-size: cover;
         background-repeat: no-repeat;
     }
+    h3{
+        margin: 20px 0;
+    }
 </style>
 @endpush
 
@@ -30,17 +33,17 @@ Our Event
     <h2 class="text-center">Our Event</h2>
 
     <div class="container">
-        <h3>On Going</h3>
+        <h3 class="text-center">On Going</h3>
         <div class="row">
             @foreach($events['ongoing'] as $event)
             @include('site._componen.event-card', ['event'=>$event])
             @endforeach
-            <a href="{{ route('site.event.ongoing') }}" class="btn btn-outline-primary btn-block">View More</a>
         </div>
+        <a href="{{ route('site.event.ongoing') }}" class="btn btn-outline-primary btn-block">View More</a>
     </div>
 
     <div class="container">
-        <h3>Upcomming</h3>
+        <h3 class="text-center">Upcomming</h3>
         <div class="row">
             @foreach($events['upcomming'] as $event)
             @include('site._componen.event-card', ['event'=>$event])
@@ -50,7 +53,7 @@ Our Event
     </div>
 
     <div class="container">
-        <h3>Past</h3>
+        <h3 class="text-center">Past</h3>
         <div class="row">
             @foreach($events['past'] as $event)
             @include('site._componen.event-card', ['event'=>$event])

@@ -16,8 +16,7 @@ class HomeController extends Controller
     {
         $MainSlider = MainSlider::orderBy('order','asc')->get();
         $InterfaceConfig = [
-            'about_us' => InterfaceConfig::where('key','about_us')->first()->content,
-            'footer' => InterfaceConfig::where('key','footer')->first()->content
+            'about_us' => InterfaceConfig::where('key','about_us')->first()->content
         ];
         return view('site._pages.home.index', compact('MainSlider', 'InterfaceConfig'));
     }
@@ -43,6 +42,12 @@ class HomeController extends Controller
     public static function interfaceGetDescription()
     {
         $InterfaceConfig = InterfaceConfig::where('key','description')->first();
+        echo $InterfaceConfig->content;
+    }
+
+    public static function interfaceGetFooter()
+    {
+        $InterfaceConfig = InterfaceConfig::where('key','footer')->first();
         echo $InterfaceConfig->content;
     }
 

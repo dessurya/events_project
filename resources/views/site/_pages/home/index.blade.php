@@ -7,7 +7,7 @@ Home
 @push('link')
 <style type="text/css">
     .carousel .carousel-inner .carousel-item .img{
-        height: 538px;
+        height: 539px;
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -36,6 +36,13 @@ Home
     .container > div{
         padding : 10px 20px;
     }
+
+    @media (max-width: 812px) { /* Mobile landscape and potrait */
+        .grid-container{
+            display: block;
+            grid-template-columns: none;
+        }
+    }
 </style>
 @endpush
 
@@ -56,7 +63,6 @@ Home
         </div>
         <div id="interface" class="container">
             <div id="about_us">{!! $InterfaceConfig['about_us'] !!}</div>
-            <div id="footer">{!! $InterfaceConfig['footer'] !!}</div>
         </div>
     </div>
     <div id="EventOGU">
