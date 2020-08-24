@@ -53,7 +53,7 @@ class DashboardController extends Controller
     				'number' => EventTournament::where('flag_status',6)->count()
     			]
     		],
-			'new_regiter_tourne_to' => EventTournamentRegistration::where('status','WAITING')->count(),
+			'new_regiter_tourne_to' => EventTournamentRegistration::where('status',1)->count(),
 			'count_event_coupon' => [
     			[
     				'bg_class' => 'bg-danger',
@@ -106,7 +106,7 @@ class DashboardController extends Controller
     				'number' => EventCouponRegistration::where('status',3)->count()
 				]
 			],
-			'new_regiter_coupon' => EventCouponRegistration::where('status','WAITING')->count(),
+			'new_regiter_coupon' => EventCouponRegistration::where('status',1)->count(),
 			'participate_coupon' => [
 				[
     				'bg_class' => 'bg-secondary',
