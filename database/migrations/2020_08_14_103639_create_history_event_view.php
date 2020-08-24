@@ -13,7 +13,7 @@ class CreateHistoryEventView extends Migration
      */
     public function up()
     {
-        DB::statement("CREATE OR REPLACE VIEW v_history_event AS (
+        DB::statement("CREATE OR REPLACE VIEW `v_history_event` AS 
                 SELECT
                     a.id, 
                     a.title, 
@@ -76,7 +76,6 @@ class CreateHistoryEventView extends Migration
                     v_event_other a
                 LEFT JOIN
                     event_other b on a.id = b.id
-            )
         ");
     }
 
