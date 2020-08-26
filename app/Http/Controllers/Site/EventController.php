@@ -10,6 +10,9 @@ use App\Models\ViewEventTournamentParticipants;
 use App\Models\ViewEventCouponRegistration;
 use App\Models\EventTournamentRegistration;
 use App\Models\EventCouponRegistration;
+use App\Models\EventTournamentWebsite;
+use App\Models\EventCouponWebsite;
+use App\Models\EventOtherWebsite;
 
 class EventController extends Controller
 {
@@ -185,6 +188,10 @@ class EventController extends Controller
             'event_id'=>base64_decode($type),
             'id'=>base64_decode($encode)
         ])->first();
+        
+        if ($data->event_id == 1) { $website = EventTournamentWebsite::with('website')->where('event_id',$data->id)->get(); }
+        else if ($data->event_id == 2) { $website = EventCouponWebsite::with('website')->where('event_id',$data->id)->get(); }
+        else if ($data->event_id == 3) { $website = EventOtherWebsite::with('website')->where('event_id',$data->id)->get(); }
 
         $param = [];
         if (base64_decode($type) == 1) {
@@ -198,8 +205,7 @@ class EventController extends Controller
                 'participants_status_id' => 3
                 ])->orderBy('confirm_at', 'asc')->get();
         }
-        return view('site._pages.event.show', compact('data','param'));
-        dd($data);
+        return view('site._pages.event.show', compact('data','param','website'));
     }
 
     public function registration(Request $input)

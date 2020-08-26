@@ -93,7 +93,6 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
     <div id="MainContent" class="container">
         <div id="title">
             <h2 class="text-center">{{ Str::title($data->title) }}</h2>
-            <h5 class="text-center">{{ Str::title($data->website) }}</h5>
         </div>
         <div class="img d-block w-100" title="{{ $data->title }}"
         @if(!empty($data->picture))
@@ -106,6 +105,11 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
             <p class="card-text text-center"><small class="text-muted">
                 @if(!empty($data->start_registration) and !empty($data->end_registration))Registration : {{ $data->start_registration.' - '.$data->end_registration }} | @endif<span class="badge {{ $data->status_id == 2 ? 'badge-danger' : 'badge-info'}}">{{ $data->status }}</span> | {{ $data->start_event.' - '.$data->end_event }} : Activity
             </small></p>
+            <div class="text-center">
+                @foreach($website as $item)
+                <a href="{{ empty($item->website->url) ? '#' : $item->website->url }}" class="badge badge-success">{{ $item->website->name }}</a>
+                @endforeach
+            </div>
             <div>{!! $data->description !!}</div>
             <div>{!! $data->terms_and_conditions !!}</div>
             <hr>
