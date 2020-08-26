@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use App\Models\EventCoupon;
+use App\Models\EventCouponWebsite;
 use App\Models\EventCouponRegistration;
 use App\Models\ViewEventCoupon;
 use App\Models\ViewEventCouponRegistration;
@@ -88,7 +89,7 @@ class EventCouponController extends Controller
             'title' => 'Form Event Coupon',
             'action' => 'panel.event.coupon.store',
             'readonly' => [],
-            'required' => ['title', 'website_id', 'start_active', 'start_registration', 'end_active', 'end_registration', 'max_coupon']
+            'required' => ['title', 'website', 'start_active', 'start_registration', 'end_active', 'end_registration', 'max_coupon']
         ];
     }
 
@@ -177,14 +178,20 @@ class EventCouponController extends Controller
         $tab_show = $this->pageConfig();
         $tab_show = '#'.$tab_show['tabs']['tab'][1]['id'];
         $find = null;
+        $select2val = [];
         if ($input->id != "true") {
-            $find = EventCoupon::find($input->id);
+            $find = EventCoupon::with('websites')->find($input->id);
+            foreach ($find->websites as $web) {
+                $select2val[] = $web->website_id;
+            }
         }
         return [
         	'summernote' => true,
         	'summernote_target' => ['textarea.summernote'],
             'show_tab' => true,
             'show_tab_target' => $tab_show,
+            'select2_valset' => true,
+            'select2_valset_data' => $select2val,
             'fill_form' => true,
             'fill_form_config' => [
                 'target' => 'form#'.$formConfig['id'],
@@ -234,7 +241,6 @@ class EventCouponController extends Controller
         }
         $store->title = $input->title;
         $store->max_coupon = $input->max_coupon;
-        $store->website_id = $input->website_id;
         $store->terms_and_conditions = $input->terms_and_conditions;
         $store->description = $input->description;
         $store->end_active = $input->end_active;
@@ -244,6 +250,10 @@ class EventCouponController extends Controller
         $store->max_coupon = $input->max_coupon;
         $store->save();
         $find = EventCoupon::find($store->id);
+        EventCouponWebsite::where('event_id',$find->id)->delete();
+        foreach ($input->website as $web_id) {
+            EventCouponWebsite::create(['event_id'=>$find->id, 'website_id'=>$web_id]);
+        }
         $formConfig = $this->formConfig();
         $tab_show = $this->pageConfig();
         $tab_show = '#'.$tab_show['tabs']['tab'][0]['id'];
@@ -270,6 +280,9 @@ class EventCouponController extends Controller
     public function delete(Request $input)
     {
         foreach ($this->getDataIn($input->id) as $list) {
+            EventCouponWebsite::where('event_id',$list->id)->delete();
+            EventCouponRegistration::where('event_coupon_id',$list->id)->delete();
+            ParticipantsCoupon::where('event_coupon_id',$list->id)->delete();
         	if (!empty($list->picture)) {
         		$picture = explode('/public/', $list->picture);
         		if (file_exists($picture[1])) {
@@ -329,10 +342,9 @@ class EventCouponController extends Controller
         foreach ($input->coupons as $coupon) {
             $register = EventCouponRegistration::find($coupon['id']);
             $gifts = explode('^',$coupon['coupon']);
-            foreach ($gifts as $gift) {
-                if (!empty($gift)) {
+            for ($i=0; $i < $coupon['coupon']; $i++) { 
                     $ParticipantsCoupon = new ParticipantsCoupon;
-                    $ParticipantsCoupon->coupon_code = $gift;
+                    $ParticipantsCoupon->coupon_code = $event->id.'.'.$register->participants_id.base64_encode(rand(10,99)).$event->max_coupon.'-'.Carbon::now()->format('Y_m_d');
                     $ParticipantsCoupon->participants_id = $register->participants_id;
                     $ParticipantsCoupon->participants_username = $register->participants_username;
                     $ParticipantsCoupon->event_coupon_id = $register->event_coupon_id;
@@ -341,7 +353,6 @@ class EventCouponController extends Controller
                     $event->save();
                     $register->have_coupon += 1;
                     $register->save();
-                }
             }
         }
         return [

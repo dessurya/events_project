@@ -32,14 +32,12 @@ class CreateEventTournamentToParticipantsView extends Migration
                     ett.title as event_tittle,
                     es.value as event_status,
                     es.self_id as event_status_id,
-                    w.name as event_website,
                     ettr.created_at as created_at
                 FROM event_tournament_to_registration ettr
                 LEFT JOIN participants p ON p.id = ettr.participants_id
                 LEFT JOIN event_tournament_to ett ON ett.id = ettr.event_tournament_id
                 LEFT JOIN master_status_self es ON es.self_id = ett.flag_status and es.parent_id = 1
                 LEFT JOIN master_status_self ps ON ps.self_id = ettr.status and ps.parent_id = 3
-                LEFT JOIN website w ON w.id = ett.website_id
             )
         ");
     }

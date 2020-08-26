@@ -16,7 +16,7 @@ Dashboard
                     <div class="icon">
                         <i class="fas fa-user-plus"></i>
                     </div>
-                    <a href="{{ route('panel.register.tournament.list') }}" class="small-box-footer">
+                    <a href="{{ route('panel.register.tournament.list.new') }}" class="small-box-footer">
                         More info <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
@@ -30,7 +30,7 @@ Dashboard
                     <div class="icon">
                         <i class="fas fa-user-plus"></i>
                     </div>
-                    <a href="{{ route('panel.register.coupon.list') }}" class="small-box-footer">
+                    <a href="{{ route('panel.register.coupon.list.new') }}" class="small-box-footer">
                         More info <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
@@ -107,7 +107,7 @@ Dashboard
                     </div>
                     @endforeach
                     @foreach($config['participate_coupon'] as $item)
-                    <div class="col-md-2 col-sm-3 col-12">
+                    <div class="col-md-3 col-sm-3 col-12">
                         <div class="info-box {{ $item['bg_class'] }}">
                             <span class="info-box-icon"><i class="fa fa-{{ $item['icon'] }}"></i></span>
                             <div class="info-box-content">

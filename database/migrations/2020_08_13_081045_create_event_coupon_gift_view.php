@@ -31,14 +31,12 @@ class CreateEventCouponGiftView extends Migration
                     ec.title as event_tittle,
                     es.value as event_status,
                     es.self_id as event_status_id,
-                    w.name as event_website,
                     ecr.created_at as created_at
                 FROM event_coupon_registration ecr
                 LEFT JOIN participants p ON p.id = ecr.participants_id
                 LEFT JOIN event_coupon ec ON ec.id = ecr.event_coupon_id
                 LEFT JOIN master_status_self es ON es.self_id = ec.flag_status and es.parent_id = 1
                 LEFT JOIN master_status_self ps ON ps.self_id = ecr.status and ps.parent_id = 4
-                LEFT JOIN website w ON w.id = ec.website_id
             )
         ");
     }

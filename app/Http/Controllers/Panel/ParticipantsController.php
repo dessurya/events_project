@@ -148,7 +148,6 @@ class ParticipantsController extends Controller
                 $html .= "<tr>";
                 $html .= "<td>".$row->event_status."</td>";
                 $html .= "<td>".$row->event_tittle."</td>";
-                $html .= "<td>".$row->event_website."</td>";
                 $html .= "<td>".$row->participants_status."</td>";
                 $html .= "<td>".$row->participants_point_board."</td>";
                 $html .= "<td>".$row->participants_rank_board."</td>";
@@ -187,7 +186,6 @@ class ParticipantsController extends Controller
                 $html .= "<td>".$row->confirm_at."</td>";
                 $html .= "<td>".$row->event_coupon_title."</td>";
                 $html .= "<td>".$row->event_coupon_status."</td>";
-                $html .= "<td>".$row->event_coupon_website."</td>";
                 $html .= "<td>".$row->created_at."</td>";
                 $html .= "</tr>";
             }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use App\Models\EventOther;
+use App\Models\EventOtherWebsite;
 use App\Models\ViewEventOther;
 use App\Models\MasterWebsite;
 use Carbon\Carbon;
@@ -50,7 +51,6 @@ class EventOtherController extends Controller
             ],
             'componen' => [
                 ["data"=>"title","name"=>"title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"website","name"=>"website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"start_activity","name"=>"start_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"end_activity","name"=>"end_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
@@ -149,14 +149,20 @@ class EventOtherController extends Controller
         $tab_show = $this->pageConfig();
         $tab_show = '#'.$tab_show['tabs']['tab'][1]['id'];
         $find = null;
+        $select2val = [];
         if ($input->id != "true") {
-            $find = EventOther::find($input->id);
+            $find = EventOther::with('websites')->find($input->id);
+            foreach ($find->websites as $web) {
+                $select2val[] = $web->website_id;
+            }
         }
         return [
         	'summernote' => true,
         	'summernote_target' => ['textarea.summernote'],
             'show_tab' => true,
             'show_tab_target' => $tab_show,
+            'select2_valset' => true,
+            'select2_valset_data' => $select2val,
             'fill_form' => true,
             'fill_form_config' => [
                 'target' => 'form#'.$formConfig['id'],
@@ -205,13 +211,16 @@ class EventOtherController extends Controller
             $store->picture = $file_dir;
         }
         $store->title = $input->title;
-        $store->website_id = $input->website_id;
         $store->terms_and_conditions = $input->terms_and_conditions;
         $store->description = $input->description;
         $store->end_activity = $input->end_activity;
         $store->start_activity = $input->start_activity;
         $store->save();
         $find = EventOther::find($store->id);
+        EventOtherWebsite::where('event_id',$find->id)->delete();
+        foreach ($input->website as $web_id) {
+            EventOtherWebsite::create(['event_id'=>$find->id, 'website_id'=>$web_id]);
+        }
         $formConfig = $this->formConfig();
         $tab_show = $this->pageConfig();
         $tab_show = '#'.$tab_show['tabs']['tab'][0]['id'];
@@ -238,6 +247,7 @@ class EventOtherController extends Controller
     public function delete(Request $input)
     {
         foreach ($this->getDataIn($input->id) as $list) {
+            EventOtherWebsite::where('event_id',$list->id)->delete();
         	if (!empty($list->picture)) {
         		$picture = explode('/public/', $list->picture);
         		if (file_exists($picture[1])) {

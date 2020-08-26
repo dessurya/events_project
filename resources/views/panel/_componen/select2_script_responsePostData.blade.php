@@ -1,0 +1,1 @@
+if(data.select2_valset == true) { select2_valset(data.select2_valset_data); }

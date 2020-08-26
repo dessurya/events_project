@@ -44,7 +44,6 @@ class CouponController extends Controller
                 ["data"=>"confirm_at","name"=>"confirm_at","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"event_coupon_title","name"=>"event_coupon_title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"event_coupon_status","name"=>"event_coupon_status","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"event_coupon_website","name"=>"event_coupon_website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"participants_username","name"=>"participants_username","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"participants_name","name"=>"participants_name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"created_at","name"=>"created_at","searchable"=>true,"searchtype"=>"date","orderable"=>true]
@@ -107,9 +106,6 @@ class CouponController extends Controller
         }
         if (isset($input->event_coupon_status) and !empty($input->event_coupon_status)){
             $data->where('event_coupon_status', 'like', '%'.$input->event_coupon_status.'%');
-        }
-        if (isset($input->event_coupon_website) and !empty($input->event_coupon_website)){
-            $data->where('event_coupon_website', 'like', '%'.$input->event_coupon_website.'%');
         }
         $data = $data->paginate($paginate);
         return [

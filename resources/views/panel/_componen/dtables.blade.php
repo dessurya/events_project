@@ -3,16 +3,13 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <div id="dTableAction" class="input-group input-group-sm" style="float:left;">
+                    <div id="dTableAction" class="input-group">
                         <div class="input-group-append">
                             <button class="btn btn-info" onclick="rebuildTable()";>
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                             <button class="btn btn-info" onclick="toogleClass('hide', '#{{ $config['table_id'] }} input')";>
                                 <i class="fas fa-search"></i>
-                            </button>
-                            <button class="btn btn-info";>
-                                <i class="fas fa-tools"></i>
                             </button>
                             <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="true">
                                 <span class="sr-only">Toggle Dropdown</span>

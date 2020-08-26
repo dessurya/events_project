@@ -18,7 +18,6 @@ class CreateEventTournamentView extends Migration
                 SELECT 
                     ett.id as id,
                     title,
-                    w.name as website,
                     start_activity,
                     end_activity,
                     start_registration,
@@ -31,7 +30,6 @@ class CreateEventTournamentView extends Migration
                 FROM event_tournament_to ett
                 LEFT JOIN master_status_self es ON es.self_id = ett.flag_status and es.parent_id = 1
                 LEFT JOIN master_status_self gr ON gr.self_id = ett.generate_ranks and gr.parent_id = 2
-                LEFT JOIN website w ON w.id = ett.website_id
             )
         ");
     }

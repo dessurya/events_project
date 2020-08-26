@@ -7,7 +7,12 @@ use Carbon\Carbon;
 
 class EventTournament extends Model
 {
-	protected $table = 'event_tournament_to';
+    protected $table = 'event_tournament_to';
+    
+    public function websites()
+    {
+        return $this->hasMany('App\Models\EventTournamentWebsite', 'event_id', 'id');
+    }
 	public function getPictureAttribute($pic)
     {
         if (!empty($pic)) {

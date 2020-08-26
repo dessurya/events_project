@@ -1,14 +1,18 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Participants;
 use App\Models\InterfaceConfig;
 use App\Models\MasterWebsite;
 use App\Models\EventTournament;
+use App\Models\EventTournamentWebsite;
 use App\Models\EventTournamentRegistration;
 use App\Models\EventOther;
+use App\Models\EventOtherWebsite;
 use App\Models\EventCoupon;
+use App\Models\EventCouponWebsite;
 use App\Models\EventCouponRegistration;
 use App\Models\MasterStatusParent;
 use App\Models\MasterStatusSelf;
@@ -107,7 +111,6 @@ class SeederFeed extends Seeder
         $EventTournament = [
             [
                 'title' => 'event 001',
-                'website_id' => 1,
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-01-01'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-01-07'))->format('Y-m-d'),
@@ -116,7 +119,6 @@ class SeederFeed extends Seeder
                 'flag_status' => 6
             ],[
                 'title' => 'event 002',
-                'website_id' => 2,
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-08-17'))->format('Y-m-d'),
@@ -125,7 +127,6 @@ class SeederFeed extends Seeder
                 'flag_status' => 2
             ],[
                 'title' => 'event 003',
-                'website_id' => 3,
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
@@ -134,7 +135,6 @@ class SeederFeed extends Seeder
                 'flag_status' => 3
             ],[
                 'title' => 'event 004',
-                'website_id' => 3,
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-01'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
@@ -143,7 +143,6 @@ class SeederFeed extends Seeder
                 'flag_status' => 4
             ],[
                 'title' => 'event 005',
-                'website_id' => 2,
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-01'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
@@ -152,7 +151,6 @@ class SeederFeed extends Seeder
                 'flag_status' => 5
             ],[
                 'title' => 'event 006',
-                'website_id' => 1,
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-09-01'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-09-05'))->format('Y-m-d'),
@@ -160,11 +158,25 @@ class SeederFeed extends Seeder
                 'end_activity' => (new Carbon('2020-09-12'))->format('Y-m-d'),
                 'flag_status' => 1
             ]
-            
+        ];
+        $website = [
+            'event_001' => [1,2,3,4,5],
+            'event_002' => [2,3],
+            'event_003' => [1,4,5],
+            'event_004' => [4,5],
+            'event_005' => [1],
+            'event_006' => [1,2,5]
         ];
 
         foreach ($EventTournament as $store) {
-            EventTournament::create($store);
+            $store = EventTournament::create($store);
+            $web = $website[Str::slug($store->title,'_')];
+            foreach ($web as $item) {
+                EventTournamentWebsite::create([
+                    'event_id'=>$store->id,
+                    'website_id'=>$item
+                ]);
+            }
         }
     }
 
@@ -276,36 +288,48 @@ class SeederFeed extends Seeder
         $EventOther = [
             [
                 'title' => 'event 001',
-                'website_id' => 1,
                 'start_activity' => (new Carbon('2020-06-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-06-17'))->format('Y-m-d'),
                 'flag_status' => 6
             ],
             [
                 'title' => 'event 002',
-                'website_id' => 2,
                 'start_activity' => (new Carbon('2020-08-01'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-13'))->format('Y-m-d'),
                 'flag_status' => 5
             ],
             [
                 'title' => 'event 003',
-                'website_id' => 3,
                 'start_activity' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-17'))->format('Y-m-d'),
                 'flag_status' => 4
             ],
             [
                 'title' => 'event 004',
-                'website_id' => 4,
                 'start_activity' => (new Carbon('2020-10-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-10-17'))->format('Y-m-d'),
                 'flag_status' => 1
             ],
         ];
+
+        $website = [
+            'event_001' => [1,2,3,4,5],
+            'event_002' => [2,3],
+            'event_003' => [1,4,5],
+            'event_004' => [4,5],
+            'event_005' => [1],
+            'event_006' => [1,2,5]
+        ];
         
         foreach ($EventOther as $store) {
-            EventOther::create($store);
+            $store = EventOther::create($store);
+            $web = $website[Str::slug($store->title,'_')];
+            foreach ($web as $item) {
+                EventOtherWebsite::create([
+                    'event_id'=>$store->id,
+                    'website_id'=>$item
+                ]);
+            }
         }
     }
 
@@ -313,7 +337,6 @@ class SeederFeed extends Seeder
         $EventCoupon = [
             [
                 'title' => 'coupon 001',
-                'website_id' => 1,
                 'start_registration' => (new Carbon('2020-01-01'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-01-07'))->format('Y-m-d'),
                 'start_active' => (new Carbon('2020-01-10'))->format('Y-m-d'),
@@ -322,7 +345,6 @@ class SeederFeed extends Seeder
                 'flag_status' => 6
             ],[
                 'title' => 'coupon 002',
-                'website_id' => 2,
                 'start_registration' => (new Carbon('2020-07-03'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-07-07'))->format('Y-m-d'),
                 'start_active' => (new Carbon('2020-07-10'))->format('Y-m-d'),
@@ -331,7 +353,6 @@ class SeederFeed extends Seeder
                 'flag_status' => 5
             ],[
                 'title' => 'coupon 003',
-                'website_id' => 3,
                 'start_registration' => (new Carbon('2020-07-03'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-07-20'))->format('Y-m-d'),
                 'start_active' => (new Carbon('2020-08-10'))->format('Y-m-d'),
@@ -340,7 +361,6 @@ class SeederFeed extends Seeder
                 'flag_status' => 4
             ],[
                 'title' => 'coupon 004',
-                'website_id' => 2,
                 'start_registration' => (new Carbon('2020-08-03'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'start_active' => (new Carbon('2020-09-10'))->format('Y-m-d'),
@@ -351,8 +371,22 @@ class SeederFeed extends Seeder
             
         ];
 
+        $website = [
+            'coupon_001' => [1,2,3,4,5],
+            'coupon_002' => [2,3],
+            'coupon_003' => [1,4,5],
+            'coupon_004' => [4,5]
+        ];
+
         foreach ($EventCoupon as $store) {
-            EventCoupon::create($store);
+            $store = EventCoupon::create($store);
+            $web = $website[Str::slug($store->title,'_')];
+            foreach ($web as $item) {
+                EventCouponWebsite::create([
+                    'event_id'=>$store->id,
+                    'website_id'=>$item
+                ]);
+            }
         }
     }
 

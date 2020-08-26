@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use App\Models\EventTournament;
+use App\Models\EventTournamentWebsite;
 use App\Models\EventTournamentRegistration;
 use App\Models\ViewEventTournament;
 use App\Models\ViewEventTournamentParticipants;
@@ -59,7 +60,6 @@ class EventTournamentController extends Controller
             ],
             'componen' => [
                 ["data"=>"title","name"=>"title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"website","name"=>"website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"generate_ranks","name"=>"generate_ranks","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"prize","name"=>"prize","searchable"=>true,"searchtype"=>"text","orderable"=>true],
@@ -86,7 +86,7 @@ class EventTournamentController extends Controller
             'title' => 'Form Tournament TO',
             'action' => 'panel.event.tournament.store',
             'readonly' => [],
-            'required' => ['title', 'prize', 'website_id', 'start_activity', 'start_registration', 'end_activity', 'end_registration']
+            'required' => ['title', 'prize', 'website', 'start_activity', 'start_registration', 'end_activity', 'end_registration']
         ];
     }
 
@@ -178,22 +178,27 @@ class EventTournamentController extends Controller
         $tab_show = $this->pageConfig();
         $tab_show = '#'.$tab_show['tabs']['tab'][1]['id'];
         $find = null;
+        $select2val = [];
         if ($input->id != "true") {
-            $find = EventTournament::find($input->id);
+            $find = EventTournament::with('websites')->find($input->id);
+            foreach ($find->websites as $web) {
+                $select2val[] = $web->website_id;
+            }
         }
         return [
         	'summernote' => true,
         	'summernote_target' => ['textarea.summernote'],
             'show_tab' => true,
             'show_tab_target' => $tab_show,
+            'select2_valset' => true,
+            'select2_valset_data' => $select2val,
             'fill_form' => true,
             'fill_form_config' => [
                 'target' => 'form#'.$formConfig['id'],
                 'readonly' => $formConfig['readonly'],
                 'required' => $formConfig['required'],
                 'data' => $find
-            ],
-            $input->all()
+            ]
         ];
     }
 
@@ -234,7 +239,6 @@ class EventTournamentController extends Controller
             $store->picture = $file_dir;
         }
         $store->title = $input->title;
-        $store->website_id = $input->website_id;
         $store->prize = $input->prize;
         $store->terms_and_conditions = $input->terms_and_conditions;
         $store->description = $input->description;
@@ -244,6 +248,10 @@ class EventTournamentController extends Controller
         $store->start_registration = $input->start_registration;
         $store->save();
         $find = EventTournament::find($store->id);
+        EventTournamentWebsite::where('event_id',$find->id)->delete();
+        foreach ($input->website as $web_id) {
+            EventTournamentWebsite::create(['event_id'=>$find->id, 'website_id'=>$web_id]);
+        }
         $formConfig = $this->formConfig();
         $tab_show = $this->pageConfig();
         $tab_show = '#'.$tab_show['tabs']['tab'][0]['id'];
@@ -270,6 +278,8 @@ class EventTournamentController extends Controller
     public function delete(Request $input)
     {
         foreach ($this->getDataIn($input->id) as $list) {
+            EventTournamentWebsite::where('event_id',$list->id)->delete();
+            EventTournamentRegistration::where('event_tournament_id',$list->id)->delete();
         	if (!empty($list->picture)) {
         		$picture = explode('/public/', $list->picture);
         		if (file_exists($picture[1])) {

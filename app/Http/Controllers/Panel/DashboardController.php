@@ -107,38 +107,39 @@ class DashboardController extends Controller
 				]
 			],
 			'new_regiter_coupon' => EventCouponRegistration::where('status',1)->count(),
-			'participate_coupon' => [
-				[
-    				'bg_class' => 'bg-secondary',
-    				'icon' => 'coffee',
-    				'name' => 'All Coupon',
-    				'number' => ParticipantsCoupon::count()
-				],
-				[
-    				'bg_class' => 'bg-secondary',
-					'icon' => 'coffee',
-					'name' => 'Coupon Available',
-    				'number' => ParticipantsCoupon::where('coupon_status', 1)->count()
-    			],
-				[
-    				'bg_class' => 'bg-secondary',
-    				'icon' => 'coffee',
-    				'name' => 'Coupon Used Up',
-    				'number' => ParticipantsCoupon::where('coupon_status', 4)->count()
-    			],
-				[
-    				'bg_class' => 'bg-secondary',
-    				'icon' => 'coffee',
-    				'name' => 'Coupon Rejected',
-    				'number' => ParticipantsCoupon::where('coupon_status', 3)->count()
-    			],
-				[
-    				'bg_class' => 'bg-secondary',
-    				'icon' => 'coffee',
-    				'name' => 'Coupon Banned',
-    				'number' => ParticipantsCoupon::where('coupon_status', 2)->count()
-    			]
-			]
+			'participate_coupon' => []
+			// 'participate_coupon' => [
+			// 	[
+    		// 		'bg_class' => 'bg-secondary',
+    		// 		'icon' => 'coffee',
+    		// 		'name' => 'All Coupon',
+    		// 		'number' => ParticipantsCoupon::count()
+			// 	],
+			// 	[
+    		// 		'bg_class' => 'bg-secondary',
+			// 		'icon' => 'coffee',
+			// 		'name' => 'Coupon Available',
+    		// 		'number' => ParticipantsCoupon::where('coupon_status', 1)->count()
+    		// 	],
+			// 	[
+    		// 		'bg_class' => 'bg-secondary',
+    		// 		'icon' => 'coffee',
+    		// 		'name' => 'Coupon Used Up',
+    		// 		'number' => ParticipantsCoupon::where('coupon_status', 4)->count()
+    		// 	],
+			// 	[
+    		// 		'bg_class' => 'bg-secondary',
+    		// 		'icon' => 'coffee',
+    		// 		'name' => 'Coupon Rejected',
+    		// 		'number' => ParticipantsCoupon::where('coupon_status', 3)->count()
+    		// 	],
+			// 	[
+    		// 		'bg_class' => 'bg-secondary',
+    		// 		'icon' => 'coffee',
+    		// 		'name' => 'Coupon Banned',
+    		// 		'number' => ParticipantsCoupon::where('coupon_status', 2)->count()
+    		// 	]
+			// ]
     	];
         return view('panel._pages.dashboard.index', compact('config'));
     }

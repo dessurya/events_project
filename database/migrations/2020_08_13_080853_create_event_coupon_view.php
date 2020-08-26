@@ -21,7 +21,6 @@ class CreateEventCouponView extends Migration
                     max_coupon,
                     max_coupon-gifted_coupon as available_coupon,
                     gifted_coupon,
-                    w.name as website,
                     start_active,
                     end_active,
                     start_registration,
@@ -31,7 +30,6 @@ class CreateEventCouponView extends Migration
                     ett.created_at as created_at
                 FROM event_coupon ett
                 LEFT JOIN master_status_self es ON es.self_id = ett.flag_status and es.parent_id = 1
-                LEFT JOIN website w ON w.id = ett.website_id
             )
         ");
     }

@@ -107,7 +107,6 @@
 						        <tr>
 						          <th>Status Event</th>
 						          <th>Event</th>
-						          <th>Website</th>
 						          <th>Status Participants</th>
 						          <th>Point</th>
 						          <th>Rank</th>
@@ -119,7 +118,6 @@
 						      	<tr>
 						      		<td>{{ $row->event_status }}</td>
 						      		<td>{{ $row->event_tittle }}</td>
-						      		<td>{{ $row->event_website }}</td>
 						      		<td>{{ $row->participants_status }}</td>
 						      		<td>{{ $row->participants_point_board }}</td>
 						      		<td>{{ $row->participants_rank_board }}</td>
@@ -158,7 +156,6 @@
 						          <th>Confirm At</th>
 						          <th>Event Title</th>
 						          <th>Event Status</th>
-						          <th>Event Website</th>
 						          <th>Created At</th>
 						        </tr>
 						      </thead>
@@ -171,7 +168,6 @@
 						      		<td>{{ $row->confirm_at }}</td>
 						      		<td>{{ $row->event_coupon_title }}</td>
 						      		<td>{{ $row->event_coupon_status }}</td>
-						      		<td>{{ $row->event_coupon_website }}</td>
 						      		<td>{{ $row->created_at }}</td>
 						      	</tr>
 						      	@endforeach

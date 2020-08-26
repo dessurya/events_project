@@ -6,22 +6,22 @@
 		<input type="hidden" name="id" class="input">
 		<div class="card-body">
 			<div class="row">
-				<div class="col-sm-12">
+				<div class="col-sm-6">
 					<div class="form-group">
 						<label>Title</label>
-						<input readonly name="title" type="text" class="form-control input">
+						<input disabled name="title" type="text" class="form-control input">
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label>Prize</label>
-						<input readonly name="prize" type="number" class="form-control input">
+						<input disabled name="prize" type="number" class="form-control input">
 					</div>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-12">
 					<div class="form-group">
 						<label>Website</label>
-						<select readonly name="website_id" type="number" class="form-control input select">
+						<select disabled name="website" class="form-control input select2bs4" multiple="multiple">
 							@foreach($website as $list)
 							<option value="{{ $list->id }}">{{ $list->name }}</option>
 							@endforeach
@@ -31,25 +31,25 @@
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label>Registration Start On : </label>
-						<input readonly name="start_registration" type="date" class="form-control input date">
+						<input disabled name="start_registration" type="date" class="form-control input date">
 					</div>
 				</div>
                 <div class="col-sm-6">
 					<div class="form-group">
 						<label>Activity Start On : </label>
-						<input readonly name="start_activity" type="date" class="form-control input date">
+						<input disabled name="start_activity" type="date" class="form-control input date">
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label>Registration End On : </label>
-						<input readonly name="end_registration" type="date" class="form-control input date">
+						<input disabled name="end_registration" type="date" class="form-control input date">
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label>Activity End On : </label>
-						<input readonly name="end_activity" type="date" class="form-control input date">
+						<input disabled name="end_activity" type="date" class="form-control input date">
 					</div>
 				</div>
 				<div class="col-sm-12">

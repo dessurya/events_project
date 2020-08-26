@@ -43,15 +43,11 @@ class RegisterTournamentController extends Controller
                 ["data"=>"created_at","name"=>"created_at","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"participants_username","name"=>"participants_username","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"participants_name","name"=>"participants_name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"participants_status","name"=>"participants_status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
+                ["data"=>"participants_status","name"=>"participants_status","searchable"=>false,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"event_tittle","name"=>"event_tittle","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"event_status","name"=>"event_status","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"event_website","name"=>"event_website","searchable"=>true,"searchtype"=>"text","orderable"=>true]
+                ["data"=>"event_status","name"=>"event_status","searchable"=>true,"searchtype"=>"text","orderable"=>true]
             ],
-            'action' => [
-                ["route" => "panel.register.tournament.confirm", "title" => "Confirm Participants", "action" => "confirm", "select" => true, "confirm" => true, "multiple" => true],
-                ["route" => "panel.register.tournament.reject", "title" => "Reject Participants", "action" => "reject", "select" => true, "confirm" => true, "multiple" => true]
-            ]
+            'action' => []
         ];
     }
 
@@ -60,15 +56,54 @@ class RegisterTournamentController extends Controller
         return view('panel._componen.dtables', ['config' => $this->dtableConfig()])->render();
     }
 
-    public function list(Request $input)
+    public function newList(Request $input)
     {
         $config = [
             "page" => $this->pageConfig(),
             "dtable" => $this->dtableConfig()
         ];
+        $config["dtable"]["get_data_route"] = $config["dtable"]["get_data_route"].".new";
+        $config["dtable"]["action"] = [
+            ["route" => "panel.register.tournament.confirm", "title" => "Confirm Participants", "action" => "confirm", "select" => true, "confirm" => true, "multiple" => true],
+            ["route" => "panel.register.tournament.reject", "title" => "Reject Participants", "action" => "reject", "select" => true, "confirm" => true, "multiple" => true]
+        ];
+        $config["page"]["title"] = $config["page"]["title"]." (New Registration)";
+        $config["page"]["tabs"]["tab"][0]["content"] = view('panel._componen.dtables', ['config' => $config["dtable"]])->render();
+        return view('panel._pages.register.tournament.index', compact('config'));
+    }
+    public function rejectList(Request $input)
+    {
+        $config = [
+            "page" => $this->pageConfig(),
+            "dtable" => $this->dtableConfig()
+        ];
+        $config["page"]["title"] = $config["page"]["title"]." (Reject Registration)";
+        $config["dtable"]["get_data_route"] = $config["dtable"]["get_data_route"].".reject";
+        return view('panel._pages.register.tournament.index', compact('config'));
+    }
+    public function historyList(Request $input)
+    {
+        $config = [
+            "page" => $this->pageConfig(),
+            "dtable" => $this->dtableConfig()
+        ];
+        $config["dtable"]["get_data_route"] = $config["dtable"]["get_data_route"].".history";
+        $config["dtable"]["componen"][3] = ["data"=>"participants_status","name"=>"participants_status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"];
+        $config["page"]["title"] = $config["page"]["title"]." (History)";
+        $config["page"]["tabs"]["tab"][0]["content"] = view('panel._componen.dtables', ['config' => $config["dtable"]])->render();
         return view('panel._pages.register.tournament.index', compact('config'));
     }
 
+    public function newGetData(Request $input)
+    {
+        $input->participants_status = 'Waiting';
+        return $this->getData($input);
+    }
+    public function rejectGetData(Request $input)
+    {
+        $input->participants_status = 'Rejected';
+        return $this->getData($input);
+    }
     public function getData(Request $input)
     {
         $paginate = 10;
@@ -102,9 +137,6 @@ class RegisterTournamentController extends Controller
         }
         if (isset($input->event_status) and !empty($input->event_status)){
             $data->where('event_status', 'like', '%'.$input->event_status.'%');
-        }
-        if (isset($input->event_website) and !empty($input->event_website)){
-            $data->where('event_website', 'like', '%'.$input->event_website.'%');
         }
         $data = $data->paginate($paginate);
         return [

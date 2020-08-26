@@ -78,7 +78,7 @@ function getSelectedRowId(data) {
     });
     var idDL = idData.length - 1;
     idData = idData.substr(0, idDL);
-    if (idData === null || idData === '' || idData === undefined) {
+    if (idData === null || idData === '' || idData === undefined || idData === "undefined" || idData.length == 0) {
         pnotify({ "title": "info", "type": "error", "text": "No Data Selected!" });
         return false;
     } else if (data.multiple == false && idData.indexOf('^') > -1) {
@@ -94,7 +94,7 @@ function show_tab(target) {
 
 function fill_form(data) {
     $(data.target).find('button').removeAttr('disabled');
-    $(data.target).find('.input').val(null).removeAttr('required').removeAttr('readonly');
+    $(data.target).find('.input').val(null).removeAttr('required').removeAttr('readonly').removeAttr('disabled');
     $.each(data.required, function(key, target) {
         $('[name=' + target + ']').attr('required', 'true');
     });
@@ -184,6 +184,12 @@ $(document).on('submit', 'form.postData', function() {
             }
         } else if ($(this).hasClass('select')) {
             input[$(this).attr('name')] = $(this).find('option:selected').val();
+        } else if ($(this).hasClass('select2bs4')) {
+            var param = [];
+            $.each($(this).find('option:selected'), function() {
+                param.push($(this).val());
+            });
+            input[$(this).attr('name')] = param;
         }
     });
     pnotifyConfirm({

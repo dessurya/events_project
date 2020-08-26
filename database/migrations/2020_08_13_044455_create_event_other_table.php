@@ -22,7 +22,6 @@ class CreateEventOtherTable extends Migration
             $table->text('terms_and_conditions')->nullable();
             $table->text('picture')->nullable();
             $table->integer('flag_status')->comment('master_status_parent : 1')->default('1');
-            $table->integer('website_id')->nullable();
             $table->timestamps();
         });
     }

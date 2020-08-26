@@ -6,10 +6,12 @@
 
 @push('link')
 @include('panel._componen.summernote_link')
+@include('panel._componen.select2_link')
 @endpush
 
 @push('script')
 @include('panel._componen.summernote_script', ['config' => $config['dtable']])
+@include('panel._componen.select2_script', ['config' => $config['dtable']])
 @include('panel._componen.dtables_script', ['config' => $config['dtable']])
 <script type="text/javascript">
 	function validateForm(data) {
@@ -102,7 +104,7 @@
                 result += '<td>'+val.participants_username+'</td>';
                 result += '<td>'+val.participants_name+'</td>';
                 result += '<td>'+val.have_coupon+'</td>';
-                result += '<td><input data-id="'+val.id+'" class="gift gift-coupon form-control" type="text" placeholder="Gift Coupon || exp : kode_1^kode_2^..." ></td>';
+                result += '<td><input data-id="'+val.id+'" class="gift gift-coupon form-control" type="number" placeholder="add coupon" ></td>';
                 result += '</tr>';
             });
         }
@@ -120,6 +122,7 @@
 @push('script.responsePostData')
 @include('panel._componen.dtables_script_responsePostData')
 @include('panel._componen.summernote_script_responsePostData')
+@include('panel._componen.select2_script_responsePostData')
 if(data.buildInGiftList == true){ buildInGiftList(data.buildInGiftList_config); }
 if(data.preparePostData == true){ preparePostData(data.preparePostData_target); }
 @endpush

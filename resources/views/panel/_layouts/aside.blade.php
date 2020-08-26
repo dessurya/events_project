@@ -49,51 +49,23 @@
     				</a>
     				<ul class="nav nav-treeview">
     					<li class="nav-item">
-							<a href="#" class="nav-link">
-								<i class="nav-icon fas fa-circle"></i>
-								<p>Event<i class="right fas fa-angle-left"></i></p>
+							<a href="{{ route('panel.event.tournament.list') }}" class="nav-link {{ Route::is('panel.event.tournament.list') ? 'active' : '' }}">
+								<i class="far fa-circle nav-icon"></i>
+								<p>Tournament TO</p>
 							</a>
-							<ul class="nav nav-treeview">
-								<li class="nav-item">
-									<a href="{{ route('panel.event.tournament.list') }}" class="nav-link {{ Route::is('panel.event.tournament.list') ? 'active' : '' }}">
-										<i class="far fa-circle nav-icon"></i>
-										<p>Tournament TO</p>
-									</a>
-								</li>
-								<li class="nav-item">
-									<a href="{{ route('panel.event.coupon.list') }}" class="nav-link {{ Route::is('panel.event.coupon.list') ? 'active' : '' }}">
-										<i class="far fa-circle nav-icon"></i>
-										<p>Coupon</p>
-									</a>
-								</li>
-								<li class="nav-item">
-									<a href="{{ route('panel.event.other.list') }}" class="nav-link {{ Route::is('panel.event.other.list') ? 'active' : '' }}">
-										<i class="far fa-circle nav-icon"></i>
-										<p>Other</p>
-									</a>
-								</li>
-							</ul>
-    					</li>
+						</li>
 						<li class="nav-item">
-							<a href="#" class="nav-link">
-								<i class="nav-icon fas fa-circle"></i>
-								<p>Register<i class="right fas fa-angle-left"></i></p>
+							<a href="{{ route('panel.event.coupon.list') }}" class="nav-link {{ Route::is('panel.event.coupon.list') ? 'active' : '' }}">
+								<i class="far fa-circle nav-icon"></i>
+								<p>Coupon</p>
 							</a>
-							<ul class="nav nav-treeview">
-								<li class="nav-item">
-									<a href="{{ route('panel.register.tournament.list') }}" class="nav-link {{ Route::is('panel.register.tournament.list') ? 'active' : '' }}">
-										<i class="far fa-circle nav-icon"></i>
-										<p>Tournament TO</p>
-									</a>
-								</li>
-								<li class="nav-item">
-									<a href="{{ route('panel.register.coupon.list') }}" class="nav-link {{ Route::is('panel.register.coupon.list') ? 'active' : '' }}">
-										<i class="far fa-circle nav-icon"></i>
-										<p>Coupon</p>
-									</a>
-								</li>
-							</ul>
-    					</li>
+						</li>
+						<li class="nav-item">
+							<a href="{{ route('panel.event.other.list') }}" class="nav-link {{ Route::is('panel.event.other.list') ? 'active' : '' }}">
+								<i class="far fa-circle nav-icon"></i>
+								<p>Other</p>
+							</a>
+						</li>
 						<li class="nav-item">
     						<a href="{{ route('panel.event.history.list') }}" class="nav-link {{ Route::is('panel.event.history.list') ? 'active' : '' }}">
     							<i class="far fa-circle nav-icon"></i>
@@ -103,11 +75,73 @@
     				</ul>
     			</li>
 				<li class="nav-item">
-    				<a href="{{ route('panel.coupon.list') }}" class="nav-link {{ Route::is('panel.coupon.list') ? 'active' : '' }} ">
-    					<i class="nav-icon fas fa-gifts"></i>
-    					<p>Coupon Management</p>
+    				<a href="#" class="nav-link {{ Route::is('panel.register*') ? 'active' : '' }} ">
+    					<i class="nav-icon fas fa-file"></i>
+    					<p>Register Management<i class="fas fa-angle-left right"></i></p>
     				</a>
+    				<ul class="nav nav-treeview">
+    					<li class="nav-item">
+							<a href="#" class="nav-link">
+								<i class="nav-icon fas fa-circle"></i>
+								<p>Tournament TO<i class="right fas fa-angle-left"></i></p>
+							</a>
+							<ul class="nav nav-treeview">
+								<li class="nav-item">
+									<a href="{{ route('panel.register.tournament.list.new') }}" class="nav-link {{ Route::is('panel.register.tournament.list.new') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>New</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('panel.register.tournament.list.reject') }}" class="nav-link {{ Route::is('panel.register.tournament.list.reject') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Reject</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('panel.register.tournament.list.history') }}" class="nav-link {{ Route::is('panel.register.tournament.list.history') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>History</p>
+									</a>
+								</li>
+							</ul>
+    					</li>
+						<li class="nav-item">
+							<a href="#" class="nav-link">
+								<i class="nav-icon fas fa-circle"></i>
+								<p>Coupon<i class="right fas fa-angle-left"></i></p>
+							</a>
+							<ul class="nav nav-treeview">
+								<li class="nav-item">
+									<a href="{{ route('panel.register.coupon.list.new') }}" class="nav-link {{ Route::is('panel.register.coupon.list.new') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>New</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('panel.register.coupon.list.reject') }}" class="nav-link {{ Route::is('panel.register.coupon.list.reject') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Reject</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('panel.register.coupon.list.history') }}" class="nav-link {{ Route::is('panel.register.coupon.list.history') ? 'active' : '' }}">
+										<i class="far fa-circle nav-icon"></i>
+										<p>History</p>
+									</a>
+								</li>
+							</ul>
+    					</li>
+    				</ul>
     			</li>
+				<?php 
+				// <li class="nav-item">
+    			// 	<a href="{{ route('panel.coupon.list') }}" class="nav-link {{ Route::is('panel.coupon.list') ? 'active' : '' }} ">
+    			// 		<i class="nav-icon fas fa-gifts"></i>
+    			// 		<p>Coupon Management</p>
+    			// 	</a>
+				// </li>
+				?>
 				<li class="nav-item">
     				<a href="#" class="nav-link {{ Route::is('panel.interface*') ? 'active' : '' }} ">
     					<i class="nav-icon fas fa-solar-panel"></i>

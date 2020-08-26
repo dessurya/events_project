@@ -83,32 +83,35 @@
 		<script type="text/javascript" src="{{ asset('vendors/jquery/jquery.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/popper.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-		<script type="text/javascript" src="{{ asset('vendors/bootstrap/js/bootstrap.min.js') }}"></script>
+		<?php
+		// <script type="text/javascript" src="{{ asset('vendors/bootstrap/js/bootstrap.min.js') }}"></script>
+		?>
 		<script type="text/javascript" src="{{ asset('vendors/adminlte-dist/js/adminlte.min.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('vendors/pnotify/pnotify.custom.min.js') }}"></script>
 		<script type="text/javascript">
 			$( document ).ready(function() {
 				cekNewRegister();
-				// $('#loading-page').hide();
+				$('#loading-page').hide();
 				@stack('script.documentreadyfunction')
 			});
 
 			function cekNewRegister() {
 				var url = '{!! route("panel.newRegisterEventCheck") !!}';
 				postData(null,url);
-				window.setTimeout(function() { 
-					cekNewRegister();
-				// }, 5000); // 5 second waiting end run again
-				// }, 30000); // 30 second waiting end run again
-				}, 50000); // 50 second waiting end run again
-				// }, 600000); // 1 menit waiting end run again
-				// }, 1200000); // 2 menit waiting end run again
-				// }, 300000); // 5 menit waiting end run again
+				// window.setTimeout(function() { 
+				// 	cekNewRegister();
+				// // }, 5000); // 5 second waiting end run again
+				// // }, 30000); // 30 second waiting end run again
+				// }, 50000); // 50 second waiting end run again
+				// // }, 600000); // 1 menit waiting end run again
+				// // }, 1200000); // 2 menit waiting end run again
+				// // }, 300000); // 5 menit waiting end run again
 			}
 
 			function playAudioApplauses() { 
-				var audio = new Audio('{!! asset('asset/applauses.mp3') !!}');
-				audio.play();
+				// var audio = new Audio('{!! asset('asset/applauses.mp3') !!}');
+				// audio.play();
+				console.log('audio is command!');
 			} 
 
 
@@ -147,12 +150,36 @@
 						]
 					}
 				}).get().on('pnotify.confirm', function(ui){
-					$(".true", ui.container).hide();
+					$(ui.container).find(".true").hide();
 					if (data.formData == true) {
 						postFormData(data.data,data.url);
 					}else{
 						postData(data.data,data.url);
 					}
+				});
+			}
+			function PNotifynotice_arr(data) {
+				$.each(data, function (idx, val) {
+					PNotifynotice(val);
+				});
+			}
+			function PNotifynotice(data) {
+				new PNotify({
+					title: data.title,
+					text: data.text,
+					type: data.type,
+					hide: false,
+					sticker: false,
+					confirm: {
+						confirm: true,
+						buttons:[
+							{ text: 'Show', addClass: 'true btn-primary', removeClass: 'btn-default'},
+							{ text: 'No', addClass: 'hide'}
+						]
+					}
+				}).get().on('pnotify.confirm', function(ui){
+					$(".true", ui.container).hide();
+					window.location.replace(data.url);
 				});
 			}
 
@@ -190,6 +217,7 @@
 				if (data.playAudioApplauses == true) { playAudioApplauses(); }
 				if (data.prepend == true) { prepend(data.prepend_config); }
 				if (data.append == true) { append(data.append_config); }
+				if (data.PNotifynotice_arr == true) { PNotifynotice_arr(data.PNotifynotice_arr_data); }
 			}
 
 			function render(data) {

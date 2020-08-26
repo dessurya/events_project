@@ -22,7 +22,6 @@ class CreateParticipantsCouponView extends Migration
                 confirm_at,
                 event_coupon_id,
                 title as event_coupon_title,
-                website as event_coupon_website,
                 status_id as event_coupon_status_id,
                 status as event_coupon_status,
                 participants_id,

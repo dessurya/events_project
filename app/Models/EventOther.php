@@ -8,6 +8,10 @@ use Carbon\Carbon;
 class EventOther extends Model
 {
     protected $table = 'event_other';
+    public function websites()
+    {
+        return $this->hasMany('App\Models\EventOtherWebsite', 'event_id', 'id');
+    }
 	public function getPictureAttribute($pic)
     {
         if (!empty($pic)) {

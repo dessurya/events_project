@@ -138,14 +138,32 @@ Route::name('panel.')->prefix('panel/')->group(function(){
 
         Route::name('register.')->prefix('register/')->group(function(){
             Route::name('tournament.')->prefix('tournament/')->group(function(){
-                Route::get('/list', 'Panel\RegisterTournamentController@list')->name('list');
-                Route::post('/list', 'Panel\RegisterTournamentController@getData')->name('getData');
+                Route::name('list.')->prefix('list/')->group(function(){
+                    Route::get('/new', 'Panel\RegisterTournamentController@newList')->name('new');
+                    Route::get('/reject', 'Panel\RegisterTournamentController@rejectList')->name('reject');
+                    Route::get('/history', 'Panel\RegisterTournamentController@historyList')->name('history');
+                });
+                Route::name('getData.')->prefix('getData/')->group(function(){
+                    Route::post('/new', 'Panel\RegisterTournamentController@newGetData')->name('new');
+                    Route::post('/reject', 'Panel\RegisterTournamentController@rejectGetData')->name('reject');
+                    Route::post('/history', 'Panel\RegisterTournamentController@getData')->name('history');
+                });
                 Route::post('/confirm', 'Panel\RegisterTournamentController@confirm')->name('confirm');
                 Route::post('/reject', 'Panel\RegisterTournamentController@reject')->name('reject');
             });
             Route::name('coupon.')->prefix('coupon/')->group(function(){
-                Route::get('/list', 'Panel\RegisterCouponController@list')->name('list');
-                Route::post('/list', 'Panel\RegisterCouponController@getData')->name('getData');
+                Route::name('list.')->prefix('list/')->group(function(){
+                    Route::get('/new', 'Panel\RegisterCouponController@newList')->name('new');
+                    Route::get('/reject', 'Panel\RegisterCouponController@rejectList')->name('reject');
+                    Route::get('/history', 'Panel\RegisterCouponController@historyList')->name('history');
+                });
+                Route::name('getData.')->prefix('getData/')->group(function(){
+                    Route::post('/new', 'Panel\RegisterCouponController@newGetData')->name('new');
+                    Route::post('/reject', 'Panel\RegisterCouponController@rejectGetData')->name('reject');
+                    Route::post('/history', 'Panel\RegisterCouponController@getData')->name('history');
+                });
+                // Route::get('/list', 'Panel\RegisterCouponController@list')->name('list');
+                // Route::post('/list', 'Panel\RegisterCouponController@getData')->name('getData');
                 Route::post('/gift', 'Panel\RegisterCouponController@gift')->name('gift');
                 Route::post('/reject', 'Panel\RegisterCouponController@reject')->name('reject');
             });

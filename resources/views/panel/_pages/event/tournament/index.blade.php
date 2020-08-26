@@ -6,10 +6,12 @@
 
 @push('link')
 @include('panel._componen.summernote_link')
+@include('panel._componen.select2_link')
 @endpush
 
 @push('script')
 @include('panel._componen.summernote_script', ['config' => $config['dtable']])
+@include('panel._componen.select2_script', ['config' => $config['dtable']])
 @include('panel._componen.dtables_script', ['config' => $config['dtable']])
 <script type="text/javascript">
 	function validateForm(data) {
@@ -135,6 +137,7 @@
 @push('script.responsePostData')
 @include('panel._componen.dtables_script_responsePostData')
 @include('panel._componen.summernote_script_responsePostData')
+@include('panel._componen.select2_script_responsePostData')
 if(data.buildInLeaderboard == true){ buildInLeaderboard(data.buildInLeaderboard_config); }
 if(data.preparePostData == true){ preparePostData(data.preparePostData_target); }
 @endpush
