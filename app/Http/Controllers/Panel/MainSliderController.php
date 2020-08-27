@@ -152,10 +152,10 @@ class MainSliderController extends Controller
         }
         if (!empty($input->picture)) {
         	if (!empty($store->picture) and !empty($input->id)) {
-        		$picture = explode('/public/', $store->picture);
-        		if (file_exists($picture[1])) {
-	        		unlink($picture[1]);
-        		}
+        		// $picture = explode('/public/', $store->picture);
+        		// if (file_exists($picture[1])) {
+	        	// 	unlink($picture[1]);
+        		// }
         	}
         	$url = 'asset/';
         	if (!file_exists($url)){
@@ -170,7 +170,7 @@ class MainSliderController extends Controller
                 mkdir($url, 0777);
             }
             $input->picture_encode = base64_decode($input->picture_encode);
-            $file_name = Carbon::now()->format('Ymd_h_i_s').'_'.Str::random(4).'_'.$input->picture_path;
+            $file_name = Carbon::now()->format('Ymd_h_i_s').'_'.Str::random(4).'_'.Str::slug($input->picture_path,'_');
             $file_dir = $url.$file_name;
             try {
                 file_put_contents($file_dir, $input->picture_encode);
@@ -211,10 +211,10 @@ class MainSliderController extends Controller
     	$back = [];
         foreach ($this->getDataIn($input->id) as $list) {
         	if (!empty($list->picture)) {
-        		$picture = explode('/public/', $list->picture);
-        		if (file_exists($picture[1])) {
-	        		unlink($picture[1]);
-        		}
+        		// $picture = explode('/public/', $list->picture);
+        		// if (file_exists($picture[1])) {
+	        	// 	unlink($picture[1]);
+        		// }
         	}
             $list->delete();
         }
