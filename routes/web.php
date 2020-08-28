@@ -67,6 +67,14 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/delete', 'Panel\MasterWebsiteController@delete')->name('delete');
             });
 
+            Route::name('bank.')->prefix('bank/')->group(function(){
+                Route::get('/list', 'Panel\MasterBankController@list')->name('list');
+                Route::post('/list', 'Panel\MasterBankController@getData')->name('getData');
+                Route::post('/form', 'Panel\MasterBankController@form')->name('form');
+                Route::post('/store', 'Panel\MasterBankController@store')->name('store');
+                Route::post('/delete', 'Panel\MasterBankController@delete')->name('delete');
+            });
+
             Route::name('participants.')->prefix('participants/')->group(function(){
                 Route::get('/list', 'Panel\ParticipantsController@list')->name('list');
                 Route::post('/list', 'Panel\ParticipantsController@getData')->name('getData');

@@ -46,9 +46,11 @@ class ParticipantsController extends Controller
                 'value' => 'asc'
             ],
             'componen' => [
+                ["data"=>"website","name"=>"website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"username","name"=>"username","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"name","name"=>"name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"no_hp","name"=>"no_hp","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"bank","name"=>"bank","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"no_rek","name"=>"no_rek","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"nama_rek","name"=>"nama_rek","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"ip_participants","name"=>"ip_participants","searchable"=>true,"searchtype"=>"text","orderable"=>true],
@@ -107,6 +109,12 @@ class ParticipantsController extends Controller
         }
         if (isset($input->nama_rek) and !empty($input->nama_rek)){
             $data->where('nama_rek', 'like', '%'.$input->nama_rek.'%');
+        }
+        if (isset($input->website) and !empty($input->website)){
+            $data->where('website', 'like', '%'.$input->website.'%');
+        }
+        if (isset($input->bank) and !empty($input->bank)){
+            $data->where('bank', 'like', '%'.$input->bank.'%');
         }
         if (isset($input->ip_participants) and !empty($input->ip_participants)){
             $data->where('ip_participants', 'like', '%'.$input->ip_participants.'%');

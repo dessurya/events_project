@@ -13,6 +13,10 @@ class EventTournament extends Model
     {
         return $this->hasMany('App\Models\EventTournamentWebsite', 'event_id', 'id');
     }
+    public function getStatus()
+    {
+        return $this->hasOne('App\Models\MasterStatusSelf', 'self_id', 'flag_status')->where('parent_id', 1);
+    }
 	public function getPictureAttribute($pic)
     {
         if (!empty($pic)) {

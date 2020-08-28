@@ -142,10 +142,7 @@ class InterFaceController extends Controller
     {
         $store = InterfaceConfig::find($input->id);
         if ($input->type == 'picture') {
-        	// if (!empty($store->content) and file_exists($store->content)) {
-        	// 	unlink($store->content);
-        	// }
-        	$url = 'asset/';
+            $url = 'asset/';
         	if (!file_exists($url)){
                 mkdir($url, 0777);
             }
@@ -157,8 +154,14 @@ class InterFaceController extends Controller
         	if (!file_exists($url)){
                 mkdir($url, 0777);
             }
-            $input->content_encode = base64_decode($input->content_encode);
-            $file_name = Carbon::now()->format('Ymd_h_i_s').'_'.Str::random(4).'_'.Str::slug($input->picture_path,'_');
+        	if (!empty($store->content) and file_exists($store->content)) {
+        		unlink($store->content);
+        	}
+            $extension = pathinfo($input->picture_path, PATHINFO_EXTENSION);
+            $fName = explode('.',$input->picture_path)[0];
+            $forFileName =Str::slug($fName,'_').'.'.$extension;
+            $input->picture_encode = base64_decode($input->picture_encode);
+            $file_name = Carbon::now()->format('Ymdhis').'_'.Str::random(4).'_'.$forFileName;
             $file_dir = $url.$file_name;
             try {
                 file_put_contents($file_dir, $input->content_encode);

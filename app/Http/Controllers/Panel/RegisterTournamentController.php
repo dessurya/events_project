@@ -43,6 +43,7 @@ class RegisterTournamentController extends Controller
                 ["data"=>"created_at","name"=>"created_at","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"participants_username","name"=>"participants_username","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"participants_name","name"=>"participants_name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"participants_website","name"=>"participants_website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"participants_status","name"=>"participants_status","searchable"=>false,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"event_tittle","name"=>"event_tittle","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"event_status","name"=>"event_status","searchable"=>true,"searchtype"=>"text","orderable"=>true]
@@ -131,6 +132,9 @@ class RegisterTournamentController extends Controller
         }
         if (isset($input->participants_status) and !empty($input->participants_status)){
             $data->where('participants_status', 'like', '%'.$input->participants_status.'%');
+        }
+        if (isset($input->participants_website) and !empty($input->participants_website)){
+            $data->where('participants_website', 'like', '%'.$input->participants_website.'%');
         }
         if (isset($input->event_tittle) and !empty($input->event_tittle)){
             $data->where('event_tittle', 'like', '%'.$input->event_tittle.'%');

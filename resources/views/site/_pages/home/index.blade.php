@@ -7,9 +7,9 @@ Home
 @push('link')
 <style type="text/css">
     .carousel .carousel-inner .carousel-item .img{
-        height: 539px;
+        height: 735px;
         background-position: center;
-        background-size: cover;
+        background-size: 100% 100%;
         background-repeat: no-repeat;
     }
 

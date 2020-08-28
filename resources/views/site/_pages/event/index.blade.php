@@ -16,7 +16,7 @@ Our Event
         width: 100%;
         height:380px;
         background-position: center;
-        background-size: cover;
+        background-size: 100% 100%;
         background-repeat: no-repeat;
     }
     h3{

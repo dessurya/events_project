@@ -19,6 +19,10 @@ class EventCoupon extends Model
         }
         return null;
     }
+    public function getStatus()
+    {
+        return $this->hasOne('App\Models\MasterStatusSelf', 'self_id', 'flag_status')->where('parent_id', 1);
+    }
 	public function getStartActiveAttribute($date)
     {
         return Carbon::parse($date)->format('Y-m-d');

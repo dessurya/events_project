@@ -19,7 +19,7 @@ class EventCouponController extends Controller
 {
     private function pageConfig(){
 		return [
-            'title' => 'Event Tournament TO Management',
+            'title' => 'Event Coupon Management',
             'tabs' => [
                 'id_head' => 'custom-tabs-tab',
                 'id_content' => 'custom-tabs-tabContent',
@@ -80,6 +80,23 @@ class EventCouponController extends Controller
                 ["route" => "panel.event.coupon.generatestatus", "title" => "Generate Status Event Coupon", "action" => "generatestatus", "select" => false, "confirm" => false, "multiple" => false]
             ]
         ];
+    }
+    
+    private function getDirFile()
+    {
+        $url = 'asset/';
+        if (!file_exists($url)){
+            mkdir($url, 0777);
+        }
+        $url .= 'picture/';
+        if (!file_exists($url)){
+            mkdir($url, 0777);
+        }
+        $url .= 'event_coupon/';
+        if (!file_exists($url)){
+            mkdir($url, 0777);
+        }
+        return $url;
     }
 
     private function formConfig()
@@ -203,34 +220,52 @@ class EventCouponController extends Controller
         ];
     }
 
+    private function checkDate($event, $input)
+    {
+        $date = Carbon::now()->format('Y-m-d');
+        $msg = 'this event status is '.$event->getStatus->value.',';
+        if ($event->flag_status == 1 and $input->start_registration < $date) {
+            return ['success' => false, 'msg' => $msg.' and start_registration must be greater or equals than '.$date.' (today)'];
+        }else if ($event->flag_status == 2 and $input->end_registration < $date) {
+            return ['success' => false, 'msg' => $msg.' and end_registration must be greater or equals than '.$date.' (today)'];
+        }else if ($event->flag_status == 3 and $input->start_active < $date) {
+            return ['success' => false, 'msg' => $msg.' and start_active must be greater or equals than '.$date.' (today)'];
+        }else if (in_array($event->flag_status,[4,5,6]) and $input->end_active < $date) {
+            return ['success' => false, 'msg' => $msg.' and end_active must be greater or equals than '.$date.' (today)'];
+        }else if (in_array($event->flag_status,[5,6]) and $input->end_active > $date) {
+            return ['success' => false, 'msg' => $msg.' and end_active cannot be bigger than '.$date.' (today)'];
+        }
+        return ['success'=>true];
+    }
+
     public function store(Request $input)
     {
         if (empty($input->id)) {
             $store = new EventCoupon;
         }else{
-            $store = EventCoupon::find($input->id);
+            $store = EventCoupon::with('getStatus')->find($input->id);
+            $checkDate = $this->checkDate($store,$input);
+            if ($checkDate['success'] == false) {
+                return [
+                    'pnotify' => true,
+                    'pnotify_type' => 'error',
+                    'pnotify_text' => $checkDate['msg']
+                ];
+            }
         }
         if (!empty($input->picture)) {
+            $url = $this->getDirFile();
         	if (!empty($store->picture) and !empty($input->id)) {
-        		// $picture = explode('/public/', $store->picture);
-        		// if (file_exists($picture[1])) {
-	        	// 	unlink($picture[1]);
-        		// }
+        		$picture = explode($url, $store->picture);
+        		if (file_exists($url.$picture[1])) {
+	        		unlink($url.$picture[1]);
+        		}
         	}
-        	$url = 'asset/';
-        	if (!file_exists($url)){
-                mkdir($url, 0777);
-            }
-            $url .= 'picture/';
-        	if (!file_exists($url)){
-                mkdir($url, 0777);
-            }
-            $url .= 'event_coupon/';
-        	if (!file_exists($url)){
-                mkdir($url, 0777);
-            }
+            $extension = pathinfo($input->picture_path, PATHINFO_EXTENSION);
+            $fName = explode('.',$input->picture_path)[0];
+            $forFileName =Str::slug($fName,'_').'.'.$extension;
             $input->picture_encode = base64_decode($input->picture_encode);
-            $file_name = Carbon::now()->format('Ymd_h_i_s').'_'.Str::random(4).'_'.Str::slug($input->picture_path,'_');
+            $file_name = Carbon::now()->format('Ymdhis').'_'.Str::random(4).'_'.$forFileName;
             $file_dir = $url.$file_name;
             try {
                 file_put_contents($file_dir, $input->picture_encode);
@@ -284,10 +319,11 @@ class EventCouponController extends Controller
             EventCouponRegistration::where('event_coupon_id',$list->id)->delete();
             ParticipantsCoupon::where('event_coupon_id',$list->id)->delete();
         	if (!empty($list->picture)) {
-        		// $picture = explode('/public/', $list->picture);
-        		// if (file_exists($picture[1])) {
-	        	// 	unlink($picture[1]);
-        		// }
+                $url = $this->getDirFile();
+        		$picture = explode($url, $list->picture);
+        		if (file_exists($url.$picture[1])) {
+	        		unlink($url.$picture[1]);
+        		}
         	}
             $list->delete();
         }

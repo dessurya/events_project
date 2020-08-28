@@ -13,6 +13,8 @@ use App\Models\EventCouponRegistration;
 use App\Models\EventTournamentWebsite;
 use App\Models\EventCouponWebsite;
 use App\Models\EventOtherWebsite;
+use App\Models\MasterWebsite;
+use App\Models\MasterBank;
 
 class EventController extends Controller
 {
@@ -205,7 +207,10 @@ class EventController extends Controller
                 'participants_status_id' => 3
                 ])->orderBy('confirm_at', 'asc')->get();
         }
-        return view('site._pages.event.show', compact('data','param','website'));
+        $MasterWebsite = MasterWebsite::orderBy('name','asc')->get();
+        $MasterBank = MasterBank::orderBy('name','asc')->get();
+        
+        return view('site._pages.event.show', compact('data','param','website','MasterWebsite','MasterBank'));
     }
 
     public function registration(Request $input)
@@ -215,16 +220,19 @@ class EventController extends Controller
             'id' => $input->event_id
         ])->first();
 
-        if (in_array($data->status_id, [5,6])) {
+        if (in_array($data->status_id, [1,5,6])) {
             return [
                 'pnotify' => true,
                 'pnotify_type' => 'error',
-                'pnotify_text' => 'This event is close or end'
+                'pnotify_text' => 'This event is not on registration or this event is close or end'
             ];
         }
 
         if ($input->form == 'find') {
-            $Participants = Participants::where('username', $input->username)->get();
+            $Participants = Participants::where([
+                'username' => $input->username,
+                'website' => $input->website
+            ])->get();
             if (count($Participants) == 1) {
                 $Participants = $Participants[0];
                 return [
@@ -251,6 +259,8 @@ class EventController extends Controller
             }
             $Participants->ip_participants = $input->ip();
             $Participants->alamat = $input->alamat;
+            $Participants->bank = $input->bank;
+            $Participants->website = $input->website;
             $Participants->nama_rek = $input->nama_rek;
             $Participants->name = $input->name;
             $Participants->no_hp = $input->no_hp;
@@ -264,12 +274,14 @@ class EventController extends Controller
                     'participants_id' => $Participants->id,
                     'event_tournament_id' => $input->event_id
                 ])->get();
+                $store->event_tournament_id = $input->event_id;
             } else if ($input->event_type == 2) {
                 $store = new EventCouponRegistration;
                 $find = EventCouponRegistration::where([
                     'participants_id' => $Participants->id,
                     'event_coupon_id' => $input->event_id
                 ])->get();
+                $store->event_coupon_id = $input->event_id;
             }
             if (count($find) > 0) {
                 return [
@@ -280,7 +292,6 @@ class EventController extends Controller
             }
             $store->participants_username = $input->username;
             $store->participants_id = $Participants->id;
-            $store->event_tournament_id = $input->event_id;
             $store->registration_ip = $input->ip();
             $store->save();
 

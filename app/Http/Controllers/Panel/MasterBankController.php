@@ -4,15 +4,13 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Models\MainSlider;
-use Carbon\Carbon;
+use App\Models\MasterBank;
 
-class MainSliderController extends Controller
+class MasterBankController extends Controller
 {
     private function pageConfig(){
 		return [
-            'title' => 'Main Slider Management',
+            'title' => 'Master Bank Management',
             'tabs' => [
                 'id_head' => 'custom-tabs-tab',
                 'id_content' => 'custom-tabs-tabContent',
@@ -39,50 +37,32 @@ class MainSliderController extends Controller
     private function dtableConfig()
     {
         return [
-            'get_data_route' => 'panel.interface.mainslider.getData',
-            'table_id' => 'd_tables_mainslider',
+            'get_data_route' => 'panel.master.bank.getData',
+            'table_id' => 'd_tables_website',
             'order' => [
-                'key' => 'order',
+                'key' => 'name',
                 'value' => 'asc'
             ],
             'componen' => [
                 ["data"=>"name","name"=>"name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"order","name"=>"order","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"created_at","name"=>"created_at","searchable"=>true,"searchtype"=>"date","orderable"=>true]
             ],
             'action' => [
-                ["route" => "panel.interface.mainslider.form", "title" => "Add Main Slider", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
-                ["route" => "panel.interface.mainslider.form", "title" => "Update Main Slider", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
-                ["route" => "panel.interface.mainslider.delete", "title" => "Delete Main Slider", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true]
+                ["route" => "panel.master.bank.form", "title" => "Add Bank", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
+                ["route" => "panel.master.bank.form", "title" => "Update Bank", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
+                ["route" => "panel.master.bank.delete", "title" => "Delete Bank", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true]
             ]
         ];
-    }
-
-    private function getDirFile()
-    {
-        $url = 'asset/';
-        if (!file_exists($url)){
-            mkdir($url, 0777);
-        }
-        $url .= 'picture/';
-        if (!file_exists($url)){
-            mkdir($url, 0777);
-        }
-        $url .= 'mainslider/';
-        if (!file_exists($url)){
-            mkdir($url, 0777);
-        }
-        return $url;
     }
 
     private function formConfig()
     {
         return [
-            'id' => 'mainslider_form',
-            'title' => 'Form Main Slider',
-            'action' => 'panel.interface.mainslider.store',
+            'id' => 'bank_form',
+            'title' => 'Form Running Text',
+            'action' => 'panel.master.bank.store',
             'readonly' => [],
-            'required' => ['name', 'order']
+            'required' => ['name']
         ];
     }
 
@@ -93,7 +73,7 @@ class MainSliderController extends Controller
 
     private function getForm()
     {
-        return view('panel._pages.mainslider.form', ['config' => $this->formConfig()])->render();
+        return view('panel._pages.master.bank.form', ['config' => $this->formConfig()])->render();
     }
     
     public function list(Request $input)
@@ -102,7 +82,7 @@ class MainSliderController extends Controller
             "page" => $this->pageConfig(),
             "dtable" => $this->dtableConfig()
         ];
-        return view('panel._pages.mainslider.index', compact('config'));
+        return view('panel._pages.master.bank.index', compact('config'));
     }
 
     public function getData(Request $input)
@@ -111,7 +91,7 @@ class MainSliderController extends Controller
         if (isset($input->show) and !empty($input->show)) {
             $paginate = $input->show;
         }
-        $data = MainSlider::select('*');
+        $data = MasterBank::select('*');
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
@@ -127,9 +107,6 @@ class MainSliderController extends Controller
         if (isset($input->name) and !empty($input->name)){
             $data->where('name', 'like', '%'.$input->name.'%');
         }
-        if (isset($input->order) and !empty($input->order)){
-            $data->where('order', 'like', '%'.$input->order.'%');
-        }
         $data = $data->paginate($paginate);
         return [
             'renderGetData' => true,
@@ -144,7 +121,7 @@ class MainSliderController extends Controller
         $tab_show = '#'.$tab_show['tabs']['tab'][1]['id'];
         $find = null;
         if ($input->id != "true") {
-            $find = MainSlider::find($input->id);
+            $find = MasterBank::find($input->id);
         }
         return [
             'show_tab' => true,
@@ -163,35 +140,13 @@ class MainSliderController extends Controller
     public function store(Request $input)
     {
         if (empty($input->id)) {
-            $store = new MainSlider;
+            $store = new MasterBank;
         }else{
-            $store = MainSlider::find($input->id);
-        }
-        if (!empty($input->picture)) {
-            $url = $this->getDirFile();
-        	if (!empty($store->picture) and !empty($input->id)) {
-        		$picture = explode($url, $store->picture);
-        		if (file_exists($url.$picture[1])) {
-	        		unlink($url.$picture[1]);
-        		}
-        	}
-            $extension = pathinfo($input->picture_path, PATHINFO_EXTENSION);
-            $fName = explode('.',$input->picture_path)[0];
-            $forFileName =Str::slug($fName,'_').'.'.$extension;
-            $input->picture_encode = base64_decode($input->picture_encode);
-            $file_name = Carbon::now()->format('Ymdhis').'_'.Str::random(4).'_'.$forFileName;
-            $file_dir = $url.$file_name;
-            try {
-                file_put_contents($file_dir, $input->picture_encode);
-            } catch (Exception $e) {
-                $response = $e->getMessage();
-            }
-            $store->picture = $file_dir;
+            $store = MasterBank::find($input->id);
         }
         $store->name = $input->name;
-        $store->order = $input->order;
         $store->save();
-        $find = MainSlider::find($store->id);
+        $find = MasterBank::find($store->id);
         $formConfig = $this->formConfig();
         $tab_show = $this->pageConfig();
         $tab_show = '#'.$tab_show['tabs']['tab'][0]['id'];
@@ -212,31 +167,22 @@ class MainSliderController extends Controller
     private function getDataIn($stringId)
     {
         $ids = explode('^', $stringId);
-        return MainSlider::whereIn('id', $ids)->get();
+        return MasterBank::whereIn('id', $ids)->get();
     }
 
     public function delete(Request $input)
     {
-    	$back = [];
         foreach ($this->getDataIn($input->id) as $list) {
-        	if (!empty($list->picture)) {
-                $url = $this->getDirFile();
-                $picture = explode($url, $list->picture);
-        		if (file_exists($url.$picture[1])) {
-	        		unlink($url.$picture[1]);
-        		}
-        	}
             $list->delete();
         }
         $formConfig = $this->formConfig();
         return [
-        	'$back' => $back,
             'close_form' => true,
             'close_form_target' => 'form#'.$formConfig['id'],
             'rebuildTable' => true,
             'pnotify' => true,
             'pnotify_type' => 'success',
-            'pnotify_text' => 'Success delete main slider'
+            'pnotify_text' => 'Success delete website'
         ];
     }
 }

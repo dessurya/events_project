@@ -28,6 +28,12 @@
     					<p>Master Data<i class="fas fa-angle-left right"></i></p>
     				</a>
     				<ul class="nav nav-treeview">
+						<li class="nav-item">
+    						<a href="{{ route('panel.master.bank.list') }}" class="nav-link {{ Route::is('panel.master.bank.list') ? 'active' : '' }}">
+    							<i class="far fa-circle nav-icon"></i>
+    							<p>Bank</p>
+    						</a>
+    					</li>
     					<li class="nav-item">
     						<a href="{{ route('panel.master.website.list') }}" class="nav-link {{ Route::is('panel.master.website.list') ? 'active' : '' }}">
     							<i class="far fa-circle nav-icon"></i>

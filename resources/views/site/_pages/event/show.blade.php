@@ -24,9 +24,9 @@
     }
 
     #MainContent .img{
-        height: 490px;
+        height: 533px;
         background-position: center;
-        background-size: cover;
+        background-size: 100% 100%;
         background-repeat: no-repeat;
     }
 
@@ -74,12 +74,14 @@
     });
 
     function fill_form(data) {
+        $('form#registration #otherInput').show();
         $('form .input').removeAttr('readonly').attr('required', 'true');
         $('form').data('form','store');
         $.each(data, function(key, val){
             $('form').find('[name='+key+']').val(val);
         });
         $('form').find('[name=username]').removeAttr('required').attr('readonly', 'true');
+        $('form').find('[name=website]').removeAttr('required').attr('disabled', 'disabled');
     }
 </script>
 @endpush
