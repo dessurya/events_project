@@ -119,6 +119,7 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/leaderboard/add-point', 'Panel\EventTournamentController@leaderboardAddPoint')->name('leaderboardAddPoint');
                 Route::post('/leaderboard/generate-rank', 'Panel\EventTournamentController@leaderboardGenerateRank')->name('leaderboardGenerateRank');
                 Route::post('/generatestatus', 'Panel\EventTournamentController@generatestatus')->name('generatestatus');
+                Route::post('/addparticipants', 'Panel\EventTournamentController@addparticipants')->name('addparticipants');
             });
             Route::name('coupon.')->prefix('coupon/')->group(function(){
                 Route::get('/list', 'Panel\EventCouponController@list')->name('list');
@@ -129,6 +130,7 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/gift', 'Panel\EventCouponController@gift')->name('gift');
                 Route::post('/gifted', 'Panel\EventCouponController@gifted')->name('gifted');
                 Route::post('/generatestatus', 'Panel\EventCouponController@generatestatus')->name('generatestatus');
+                Route::post('/addparticipants', 'Panel\EventCouponController@addparticipants')->name('addparticipants');
             });
             Route::name('other.')->prefix('other/')->group(function(){
                 Route::get('/list', 'Panel\EventOtherController@list')->name('list');
@@ -156,6 +158,7 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                     Route::post('/reject', 'Panel\RegisterTournamentController@rejectGetData')->name('reject');
                     Route::post('/history', 'Panel\RegisterTournamentController@getData')->name('history');
                 });
+                Route::post('/store/{id}', 'Panel\RegisterTournamentController@store')->name('store');
                 Route::post('/confirm', 'Panel\RegisterTournamentController@confirm')->name('confirm');
                 Route::post('/reject', 'Panel\RegisterTournamentController@reject')->name('reject');
             });

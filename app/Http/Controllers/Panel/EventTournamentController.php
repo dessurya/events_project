@@ -74,7 +74,8 @@ class EventTournamentController extends Controller
                 ["route" => "panel.event.tournament.form", "title" => "Add Tournament TO", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
                 ["route" => "panel.event.tournament.form", "title" => "Update Tournament TO", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
                 ["route" => "panel.event.tournament.delete", "title" => "Delete Tournament TO", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true],
-                ["route" => "panel.event.tournament.generatestatus", "title" => "Generate Status Event Tournament TO", "action" => "generatestatus", "select" => false, "confirm" => false, "multiple" => false]
+                ["route" => "panel.event.tournament.generatestatus", "title" => "Generate Status Event Tournament TO", "action" => "generatestatus", "select" => false, "confirm" => false, "multiple" => false],
+                ["route" => "panel.event.tournament.addparticipants", "title" => "Add Participants", "action" => "add_participants", "select" => true, "confirm" => false, "multiple" => false]
             ]
         ];
     }
@@ -404,6 +405,25 @@ class EventTournamentController extends Controller
             'pnotify' => true,
             'pnotify_type' => 'success',
             'pnotify_text' => 'Success generate status event tournamen to'
+        ];
+    }
+    
+    public function addparticipants(Request $input)
+    {
+        $evt = EventTournament::find($input->id);
+        if (in_status($evt->flag_status,[5,6])) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Sorry this event status is end active or close'
+            ];
+        }
+        return [
+            'prepareEventAddParticipants' => true,
+            'prepareEventAddParticipantsConfig' => [
+                'msg' => 'Add Participants For Event TO  : '.$evt->title,
+                'routeStore' => route('panel.register.tournament.store', ['id'=>base64_encode($evt->id)])
+            ]
         ];
     }
 }

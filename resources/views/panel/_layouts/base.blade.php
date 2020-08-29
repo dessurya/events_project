@@ -91,6 +91,7 @@
 		<script type="text/javascript">
 			$( document ).ready(function() {
 				cekNewRegister();
+				checkEventAddParticipants();
 				$('#loading-page').hide();
 				@stack('script.documentreadyfunction')
 			});
@@ -218,8 +219,19 @@
 				if (data.prepend == true) { prepend(data.prepend_config); }
 				if (data.append == true) { append(data.append_config); }
 				if (data.PNotifynotice_arr == true) { PNotifynotice_arr(data.PNotifynotice_arr_data); }
+				if (data.prepareEventAddParticipants == true) { prepareEventAddParticipants(data.prepareEventAddParticipantsConfig); }
 			}
 
+			function prepareEventAddParticipants(data) {
+				localStorage.setItem('eventAddParticipants', data);
+				checkEventAddParticipants();
+			}
+			function checkEventAddParticipants() {
+				var getItem = localStorage.getItem('eventAddParticipants');
+				if (getItem != null || getItem != '' || getItem != undefined || getItem != "undefined" || getItem.length != 0) {
+					PNotifynotice({'title':'Warning! Event Add Participants','type':'error','url':getItem.routeStore,'text':getItem.msg+'. For continue please click SHOW button'});
+				}
+			}
 			function render(data) {
 				$(data.target).html(atob(data.content));
 			}
