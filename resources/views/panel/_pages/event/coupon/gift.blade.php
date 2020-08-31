@@ -27,13 +27,14 @@
       <thead>
         <tr>
           <th>Confirm At</th>
+          <th>Website</th>
           <th>Username</th>
           <th>Name</th>
           <th>Have Coupon</th>
           <th></th>
         </tr>
       </thead>
-      <tbody><tr><td colspan="5" class="text-center">-</td></tr></tbody>
+      <tbody><tr><td colspan="6" class="text-center">-</td></tr></tbody>
     </table>
   </div>
 </div>

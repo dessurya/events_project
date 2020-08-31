@@ -194,8 +194,9 @@
     					</li>
     				</ul>
     			</li>
-				<div id="render_notif_register"></div>
     		</ul>
     	</nav>
     </div>
+	
+	<div id="render_some_action"></div>
 </aside>

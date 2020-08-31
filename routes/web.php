@@ -173,8 +173,7 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                     Route::post('/reject', 'Panel\RegisterCouponController@rejectGetData')->name('reject');
                     Route::post('/history', 'Panel\RegisterCouponController@getData')->name('history');
                 });
-                // Route::get('/list', 'Panel\RegisterCouponController@list')->name('list');
-                // Route::post('/list', 'Panel\RegisterCouponController@getData')->name('getData');
+                Route::post('/store/{id}', 'Panel\RegisterCouponController@store')->name('store');
                 Route::post('/gift', 'Panel\RegisterCouponController@gift')->name('gift');
                 Route::post('/reject', 'Panel\RegisterCouponController@reject')->name('reject');
             });

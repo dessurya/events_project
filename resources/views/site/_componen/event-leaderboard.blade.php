@@ -4,6 +4,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>Website</th>
                 <th>Username</th>
                 <th>Name</th>
                 <th>Rank</th>
@@ -12,6 +13,7 @@
         <tbody>
             @foreach($participants as $participant)
             <tr>
+                <td>{{ $participant->participants_website }}</td>
                 <td>{{ $participant->participants_username }}</td>
                 <td>{{ $participant->participants_name }}</td>
                 <td>{{ $participant->participants_rank_board }}</td>

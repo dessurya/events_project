@@ -411,7 +411,7 @@ class EventTournamentController extends Controller
     public function addparticipants(Request $input)
     {
         $evt = EventTournament::find($input->id);
-        if (in_status($evt->flag_status,[5,6])) {
+        if (in_array($evt->flag_status,[5,6])) {
             return [
                 'pnotify' => true,
                 'pnotify_type' => 'error',

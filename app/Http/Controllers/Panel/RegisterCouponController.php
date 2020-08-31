@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EventCouponRegistration;
 use App\Models\ViewEventCouponRegistration;
+use App\Models\Participants;
 use Carbon\Carbon;
 
 class RegisterCouponController extends Controller
@@ -215,6 +216,39 @@ class RegisterCouponController extends Controller
             $ret['pnotify_type'] = 'success';
             $ret['pnotify_text'] = 'Success! not gift coupon!';
         }
+        return $ret;
+    }
+
+    public function store($id, Request $input)
+    {
+        $event_id = base64_decode($id);
+        $pnotify_arr_data = [];
+        foreach (explode('^',$input->participants) as $participants_id) {
+            $Participants = Participants::find($participants_id);
+            if (EventCouponRegistration::where(['participants_id'=>$participants_id,'event_coupon_id'=>$event_id])->count() > 0) {
+                $pnotify_arr_data[] = [
+                    'type' => 'error',
+                    'text' => 'Fail, '.$Participants->name.' ( '.$Participants->username.' ) already register'
+                ];
+            }else{
+                $store = new EventCouponRegistration;
+                $store->status = 3;
+                $store->registration_ip	= $input->ip();
+                $store->participants_username = $Participants->username;
+                $store->participants_id	= $Participants->id;
+                $store->event_coupon_id	= $event_id;
+                $store->confirm_at = Carbon::now()->format('Y-m-d H:i:s');
+                $store->save();
+            }
+        }
+        $ret = [];
+        if (count($pnotify_arr_data) > 0) {
+            $ret['pnotify_arr'] = true;
+            $ret['pnotify_arr_data'] = $pnotify_arr_data;
+        }
+        $ret['pnotify'] = true;
+        $ret['pnotify_type'] = 'success';
+        $ret['pnotify_text'] = 'Success! add participants!';
         return $ret;
     }
 }

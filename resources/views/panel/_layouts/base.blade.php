@@ -223,14 +223,41 @@
 			}
 
 			function prepareEventAddParticipants(data) {
-				localStorage.setItem('eventAddParticipants', data);
+				localStorage.setItem('eventAddParticipants', JSON.stringify(data));
 				checkEventAddParticipants();
 			}
 			function checkEventAddParticipants() {
 				var getItem = localStorage.getItem('eventAddParticipants');
-				if (getItem != null || getItem != '' || getItem != undefined || getItem != "undefined" || getItem.length != 0) {
-					PNotifynotice({'title':'Warning! Event Add Participants','type':'error','url':getItem.routeStore,'text':getItem.msg+'. For continue please click SHOW button'});
+				if (getItem != 'null' && getItem != null && getItem != '' && getItem != undefined && getItem != "undefined" && getItem.length != 0) {
+					renderActionEventAddParticipants(JSON.parse(getItem));
 				}
+			}
+			function renderActionEventAddParticipants(getItem) {
+				PNotifynotice({'title':'Warning! Event Add Participants','type':'error','url':'{!! route('panel.master.participants.list') !!}','text':getItem.msg+'. For continue please click SHOW button'});
+				var renderContent = '<div class="container"><div class="row"><div class="col-12"><div class="card"><div class="card-body">';
+				renderContent += '<h5 class="card-title">'+getItem.msg+'</h5>';
+				renderContent += '<br><br>';
+				renderContent += '<div class="btn-group btn-block" role="group" aria-label="Basic example">';
+				renderContent += '<a href="{!! route('panel.master.participants.list') !!}" class="btn btn-danger btn-xs">Show</a>';
+				renderContent += '<button type="button" class="btn btn-info btn-xs" onclick="actionInsertEventAddParticipants()">Add</button>';
+				renderContent += '<button type="button" class="btn btn-default btn-xs" onclick="actionEndEventAddParticipants()">End</button>';
+				renderContent += '</div>';
+				renderContent += '</div></div></div></div></div>';
+				render({'target':'#render_some_action','content':btoa(renderContent)});
+			}
+			function actionInsertEventAddParticipants() {
+				if(window.location.href != '{!! route('panel.master.participants.list') !!}'){
+					pnotify({"title":"Warning","type":'error',"text":"Sorry, this not Participants List!"});
+				}
+				id = getSelectedRowId({ "target": "table#d_tables_participants tr.selected", "multiple": true });
+				if (id === false) { return false; }
+				var getItem = localStorage.getItem('eventAddParticipants');
+				getItem = JSON.parse(getItem);
+				postData({'participants':id}, getItem.routeStore);
+			}
+			function actionEndEventAddParticipants() {
+				localStorage.removeItem("eventAddParticipants");
+				render({'target':'#render_some_action','content':btoa('<div></div>')});
 			}
 			function render(data) {
 				$(data.target).html(atob(data.content));

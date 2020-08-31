@@ -35,6 +35,7 @@
       <thead>
         <tr>
           <th>#</th>
+          <th>Website</th>
           <th>Username</th>
           <th>Name</th>
           <th>Point</th>
@@ -42,7 +43,7 @@
           <th width="150px"></th>
         </tr>
       </thead>
-      <tbody><tr><td colspan="6" class="text-center">-</td></tr></tbody>
+      <tbody><tr><td colspan="7" class="text-center">-</td></tr></tbody>
     </table>
   </div>
 </div>

@@ -94,13 +94,14 @@
 	function buildInGiftList(config) {
 		var result = '';
         if (config.data.length == 0) {
-            result += '<tr><td colspan="5" class="text-center">Not data found!</td></tr>';
+            result += '<tr><td colspan="6" class="text-center">Not data found!</td></tr>';
         }else{
         	var loop = 0;
             $.each(config.data, function(index, val){
             	loop++;
                 result += '<tr id='+val.id+'>';
                 result += '<td>'+val.confirm_at+'</td>';
+                result += '<td>'+val.participants_website+'</td>';
                 result += '<td>'+val.participants_username+'</td>';
                 result += '<td>'+val.participants_name+'</td>';
                 result += '<td>'+val.have_coupon+'</td>';

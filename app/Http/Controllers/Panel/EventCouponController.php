@@ -409,4 +409,23 @@ class EventCouponController extends Controller
             'pnotify_text' => 'Success generate status event coupon'
         ];
     }
+
+    public function addparticipants(Request $input)
+    {
+        $evt = EventCoupon::find($input->id);
+        if (in_array($evt->flag_status,[5,6])) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Sorry this event status is end active or close'
+            ];
+        }
+        return [
+            'prepareEventAddParticipants' => true,
+            'prepareEventAddParticipantsConfig' => [
+                'msg' => 'Add Participants For Event Coupon  : '.$evt->title,
+                'routeStore' => route('panel.register.coupon.store', ['id'=>base64_encode($evt->id)])
+            ]
+        ];
+    }
 }
