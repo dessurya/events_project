@@ -23,6 +23,9 @@
 				/* font-family: 'Public Sans', sans-serif; */
 				font-family: 'Roboto Slab', serif;
 			}
+			marquee{
+				margin-bottom : -6px;
+			}
 			#footer{
 				padding: 16px 0;
 			}

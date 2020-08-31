@@ -90,18 +90,19 @@
 		<script type="text/javascript" src="{{ asset('vendors/pnotify/pnotify.custom.min.js') }}"></script>
 		<script type="text/javascript">
 			$( document ).ready(function() {
-				cekNewRegister();
+				cekNewRegister('run');
 				checkEventAddParticipants();
 				$('#loading-page').hide();
 				@stack('script.documentreadyfunction')
 			});
 
-			function cekNewRegister() {
+			function cekNewRegister(param) {
 				var url = '{!! route("panel.newRegisterEventCheck") !!}';
-				postData(null,url);
-				// window.setTimeout(function() { 
-				// 	cekNewRegister();
-				// // }, 5000); // 5 second waiting end run again
+				postData({'param':param},url);
+				window.setTimeout(function() { 
+					cekNewRegister('false');
+				// }, 5000); // 5 second waiting end run again
+				}, 10000); // 10 second waiting end run again
 				// // }, 30000); // 30 second waiting end run again
 				// }, 50000); // 50 second waiting end run again
 				// // }, 600000); // 1 menit waiting end run again
@@ -110,8 +111,8 @@
 			}
 
 			function playAudioApplauses() { 
-				// var audio = new Audio('{!! asset('asset/applauses.mp3') !!}');
-				// audio.play();
+				var audio = new Audio('{!! asset('asset/applauses.mp3') !!}');
+				audio.play();
 				console.log('audio is command!');
 			} 
 
@@ -169,8 +170,8 @@
 					title: data.title,
 					text: data.text,
 					type: data.type,
-					hide: false,
-					sticker: false,
+					// hide: false,
+					// sticker: false,
 					confirm: {
 						confirm: true,
 						buttons:[

@@ -1,6 +1,6 @@
 <div class="card card-primary">
 	<div class="card-header">
-		<h3 class="card-title">{{ Str::title($config['Participants']->name).' ( '.$config['Participants']->username.' ) ' }}</h3>
+		<h3 class="card-title">{{ !empty($config['Participants']) ? Str::title($config['Participants']->name).' ( '.$config['Participants']->username.' ) ' : 'Form Add Participants' }}</h3>
 	</div>
 	<div class="card-body">
 		
@@ -12,6 +12,7 @@
                     data-toggle="tab" 
                     href="#custom-tabs-profile">Profile</a>
 			</li>
+			@if($config['ViewEventTournamentParticipants'] != null)
 			<li class="nav-item">
 				<a 
                     class="nav-link" 
@@ -19,6 +20,8 @@
                     data-toggle="tab" 
                     href="#custom-tabs-tournament">Tournament TO</a>
 			</li>
+			@endif
+			@if($config['ViewParticipantsCoupon'] != null)
 			<li class="nav-item">
 				<a 
                     class="nav-link" 
@@ -26,11 +29,13 @@
                     data-toggle="tab" 
                     href="#custom-tabs-coupon">Coupon</a>
 			</li>
+			@endif
 		</ul>
 		<div class="tab-content" id="custom-tabs-participantsshow-tabContent">
 			<div 
                 class="tab-pane fade active show" 
                 id="custom-tabs-profile">
+				<form id="form_participants" class="postData" method="post" action="{{ route('panel.master.participants.store') }}">
                 <div class="row">
 		            <div class="col-12">
 						<div class="card">
@@ -39,54 +44,80 @@
 							</div>
 							<div class="card-body p-0">
 				                <div class="row" style="padding: 10px 15px;">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label>Website</label>
+											<select required name="website" class="form-control input">
+											@foreach($config['MasterWebsite'] as $row)
+											<option value="{{ $row->name }}" {{ isset($config['Participants']['website']) and $config['Participants']['website'] == $row->name ? 'selected' : ''}}>{{ $row->name }}</option>
+											@endforeach
+											</select>
+										</div>
+									</div>
 						            <div class="col-sm-6">
 										<div class="form-group">
 											<label>Username</label>
-											<input readonly type="text" class="form-control" value="{{ $config['Participants']->username }}">
+											<input name="username" {{ !empty($config['Participants']) ? '' : 'required'}} type="text" class="form-control input" value="{{ !empty($config['Participants']) ? $config['Participants']->username : '' }}">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label>Name</label>
-											<input readonly type="text" class="form-control" value="{{ Str::title($config['Participants']->name) }}">
+											<input name="name" {{ !empty($config['Participants']) ? '' : 'required'}} type="text" class="form-control input" value="{{ !empty($config['Participants']) ? Str::title($config['Participants']->name) : '' }}">
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label>Bank</label>
+											<select required name="bank" class="form-control input">
+											@foreach($config['MasterBank'] as $row)
+											<option value="{{ $row->name }}" {{ isset($config['Participants']['bank']) and $config['Participants']['bank'] == $row->name ? 'selected' : ''}}>{{ $row->name }}</option>
+											@endforeach
+											</select>
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label>No Rekening</label>
-											<input readonly type="text" class="form-control" value="{{ $config['Participants']->no_rek }}">
+											<input name="no_rek" {{ !empty($config['Participants']) ? '' : 'required'}} type="text" class="form-control input" value="{{ !empty($config['Participants']) ? $config['Participants']->no_rek : '' }}">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label>Atas Nama Rekening</label>
-											<input readonly type="text" class="form-control" value="{{ Str::title($config['Participants']->nama_rek) }}">
+											<input name="nama_rek" {{ !empty($config['Participants']) ? '' : 'required'}} type="text" class="form-control input" value="{{ !empty($config['Participants']) ? Str::title($config['Participants']->nama_rek) : '' }}">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label>No Hp</label>
-											<input readonly type="text" class="form-control" value="{{ $config['Participants']->no_hp }}">
+											<input name="no_hp" {{ !empty($config['Participants']) ? '' : 'required'}} type="text" class="form-control input" value="{{ !empty($config['Participants']) ? $config['Participants']->no_hp : '' }}">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label>IP</label>
-											<input readonly type="text" class="form-control" value="{{ Str::title($config['Participants']->ip_participants) }}">
+											<input name="ip_participants" readonly type="text" class="form-control input" value="{{ !empty($config['Participants']) ? Str::title($config['Participants']->ip_participants) : '' }}">
 										</div>
 									</div>
 									<div class="col-sm-12">
 										<div class="form-group">
 											<label>Alamat</label>
-											<textarea readonly type="text" class="form-control">{{ Str::title($config['Participants']->alamat) }}</textarea>
+											<textarea name="alamat" {{ !empty($config['Participants']) ? '' : 'required'}} type="text" class="form-control input">{{ !empty($config['Participants']) ? Str::title($config['Participants']->alamat) : '' }}</textarea>
 										</div>
 									</div>
 								</div>
 							</div>
+							<div class="card-footer">
+								<input type="hidden" name="id" value="{{ !empty($config['Participants']) ? $config['Participants']->id : '' }}" class="input">
+								<button type="submit" class="btn btn-primary">Submit</button>
+							</div>
 						</div>
 					</div>
 				</div>
+				</form>
             </div>
+			@if($config['ViewEventTournamentParticipants'] != null)
             <div 
                 class="tab-pane fade" 
                 id="custom-tabs-tournament">
@@ -133,6 +164,8 @@
 		            </div>
 				</div>
             </div>
+			@endif
+			@if($config['ViewParticipantsCoupon'] != null)
             <div 
                 class="tab-pane fade" 
                 id="custom-tabs-coupon">
@@ -181,6 +214,7 @@
 		            </div>
 				</div>
             </div>
+			@endif
 		</div>
 		
 	</div>

@@ -55,13 +55,13 @@
 				<div class="col-sm-12">
 					<div class="form-group">
 						<label>Description</label>
-						<textarea required name="description" type="file" class="summernote form-control input"></textarea>
+						<textarea required name="description" class="summernote form-control input"></textarea>
 					</div>
 				</div>
 				<div class="col-sm-12">
 					<div class="form-group">
 						<label>Terms and Conditions</label>
-						<textarea required name="terms_and_conditions" type="file" class="summernote form-control input"></textarea>
+						<textarea required name="terms_and_conditions" class="summernote form-control input"></textarea>
 					</div>
 				</div>
 				<div class="col-sm-12">

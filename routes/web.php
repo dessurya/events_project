@@ -78,7 +78,9 @@ Route::name('panel.')->prefix('panel/')->group(function(){
             Route::name('participants.')->prefix('participants/')->group(function(){
                 Route::get('/list', 'Panel\ParticipantsController@list')->name('list');
                 Route::post('/list', 'Panel\ParticipantsController@getData')->name('getData');
+                Route::post('/add', 'Panel\ParticipantsController@add')->name('add');
                 Route::post('/show', 'Panel\ParticipantsController@show')->name('show');
+                Route::post('/store', 'Panel\ParticipantsController@store')->name('store');
 
                 Route::post('/tourne', 'Panel\ParticipantsController@tourne')->name('tourne');
                 Route::post('/coupon', 'Panel\ParticipantsController@coupon')->name('coupon');

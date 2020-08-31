@@ -157,10 +157,10 @@ class InterFaceController extends Controller
         	if (!empty($store->content) and file_exists($store->content)) {
         		unlink($store->content);
         	}
-            $extension = pathinfo($input->picture_path, PATHINFO_EXTENSION);
-            $fName = explode('.',$input->picture_path)[0];
+            $extension = pathinfo($input->content_path, PATHINFO_EXTENSION);
+            $fName = explode('.',$input->content_path)[0];
             $forFileName =Str::slug($fName,'_').'.'.$extension;
-            $input->picture_encode = base64_decode($input->picture_encode);
+            $input->content_encode = base64_decode($input->content_encode);
             $file_name = Carbon::now()->format('Ymdhis').'_'.Str::random(4).'_'.$forFileName;
             $file_dir = $url.$file_name;
             try {

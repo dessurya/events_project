@@ -9,14 +9,16 @@ use App\Models\EventCouponRegistration;
 
 class NotificationController extends Controller
 {
-    public static function newRegister()
+    public function newRegister(Request $input)
     {
         $return = [];
     	$tourne = EventTournamentRegistration::where('status',1)->count();
     	$coupon = EventCouponRegistration::where('status',1)->count();
 
     	if ($tourne > 0 or $coupon > 0) {
-            $return['playAudioApplauses'] = true;
+            if ($input->param == 'run') {
+                $return['playAudioApplauses'] = true;
+            }
             $return['PNotifynotice_arr'] = true;
             $return['PNotifynotice_arr_data'] = [];
             // $return['render'] = true;

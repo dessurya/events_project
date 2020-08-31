@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="{{ route('site.home.index') }}">
-        <img src="{{ App\Http\Controllers\Site\HomeController::interfaceGetIcon() }}" width="45" height="45" alt="{{ App\Http\Controllers\Site\HomeController::interfaceGetTitle() }} Icon">
+        <img src="{{ App\Http\Controllers\Site\HomeController::interfaceGetLogo() }}" width="45" height="45" alt="{{ App\Http\Controllers\Site\HomeController::interfaceGetTitle() }} Icon">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

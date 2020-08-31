@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Participants;
 use App\Models\ViewEventTournamentParticipants;
 use App\Models\ViewParticipantsCoupon;
+use App\Models\MasterWebsite;
+use App\Models\MasterBank;
 
 class ParticipantsController extends Controller
 {
@@ -29,7 +31,7 @@ class ParticipantsController extends Controller
                         'id' => 'custom-tabs-show-tab', 
                         'href' => 'custom-tabs-show',
                         'name' => 'Participants',
-                        'content' => '-'
+                        'content' => '<div></div>'
                     ]
                 ]
             ]
@@ -57,6 +59,7 @@ class ParticipantsController extends Controller
                 ["data"=>"created_at","name"=>"created_at","searchable"=>true,"searchtype"=>"date","orderable"=>true]
             ],
             'action' => [
+                ["route" => "panel.master.participants.add", "title" => "Add Participants", "action" => "show", "select" => false, "confirm" => false, "multiple" => false],
                 ["route" => "panel.master.participants.show", "title" => "Show Participants", "action" => "show", "select" => true, "confirm" => false, "multiple" => false]
             ]
         ];
@@ -134,7 +137,9 @@ class ParticipantsController extends Controller
         $config = [
         	'Participants' => Participants::find($input->id),
             'ViewEventTournamentParticipants' => ViewEventTournamentParticipants::where('participants_id',$input->id)->orderBy('created_at', 'desc')->paginate(10),
-            'ViewParticipantsCoupon' => ViewParticipantsCoupon::where('participants_id',$input->id)->orderBy('created_at', 'desc')->paginate(10)
+            'ViewParticipantsCoupon' => ViewParticipantsCoupon::where('participants_id',$input->id)->orderBy('created_at', 'desc')->paginate(10),
+            'MasterWebsite' => MasterWebsite::orderBy('name','asc')->get(),
+            'MasterBank' => MasterBank::orderBy('name','asc')->get()
         ];
         return [
             'show_tab' => true,
@@ -143,6 +148,87 @@ class ParticipantsController extends Controller
             'render_config' => [
                 'target' => $tab_render,
                 'content' => base64_encode(view('panel._pages.master.participants.show', ['config' => $config])->render())
+            ]
+        ];
+    }
+
+    public function add(Request $input)
+    {
+        $tab_show = $this->pageConfig();
+        $tab_render = '#'.$tab_show['tabs']['tab'][1]['href'];
+        $tab_show = '#'.$tab_show['tabs']['tab'][1]['id'];
+        $config = [
+        	'Participants' => null,
+            'ViewEventTournamentParticipants' => null,
+            'ViewParticipantsCoupon' => null,
+            'MasterWebsite' => MasterWebsite::orderBy('name','asc')->get(),
+            'MasterBank' => MasterBank::orderBy('name','asc')->get()
+        ];
+        return [
+            'show_tab' => true,
+            'show_tab_target' => $tab_show,
+            'render' => true,
+            'render_config' => [
+                'target' => $tab_render,
+                'content' => base64_encode(view('panel._pages.master.participants.show', ['config' => $config])->render())
+            ]
+        ];
+    }
+
+    public function store(Request $input)
+    {
+        if (empty($input->id)) {
+            $Participants = Participants::where([
+                'username' => $input->username,
+                'website' => $input->website
+            ])->get();
+            if (count($Participants) > 0) {
+                $Participants = $Participants[0];
+                return [
+                    'pnotify' => true,
+                    'pnotify_type' => 'error',
+                    'pnotify_text' => 'Error, username dan website sudah pernah ada!'
+                ];
+            }
+            $Participants = new Participants;
+        }else{
+            $Participants = Participants::where([
+                'username' => $input->username,
+                'website' => $input->website
+            ])->whereNotIn('id',[$input->id])->get();
+            if (count($Participants) > 0) {
+                $Participants = $Participants[0];
+                return [
+                    'pnotify' => true,
+                    'pnotify_type' => 'error',
+                    'pnotify_text' => 'Error, username dan website sudah pernah ada!'
+                ];
+            }
+            $Participants = Participants::find($input->id);
+        }
+
+        $Participants->ip_participants = $input->ip();
+        $Participants->alamat = $input->alamat;
+        $Participants->bank = $input->bank;
+        $Participants->website = $input->website;
+        $Participants->nama_rek = $input->nama_rek;
+        $Participants->name = $input->name;
+        $Participants->no_hp = $input->no_hp;
+        $Participants->no_rek = $input->no_rek;
+        $Participants->username = $input->username;
+        $Participants->save();
+        
+        $tab_show = $this->pageConfig();
+        $tab_render = '#'.$tab_show['tabs']['tab'][1]['href'];
+        $tab_show = '#'.$tab_show['tabs']['tab'][0]['id'];
+        return [
+            'rebuildTable' => true,
+            'show_tab' => true,
+            'show_tab_target' => $tab_show,
+            'render' => true,
+            'render_config' => [
+                'target' => $tab_render,
+                'content' => base64_encode('<div></div>')
             ]
         ];
     }
