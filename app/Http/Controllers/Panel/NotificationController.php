@@ -16,9 +16,11 @@ class NotificationController extends Controller
     	$coupon = EventCouponRegistration::where('status',1)->count();
 
     	if ($tourne > 0 or $coupon > 0) {
-            if ($input->param == 'run') {
-                $return['playAudioApplauses'] = true;
-            }
+            $return['playAudioApplauses'] = true;
+            $return['playAudioApplauses_config'] = [
+                'tourne' => 0,
+                'coupon' => 0
+            ];
             $return['PNotifynotice_arr'] = true;
             $return['PNotifynotice_arr_data'] = [];
             // $return['render'] = true;
@@ -32,6 +34,7 @@ class NotificationController extends Controller
                     'title' => 'New Event Register',
                     'url' => route('panel.register.tournament.list.new'),
                     'text' => 'Event Tournament TO New Register : '.$tourne ];
+                $return['playAudioApplauses_config']['tourne'] = $tourne;
             }
             if ($coupon > 0) {
                 $return['PNotifynotice_arr_data'][] = [
@@ -39,7 +42,8 @@ class NotificationController extends Controller
                     'title' => 'New Event Register',
                     'url' => route('panel.register.coupon.list.new'),
                     'text' => 'Event Coupon New Register : '.$coupon ];
-            }
+                    $return['playAudioApplauses_config']['coupon'] = $coupon;
+                }
     	}
         return $return;
     }

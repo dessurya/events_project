@@ -90,17 +90,17 @@
 		<script type="text/javascript" src="{{ asset('vendors/pnotify/pnotify.custom.min.js') }}"></script>
 		<script type="text/javascript">
 			$( document ).ready(function() {
-				cekNewRegister('run');
+				cekNewRegister();
 				checkEventAddParticipants();
 				$('#loading-page').hide();
 				@stack('script.documentreadyfunction')
 			});
 
-			function cekNewRegister(param) {
+			function cekNewRegister() {
 				var url = '{!! route("panel.newRegisterEventCheck") !!}';
-				postData({'param':param},url);
+				postData(null,url);
 				window.setTimeout(function() { 
-					cekNewRegister('false');
+					cekNewRegister();
 				// }, 5000); // 5 second waiting end run again
 				}, 10000); // 10 second waiting end run again
 				// // }, 30000); // 30 second waiting end run again
@@ -110,10 +110,19 @@
 				// // }, 300000); // 5 menit waiting end run again
 			}
 
-			function playAudioApplauses() { 
+			function playAudioApplauses(param) {
+				var play = false;
+				var getItem = localStorage.getItem('playAudioApplauses');
+				if (getItem != 'null' && getItem != null && getItem != '' && getItem != undefined && getItem != "undefined" && getItem.length != 0) {
+					getItem = JSON.parse(getItem);
+					if (getItem.tourne != param.tourne || getItem.coupon != param.coupon) { play = true; }
+				}else{ play = true; }
 				var audio = new Audio('{!! asset('asset/applauses.mp3') !!}');
-				audio.play();
-				console.log('audio is command!');
+				if (play == true) {
+					audio.play();
+				}
+				console.log(play);
+				localStorage.setItem('playAudioApplauses',JSON.stringify(param));
 			} 
 
 
@@ -216,7 +225,7 @@
 				if (data.pnotify === true) { pnotify({"title":"info","type":data.pnotify_type,"text":data.pnotify_text}); }
 				if (data.pnotify_arr === true) { pnotify_arr(data.pnotify_arr_data); }
 				if (data.render == true) { render(data.render_config); }
-				if (data.playAudioApplauses == true) { playAudioApplauses(); }
+				if (data.playAudioApplauses == true) { playAudioApplauses(data.playAudioApplauses_config); }
 				if (data.prepend == true) { prepend(data.prepend_config); }
 				if (data.append == true) { append(data.append_config); }
 				if (data.PNotifynotice_arr == true) { PNotifynotice_arr(data.PNotifynotice_arr_data); }
