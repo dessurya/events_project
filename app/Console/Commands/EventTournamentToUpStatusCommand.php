@@ -45,20 +45,22 @@ class EventTournamentToUpStatusCommand extends Command
         $events = EventTournament::whereNotIn('flag_status', [6])->get();
         foreach ($events as $event) {
             if (
-                ($event->flag_status == 1 and $date >= $event->start_registration) or
-                ($event->flag_status == 2 and $date >= $event->end_registration) or
-                ($event->flag_status == 3 and $date >= $event->start_activity) or
+                ($event->flag_status == 1 and $event->flag_registration == 1 and $date >= $event->start_registration) or
+                ($event->flag_status == 2 and $event->flag_registration == 1 and $date >= $event->end_registration) or
+                ($event->flag_status == 3 and $event->flag_registration == 1 and $date >= $event->start_activity) or
+                ($event->flag_status == 1 and $event->flag_registration == 2 and $date >= $event->start_activity) or
                 ($event->flag_status == 4 and $date >= $event->end_activity) or
                 ($event->flag_status == 5 and $date >= (new Carbon($event->end_activity))->addDays(1)->format('Y-m-d'))
             ) {
-                $this->nextStatus($event);
+                $this->nextStatus($event,$date);
             }
         }
     }
 
-    private function nextStatus($event)
+    private function nextStatus($event,$date)
     {
-        $event->flag_status += 1;
+        if ($event->flag_status == 1 and $event->flag_registration == 2 and $date >= $event->start_activity) { $event->flag_status = 4; }
+        else{ $event->flag_status += 1; }
         $event->save();
         $newSt = MasterStatusSelf::where([
             'parent_id'=>1,
