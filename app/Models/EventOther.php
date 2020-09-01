@@ -25,10 +25,12 @@ class EventOther extends Model
     }
 	public function getStartActivityAttribute($date)
     {
+        if (empty($date)) { return null; }
         return Carbon::parse($date)->format('Y-m-d');
     }
     public function getEndActivityAttribute($date)
     {
+        if (empty($date)) { return null; }
         return Carbon::parse($date)->format('Y-m-d');
     }
 	public function getCreatedAtAttribute($date)

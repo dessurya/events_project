@@ -104,7 +104,8 @@ class SeederFeed extends Seeder
                 'end_registration' => (new Carbon('2020-01-07'))->format('Y-m-d'),
                 'start_activity' => (new Carbon('2020-01-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-01-17'))->format('Y-m-d'),
-                'flag_status' => 6
+                'flag_status' => 6,
+                'flag_registration' => 1
             ],[
                 'title' => 'event 002',
                 'prize' => 2000,
@@ -112,7 +113,8 @@ class SeederFeed extends Seeder
                 'end_registration' => (new Carbon('2020-08-17'))->format('Y-m-d'),
                 'start_activity' => (new Carbon('2020-08-20'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-27'))->format('Y-m-d'),
-                'flag_status' => 2
+                'flag_status' => 2,
+                'flag_registration' => 1
             ],[
                 'title' => 'event 003',
                 'prize' => 2000,
@@ -120,15 +122,17 @@ class SeederFeed extends Seeder
                 'end_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'start_activity' => (new Carbon('2020-08-11'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-27'))->format('Y-m-d'),
-                'flag_status' => 3
+                'flag_status' => 3,
+                'flag_registration' => 1
             ],[
                 'title' => 'event 004',
                 'prize' => 2000,
-                'start_registration' => (new Carbon('2020-08-01'))->format('Y-m-d'),
-                'end_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
+                'start_registration' => null,
+                'end_registration' => null,
                 'start_activity' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-16'))->format('Y-m-d'),
-                'flag_status' => 4
+                'flag_status' => 4,
+                'flag_registration' => 2
             ],[
                 'title' => 'event 005',
                 'prize' => 2000,
@@ -136,15 +140,17 @@ class SeederFeed extends Seeder
                 'end_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
                 'start_activity' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-12'))->format('Y-m-d'),
-                'flag_status' => 5
+                'flag_status' => 5,
+                'flag_registration' => 1
             ],[
                 'title' => 'event 006',
                 'prize' => 2000,
-                'start_registration' => (new Carbon('2020-09-01'))->format('Y-m-d'),
-                'end_registration' => (new Carbon('2020-09-05'))->format('Y-m-d'),
+                'start_registration' => null,
+                'end_registration' => null,
                 'start_activity' => (new Carbon('2020-09-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-09-12'))->format('Y-m-d'),
-                'flag_status' => 1
+                'flag_status' => 1,
+                'flag_registration' => 2
             ]
         ];
         $website = [
@@ -330,7 +336,8 @@ class SeederFeed extends Seeder
                 'start_active' => (new Carbon('2020-01-10'))->format('Y-m-d'),
                 'end_active' => (new Carbon('2020-01-17'))->format('Y-m-d'),
                 'max_coupon' => 100,
-                'flag_status' => 6
+                'flag_status' => 6,
+                'flag_registration' => 1
             ],[
                 'title' => 'coupon 002',
                 'start_registration' => (new Carbon('2020-07-03'))->format('Y-m-d'),
@@ -338,23 +345,26 @@ class SeederFeed extends Seeder
                 'start_active' => (new Carbon('2020-07-10'))->format('Y-m-d'),
                 'end_active' => (new Carbon('2020-08-12'))->format('Y-m-d'),
                 'max_coupon' => 100,
-                'flag_status' => 5
+                'flag_status' => 5,
+                'flag_registration' => 1
             ],[
                 'title' => 'coupon 003',
-                'start_registration' => (new Carbon('2020-07-03'))->format('Y-m-d'),
-                'end_registration' => (new Carbon('2020-07-20'))->format('Y-m-d'),
+                'start_registration' => null,
+                'end_registration' => null,
                 'start_active' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'end_active' => (new Carbon('2020-09-12'))->format('Y-m-d'),
                 'max_coupon' => 100,
-                'flag_status' => 4
+                'flag_status' => 4,
+                'flag_registration' => 2
             ],[
                 'title' => 'coupon 004',
-                'start_registration' => (new Carbon('2020-08-03'))->format('Y-m-d'),
-                'end_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
+                'start_registration' => null,
+                'end_registration' => null,
                 'start_active' => (new Carbon('2020-09-10'))->format('Y-m-d'),
                 'end_active' => (new Carbon('2020-10-12'))->format('Y-m-d'),
                 'max_coupon' => 100,
-                'flag_status' => 3
+                'flag_status' => 3,
+                'flag_registration' => 2
             ]
             
         ];
@@ -401,7 +411,8 @@ class SeederFeed extends Seeder
             ['id'=>2,'value'=>'Tournament TO Generate Ranks'],
             ['id'=>3,'value'=>'Event Tournament TO Register'],
             ['id'=>4,'value'=>'Event Coupon Register'],
-            ['id'=>5,'value'=>'Participants Coupon Status']
+            ['id'=>5,'value'=>'Participants Coupon Status'],
+            ['id'=>6,'value'=>'Event Registration Status']
         ];
         foreach ($MasterStatusParent as $store) {
             MasterStatusParent::create($store);
@@ -429,6 +440,8 @@ class SeederFeed extends Seeder
             ['parent_id'=>5,'self_id'=>2,'value'=>'Banned'],
             ['parent_id'=>5,'self_id'=>3,'value'=>'Rejected'],
             ['parent_id'=>5,'self_id'=>4,'value'=>'Used Up'],
+            ['parent_id'=>6,'self_id'=>1,'value'=>'Allow'],
+            ['parent_id'=>6,'self_id'=>2,'value'=>'Deny'],
         ];
         foreach ($MasterStatusSelf as $store) {
             MasterStatusSelf::create($store);

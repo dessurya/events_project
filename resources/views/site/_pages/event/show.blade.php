@@ -125,10 +125,12 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
     <div id="EventOGU">
         {{ App\Http\Controllers\Site\HomeController::eventTabsList() }}
 
+        @if(in_array($data->event_id, [1,2]) and in_array($data->status_id, [2,3,4]) and $data->registration_status_id == 1)
         <div class="registration">
             <h5>Registration Form</h5>
             @include('site._componen.event-registration')
         </div>
+        @endif
     </div>
 </div>
 @endpush

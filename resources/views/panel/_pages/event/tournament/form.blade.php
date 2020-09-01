@@ -28,22 +28,32 @@
 						</select>
 					</div>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label>Registration : </label>
+						<select disabled name="flag_registration" class="form-control input select">
+						@foreach($flag_registration as $row)
+						<option value="{{$row->self_id}}">{{$row->value}}</option>
+						@endforeach
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-4">
 					<div class="form-group">
 						<label>Registration Start On : </label>
 						<input disabled name="start_registration" type="date" class="form-control input date">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label>Registration End On : </label>
+						<input disabled name="end_registration" type="date" class="form-control input date">
 					</div>
 				</div>
                 <div class="col-sm-6">
 					<div class="form-group">
 						<label>Activity Start On : </label>
 						<input disabled name="start_activity" type="date" class="form-control input date">
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="form-group">
-						<label>Registration End On : </label>
-						<input disabled name="end_registration" type="date" class="form-control input date">
 					</div>
 				</div>
 				<div class="col-sm-6">

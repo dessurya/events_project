@@ -23,10 +23,13 @@ class CreateAllView extends Migration
                     end_registration,
                     es.value as status,
                     es.self_id as status_id,
+                    er.value as registration_status_name,
+                    er.self_id as registration_status_id,
                     gr.value as generate_ranks,
                     prize,
                     ett.created_at as created_at
                 FROM event_tournament_to ett
+                LEFT JOIN master_status_self er ON er.self_id = ett.flag_registration and er.parent_id = 6
                 LEFT JOIN master_status_self es ON es.self_id = ett.flag_status and es.parent_id = 1
                 LEFT JOIN master_status_self gr ON gr.self_id = ett.generate_ranks and gr.parent_id = 2
             )
@@ -88,9 +91,12 @@ class CreateAllView extends Migration
                     end_registration,
                     es.value as status,
                     es.self_id as status_id,
+                    er.value as registration_status_name,
+                    er.self_id as registration_status_id,
                     ett.created_at as created_at
                 FROM event_coupon ett
                 LEFT JOIN master_status_self es ON es.self_id = ett.flag_status and es.parent_id = 1
+                LEFT JOIN master_status_self er ON er.self_id = ett.flag_registration and er.parent_id = 6
             )
         ");
 
@@ -135,6 +141,8 @@ class CreateAllView extends Migration
                     a.end_activity as end_event,
                     status_id,
                     status,
+                    registration_status_id,
+                    registration_status_name,
                     description,
                     terms_and_conditions,
                     picture,
@@ -155,6 +163,8 @@ class CreateAllView extends Migration
                     a.end_active as end_event,
                     status_id,
                     status,
+                    registration_status_id,
+                    registration_status_name,
                     description,
                     terms_and_conditions,
                     picture,
@@ -175,6 +185,8 @@ class CreateAllView extends Migration
                     a.end_activity as end_event,
                     status_id,
                     status,
+                    2 as registration_status_id,
+                    'Deny' as registration_status_name,
                     description,
                     terms_and_conditions,
                     picture,

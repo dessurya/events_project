@@ -118,10 +118,7 @@
 					if (getItem.tourne != param.tourne || getItem.coupon != param.coupon) { play = true; }
 				}else{ play = true; }
 				var audio = new Audio('{!! asset('asset/applauses.mp3') !!}');
-				if (play == true) {
-					audio.play();
-				}
-				console.log(play);
+				if (play == true) { audio.play(); }
 				localStorage.setItem('playAudioApplauses',JSON.stringify(param));
 			} 
 

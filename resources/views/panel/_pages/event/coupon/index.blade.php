@@ -25,10 +25,10 @@
 		if (data.id == "" && today >= start_active) {
 			error.push('start_registration must greater than today');
 		}
-		if (start_registration > end_registration) {
+		if (data.flag_registration == 1 && start_registration > end_registration) {
 			error.push('end_registration must greater than start_registration');
 		}
-		if (end_registration > start_active) {
+		if (data.flag_registration == 1 && end_registration > start_active) {
 			error.push('start_active must greater than end_registration');
 		}
 		if (start_active > end_active) {

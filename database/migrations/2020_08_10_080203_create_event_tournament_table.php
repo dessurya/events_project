@@ -25,6 +25,7 @@ class CreateEventTournamentTable extends Migration
             $table->text('picture')->nullable();
             $table->text('leaderboard')->nullable();
             $table->double('prize')->nullable();
+            $table->integer('flag_registration')->comment('master_status_parent : 6')->default('1');
             $table->integer('flag_status')->comment('master_status_parent : 1')->default('1');
             $table->integer('generate_ranks')->comment('master_status_parent : 2')->default('1');
             $table->timestamps();

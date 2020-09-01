@@ -12,6 +12,7 @@ use App\Models\EventCouponRegistration;
 use App\Models\ViewEventCoupon;
 use App\Models\ViewEventCouponRegistration;
 use App\Models\MasterWebsite;
+use App\Models\MasterStatusSelf;
 use App\Models\ParticipantsCoupon;
 use Carbon\Carbon;
 
@@ -61,11 +62,11 @@ class EventCouponController extends Controller
             ],
             'componen' => [
                 ["data"=>"title","name"=>"title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"website","name"=>"website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"max_coupon","name"=>"max_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"available_coupon","name"=>"available_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"gifted_coupon","name"=>"gifted_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
+                ["data"=>"registration_status_name","name"=>"registration_status_name","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"start_active","name"=>"start_active","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"end_active","name"=>"end_active","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"start_registration","name"=>"start_registration","searchable"=>true,"searchtype"=>"date","orderable"=>true],
@@ -107,7 +108,7 @@ class EventCouponController extends Controller
             'title' => 'Form Event Coupon',
             'action' => 'panel.event.coupon.store',
             'readonly' => [],
-            'required' => ['title', 'website', 'start_active', 'start_registration', 'end_active', 'end_registration', 'max_coupon']
+            'required' => ['title', 'website', 'flag_registration', 'start_active', 'end_active', 'max_coupon']
         ];
     }
 
@@ -118,7 +119,7 @@ class EventCouponController extends Controller
 
     private function getForm()
     {
-        return view('panel._pages.event.coupon.form', ['config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get()])->render();
+        return view('panel._pages.event.coupon.form', ['config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get(), 'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get()])->render();
     }
 
     public function list(Request $input)
@@ -180,8 +181,8 @@ class EventCouponController extends Controller
         if (isset($input->status) and !empty($input->status)){
             $data->where('status', 'like', '%'.$input->status.'%');
         }
-        if (isset($input->website) and !empty($input->website)){
-            $data->where('website', 'like', '%'.$input->website.'%');
+        if (isset($input->registration_status_name) and !empty($input->registration_status_name)){
+            $data->where('registration_status_name', 'like', '%'.$input->registration_status_name.'%');
         }
         $data = $data->paginate($paginate);
         return [
@@ -225,11 +226,18 @@ class EventCouponController extends Controller
     {
         $date = Carbon::now()->format('Y-m-d');
         $msg = 'this event status is '.$event->getStatus->value.',';
-        if ($event->flag_status == 1 and $input->start_registration < $date) {
+
+        if ($event->flag_registration == 1 and empty($input->start_registration)) {
+            return ['success' => false, 'msg' => 'start_registration is required'];
+        }else if($event->flag_registration == 1 and empty($input->end_registration)){
+            return ['success' => false, 'msg' => 'end_registration is required'];
+        }
+
+        if ($event->flag_registration == 1 and $event->flag_status == 1 and $input->start_registration < $date) {
             return ['success' => false, 'msg' => $msg.' and start_registration must be greater or equals than '.$date.' (today)'];
-        }else if ($event->flag_status == 2 and $input->end_registration < $date) {
+        }else if ($event->flag_registration == 1 and $event->flag_status == 2 and $input->end_registration < $date) {
             return ['success' => false, 'msg' => $msg.' and end_registration must be greater or equals than '.$date.' (today)'];
-        }else if ($event->flag_status == 3 and $input->start_active < $date) {
+        }else if ((($event->flag_registration == 1 and $event->flag_status == 3) or ($event->flag_registration == 2 and $event->flag_status == 1) ) and $input->start_active < $date) {
             return ['success' => false, 'msg' => $msg.' and start_active must be greater or equals than '.$date.' (today)'];
         }else if (in_array($event->flag_status,[4,5,6]) and $input->end_active < $date) {
             return ['success' => false, 'msg' => $msg.' and end_active must be greater or equals than '.$date.' (today)'];
@@ -280,9 +288,15 @@ class EventCouponController extends Controller
         $store->terms_and_conditions = $input->terms_and_conditions;
         $store->description = $input->description;
         $store->end_active = $input->end_active;
-        $store->end_registration = $input->end_registration;
         $store->start_active = $input->start_active;
-        $store->start_registration = $input->start_registration;
+        $store->flag_registration = $input->flag_registration;
+        if ($input->flag_registration == 2) {
+            $store->start_registration = null;
+            $store->end_registration = null;
+        }else{
+            $store->start_registration = $input->start_registration;
+            $store->end_registration = $input->end_registration;
+        }
         $store->max_coupon = $input->max_coupon;
         $store->save();
         $find = EventCoupon::find($store->id);
