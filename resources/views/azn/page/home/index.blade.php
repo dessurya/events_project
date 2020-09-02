@@ -4,6 +4,9 @@
 Home
 @endsection
 
+@php $eventGetUpComming = App\Http\Controllers\Azn\HomeController::eventGetUpComming(6); @endphp
+@php $eventGetOnGoing = App\Http\Controllers\Azn\HomeController::eventGetOnGoing(4); @endphp
+
 @push('link')
 <style type="text/css">
 	#single-slick .slick-item .img{
@@ -44,17 +47,17 @@ Home
         infinite: true,
         speed: 500,
         arrows: false,
-        slidesToShow: 3,
+        slidesToShow: {{ count($eventGetUpComming) > 3 ? 3 : 1 }},
         slidesToScroll: 1,
         autoplay:true,
-        initialSlide: 3,
+        initialSlide: {{ count($eventGetUpComming) > 3 ? 3 : 1 }},
         loop:true,
         responsive: [
           {
             breakpoint: 1024,
             settings: {
-              slidesToShow: 3,
-              slidesToScroll: 3,
+              slidesToShow: {{ count($eventGetUpComming) > 3 ? 3 : 1 }},
+              slidesToScroll: 1,
               infinite: true,
               dots: false,
             }
@@ -87,7 +90,7 @@ Home
 		
 		<div class="trending-main">
 			<div class="row">
-				<div class="col-lg-8">
+				<div class="col-lg-{{ count($eventGetOnGoing) > 0 ? 8 : 12}}">
 					<div class="trending-top mb-30">
 						<div id="single-slick" class="trend-top-img">
 							@foreach($MainSlider as $slide)
@@ -98,11 +101,12 @@ Home
 						</div>
 					</div>
 				</div>
+				@if(count($eventGetOnGoing) > 0)
 				<div class="col-lg-4">
 					<div class="section-tittle">
 						<h3>On Going Event</h3>
 					</div>
-					@foreach(App\Http\Controllers\Azn\HomeController::eventGetOnGoing(4) as $key => $row)
+					@foreach($eventGetOnGoing as $key => $row)
 					<div id="eventGetOnGoing" class="trand-right-single d-flex">
 						<div class="trand-right-cap">
 							<span class="color{{ $key%2 == 0 ? 2 : 3 }}">Do Date : {{ $row->start_event.' - '.$row->end_event }}</span>
@@ -113,9 +117,11 @@ Home
 					</div>
 					@endforeach
 				</div>
+				@endif
 			</div>
 		</div>
 
+		@if(count($eventGetUpComming) > 0)
 		<div class="weekly-news-area pt-50">
 			<div class="container">
 				<div class="weekly-wrapper">
@@ -129,7 +135,7 @@ Home
 					<div class="row">
 						<div class="col-12">
 							<div id="upcomming-slick" class="dot-style d-flex dot-style">
-								@foreach(App\Http\Controllers\Azn\HomeController::eventGetUpComming(6) as $key => $row)
+								@foreach($eventGetUpComming as $key => $row)
 								<div class="weekly-single">
 									<div class="weekly-img">
 										<div class="img d-block w-100" title="{{ asset($row->title) }}"
@@ -152,6 +158,7 @@ Home
 				</div>
 			</div>
 		</div>
+		@endif
 
 		<div class="about-area pt-50">
 			<div class="container">
