@@ -98,16 +98,17 @@ class SeederFeed extends Seeder
     private function EventTournament(){
         $EventTournament = [
             [
-                'title' => 'event 001',
+                'title' => 'TO event 001',
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-01-01'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-01-07'))->format('Y-m-d'),
                 'start_activity' => (new Carbon('2020-01-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-01-17'))->format('Y-m-d'),
                 'flag_status' => 6,
+                'flag_participants_username' => 2,
                 'flag_registration' => 1
             ],[
-                'title' => 'event 002',
+                'title' => 'TO event 002',
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-08-17'))->format('Y-m-d'),
@@ -116,7 +117,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 2,
                 'flag_registration' => 1
             ],[
-                'title' => 'event 003',
+                'title' => 'TO event 003',
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
@@ -125,7 +126,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 3,
                 'flag_registration' => 1
             ],[
-                'title' => 'event 004',
+                'title' => 'TO event 004',
                 'prize' => 2000,
                 'start_registration' => null,
                 'end_registration' => null,
@@ -134,7 +135,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 4,
                 'flag_registration' => 2
             ],[
-                'title' => 'event 005',
+                'title' => 'TO event 005',
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-01'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
@@ -143,7 +144,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 5,
                 'flag_registration' => 1
             ],[
-                'title' => 'event 006',
+                'title' => 'TO event 006',
                 'prize' => 2000,
                 'start_registration' => null,
                 'end_registration' => null,
@@ -154,12 +155,12 @@ class SeederFeed extends Seeder
             ]
         ];
         $website = [
-            'event_001' => [1,2,3,4,5],
-            'event_002' => [2,3],
-            'event_003' => [1,4,5],
-            'event_004' => [4,5],
-            'event_005' => [1],
-            'event_006' => [1,2,5]
+            'to_event_001' => [1,2,3,4,5],
+            'to_event_002' => [2,3],
+            'to_event_003' => [1,4,5],
+            'to_event_004' => [4,5],
+            'to_event_005' => [1],
+            'to_event_006' => [1,2,5]
         ];
 
         foreach ($EventTournament as $store) {
@@ -281,25 +282,25 @@ class SeederFeed extends Seeder
     private function EventOther(){
         $EventOther = [
             [
-                'title' => 'event 001',
+                'title' => 'Other event 001',
                 'start_activity' => (new Carbon('2020-06-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-06-17'))->format('Y-m-d'),
                 'flag_status' => 6
             ],
             [
-                'title' => 'event 002',
+                'title' => 'Other event 002',
                 'start_activity' => (new Carbon('2020-08-01'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-13'))->format('Y-m-d'),
                 'flag_status' => 5
             ],
             [
-                'title' => 'event 003',
+                'title' => 'Other event 003',
                 'start_activity' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-17'))->format('Y-m-d'),
                 'flag_status' => 4
             ],
             [
-                'title' => 'event 004',
+                'title' => 'Other event 004',
                 'start_activity' => (new Carbon('2020-10-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-10-17'))->format('Y-m-d'),
                 'flag_status' => 1
@@ -307,12 +308,12 @@ class SeederFeed extends Seeder
         ];
 
         $website = [
-            'event_001' => [1,2,3,4,5],
-            'event_002' => [2,3],
-            'event_003' => [1,4,5],
-            'event_004' => [4,5],
-            'event_005' => [1],
-            'event_006' => [1,2,5]
+            'other_event_001' => [1,2,3,4,5],
+            'other_event_002' => [2,3],
+            'other_event_003' => [1,4,5],
+            'other_event_004' => [4,5],
+            'other_event_005' => [1],
+            'other_event_006' => [1,2,5]
         ];
         
         foreach ($EventOther as $store) {
@@ -412,7 +413,8 @@ class SeederFeed extends Seeder
             ['id'=>3,'value'=>'Event Tournament TO Register'],
             ['id'=>4,'value'=>'Event Coupon Register'],
             ['id'=>5,'value'=>'Participants Coupon Status'],
-            ['id'=>6,'value'=>'Event Registration Status']
+            ['id'=>6,'value'=>'Event Registration Status'],
+            ['id'=>7,'value'=>'Event Tournament TO Participants Username']
         ];
         foreach ($MasterStatusParent as $store) {
             MasterStatusParent::create($store);
@@ -442,6 +444,8 @@ class SeederFeed extends Seeder
             ['parent_id'=>5,'self_id'=>4,'value'=>'Used Up'],
             ['parent_id'=>6,'self_id'=>1,'value'=>'Allow'],
             ['parent_id'=>6,'self_id'=>2,'value'=>'Deny'],
+            ['parent_id'=>7,'self_id'=>1,'value'=>'Full'],
+            ['parent_id'=>7,'self_id'=>2,'value'=>'Restricted'],
         ];
         foreach ($MasterStatusSelf as $store) {
             MasterStatusSelf::create($store);

@@ -73,15 +73,24 @@
 		event.preventDefault();
     });
 
+    $(document).on('submit', 'form#getCoupon', function(){
+        let input = {};
+        $.each($(this).find('.input'), function(){
+            input[$(this).attr('name')] = $(this).val();
+        });
+        postData(input,$(this).attr('action'));
+		event.preventDefault();
+    });
+
     function fill_form(data) {
         $('form#registration #otherInput').show();
-        $('form .input').removeAttr('readonly').attr('required', 'true');
-        $('form').data('form','store');
+        $('form#registration .input').removeAttr('readonly').attr('required', 'true');
+        $('form#registration').data('form','store');
         $.each(data, function(key, val){
             $('form').find('[name='+key+']').val(val);
         });
-        $('form').find('[name=username]').removeAttr('required').attr('readonly', 'true');
-        $('form').find('[name=website]').removeAttr('required').attr('disabled', 'disabled');
+        $('form#registration').find('[name=username]').removeAttr('required').attr('readonly', 'true');
+        $('form#registration').find('[name=website]').removeAttr('required').attr('disabled', 'disabled');
     }
 </script>
 @endpush
@@ -116,9 +125,9 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
             <div>{!! $data->terms_and_conditions !!}</div>
             <hr>
             @if($data->event_id == 1)
-            <div>@include('site._componen.event-leaderboard', ['participants'=>$param['participants']])</div>
+            <div>@include('site._componen.event-leaderboard', ['participants'=>$param['participants'],'participants_username_status_id'=>$param['participants_username_status_id']])</div>
             @elseif($data->event_id == 2)
-            <div>@include('site._componen.event-coupon', ['participants'=>$param['participants']])</div>
+            <div>@include('site._componen.event-coupon', ['MasterWebsite'=>$MasterWebsite])</div>
             @endif
         </div>
     </div>

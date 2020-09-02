@@ -395,7 +395,6 @@ class EventCouponController extends Controller
             $gifts = explode('^',$coupon['coupon']);
             for ($i=0; $i < $coupon['coupon']; $i++) { 
                     $ParticipantsCoupon = new ParticipantsCoupon;
-                    $ParticipantsCoupon->coupon_code = $event->id.'.'.$register->participants_id.base64_encode(rand(10,99)).$event->max_coupon.'-'.Carbon::now()->format('Y_m_d');
                     $ParticipantsCoupon->participants_id = $register->participants_id;
                     $ParticipantsCoupon->participants_username = $register->participants_username;
                     $ParticipantsCoupon->event_coupon_id = $register->event_coupon_id;
@@ -404,6 +403,9 @@ class EventCouponController extends Controller
                     $event->save();
                     $register->have_coupon += 1;
                     $register->save();
+                    $carbon = Carbon::now();
+                    $ParticipantsCoupon->coupon_code = base64_encode(rand(10,99).$register->participants_id.$event->gifted_coupon.$register->have_coupon).$carbon->format('m').$event->id.$carbon->format('d').$carbon->format('Y');
+                    $ParticipantsCoupon->save();
             }
         }
         return [

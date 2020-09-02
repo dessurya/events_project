@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Participants;
 use App\Models\ViewHistoryEvent;
+use App\Models\ViewParticipantsCoupon;
 use App\Models\ViewEventTournamentParticipants;
 use App\Models\ViewEventCouponRegistration;
 use App\Models\EventTournamentRegistration;
 use App\Models\EventCouponRegistration;
 use App\Models\EventTournamentWebsite;
+use App\Models\EventTournament;
 use App\Models\EventCouponWebsite;
 use App\Models\EventOtherWebsite;
 use App\Models\MasterWebsite;
@@ -201,11 +203,12 @@ class EventController extends Controller
                 'event_id' => base64_decode($encode),
                 'participants_status_id' => 3
                 ])->whereNotNull('participants_rank_board')->orderBy('participants_rank_board', 'asc')->orderBy('created_at', 'asc')->get();
+            $param['participants_username_status_id'] = EventTournament::find(base64_decode($encode))->flag_participants_username;
         } else if (base64_decode($type) == 2) {
-            $param['participants'] = ViewEventCouponRegistration::where([
-                'event_id' => base64_decode($encode),
-                'participants_status_id' => 3
-                ])->orderBy('confirm_at', 'asc')->get();
+            // $param['participants'] = ViewEventCouponRegistration::where([
+            //     'event_id' => base64_decode($encode),
+            //     'participants_status_id' => 3
+            //     ])->orderBy('confirm_at', 'asc')->get();
         }
         $MasterWebsite = MasterWebsite::orderBy('name','asc')->get();
         $MasterBank = MasterBank::orderBy('name','asc')->get();
@@ -301,5 +304,43 @@ class EventController extends Controller
                 'pnotify_text' => 'Thank You, '.$Participants->name.'! For your registration'
             ];
         }
+    }
+
+    public function getCoupon(Request $input)
+    {
+        $render = '';
+        $Participants = Participants::where([
+            'username' => $input->username,
+            'website' => $input->website
+        ])->get();
+        if (count($Participants) == 0) {
+            $render = '<tr><td colspan="5" class="text-center">Sorry, Username and Website Not Found</td></tr>';
+        }else{
+            $Participants = $Participants[0];
+            $data = ViewParticipantsCoupon::where([
+                'participants_id'=>$Participants->id,
+                'event_coupon_id'=>$input->event_id
+            ])->orderBy('created_at', 'desc')->get();
+            if (count($data) == 0) {
+                $render = '<tr><td colspan="5" class="text-center">Not Have Coupon</td></tr>';
+            }else{
+                foreach ($data as $idx => $row) {
+                    $render .= '<tr>';
+                    $render .= '<td>'.($idx+1).'</td>';
+                    $render .= '<td>'.$Participants->website.'</td>';
+                    $render .= '<td>'.$Participants->username.'</td>';
+                    $render .= '<td>'.$Participants->name.'</td>';
+                    $render .= '<td>'.$row->coupon_code.'</td>';
+                    $render .= '</tr>';
+                }
+            }
+        }
+        return [
+            'render' => true,
+            'render_config' => [
+                'target' => '#showCoupon table tbody',
+                'content' => base64_encode($render)
+            ]
+        ];
     }
 }

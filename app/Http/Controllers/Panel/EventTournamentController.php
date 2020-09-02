@@ -64,6 +64,7 @@ class EventTournamentController extends Controller
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"registration_status_name","name"=>"registration_status_name","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"generate_ranks","name"=>"generate_ranks","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"participants_username_status","name"=>"participants_username_status","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"prize","name"=>"prize","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"start_activity","name"=>"start_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"end_activity","name"=>"end_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
@@ -77,6 +78,7 @@ class EventTournamentController extends Controller
                 ["route" => "panel.event.tournament.form", "title" => "Update Tournament TO", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
                 ["route" => "panel.event.tournament.delete", "title" => "Delete Tournament TO", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true],
                 ["route" => "panel.event.tournament.generatestatus", "title" => "Generate Status Event Tournament TO", "action" => "generatestatus", "select" => false, "confirm" => false, "multiple" => false],
+                ["route" => "panel.event.tournament.fullRestrictedParticipantsUsername", "title" => "Full / Restricted Participants Username For Top 3", "action" => "Full/Restricted_Participants_Username", "select" => true, "confirm" => true, "multiple" => true],
                 ["route" => "panel.event.tournament.addparticipants", "title" => "Add Participants", "action" => "add_participants", "select" => true, "confirm" => false, "multiple" => false]
             ]
         ];
@@ -184,6 +186,9 @@ class EventTournamentController extends Controller
         }
         if (isset($input->registration_status_name) and !empty($input->registration_status_name)){
             $data->where('registration_status_name', 'like', '%'.$input->registration_status_name.'%');
+        }
+        if (isset($input->participants_username_status) and !empty($input->participants_username_status)){
+            $data->where('participants_username_status', 'like', '%'.$input->participants_username_status.'%');
         }
         $data = $data->paginate($paginate);
         return [
@@ -324,6 +329,21 @@ class EventTournamentController extends Controller
     {
         $ids = explode('^', $stringId);
         return EventTournament::whereIn('id', $ids)->get();
+    }
+
+    public function fullRestrictedParticipantsUsername(Request $input)
+    {
+        foreach ($this->getDataIn($input->id) as $list){
+            if ($list->flag_participants_username == 1) { $list->flag_participants_username = 2; }
+            else if ($list->flag_participants_username == 2) { $list->flag_participants_username = 1; }
+            $list->save();
+        }
+        return [
+            'rebuildTable' => true,
+            'pnotify' => true,
+            'pnotify_type' => 'success',
+            'pnotify_text' => 'Success Full / Restricted Participants Username For Top 3'
+        ];
     }
 
     public function delete(Request $input)

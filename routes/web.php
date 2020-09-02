@@ -30,6 +30,9 @@ Route::name('site.')->group(function(){
         Route::post('/registration', 'Site\EventController@registration')->name('registration');
     });
     Route::get('/contact-us', 'Site\HomeController@contact')->name('contact.index');
+
+    Route::post('/get/coupon', 'Site\EventController@getCoupon')->name('get.coupon');
+
 });
 
 Route::name('panel.')->prefix('panel/')->group(function(){
@@ -121,6 +124,7 @@ Route::name('panel.')->prefix('panel/')->group(function(){
                 Route::post('/leaderboard/add-point', 'Panel\EventTournamentController@leaderboardAddPoint')->name('leaderboardAddPoint');
                 Route::post('/leaderboard/generate-rank', 'Panel\EventTournamentController@leaderboardGenerateRank')->name('leaderboardGenerateRank');
                 Route::post('/generatestatus', 'Panel\EventTournamentController@generatestatus')->name('generatestatus');
+                Route::post('/fullRestrictedParticipantsUsername', 'Panel\EventTournamentController@fullRestrictedParticipantsUsername')->name('fullRestrictedParticipantsUsername');
                 Route::post('/addparticipants', 'Panel\EventTournamentController@addparticipants')->name('addparticipants');
             });
             Route::name('coupon.')->prefix('coupon/')->group(function(){

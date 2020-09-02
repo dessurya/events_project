@@ -6,7 +6,6 @@
             <tr>
                 <th>Website</th>
                 <th>Username</th>
-                <th>Name</th>
                 <th>Rank</th>
             </tr>
         </thead>
@@ -14,8 +13,13 @@
             @foreach($participants as $participant)
             <tr>
                 <td>{{ $participant->participants_website }}</td>
-                <td>{{ $participant->participants_username }}</td>
-                <td>{{ $participant->participants_name }}</td>
+                <td>
+                    @if($participants_username_status_id == 2 and $participant->participants_rank_board <= 3)
+                    {{ Str::limit($participant->participants_username, 5, '***') }}
+                    @else
+                    {{ $participant->participants_username }}
+                    @endif
+                </td>
                 <td>{{ $participant->participants_rank_board }}</td>
             </tr>
             @endforeach

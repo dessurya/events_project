@@ -47,9 +47,15 @@
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label>Website</label>
-											<select required name="website" class="form-control input">
+											<select required name="website" class="form-control input select">
 											@foreach($config['MasterWebsite'] as $row)
-											<option value="{{ $row->name }}" {{ isset($config['Participants']['website']) and $config['Participants']['website'] == $row->name ? 'selected' : ''}}>{{ $row->name }}</option>
+											<option 
+												value="{{ $row->name }}" 
+												@if(isset($config['Participants']['website']) and $config['Participants']['website'] == $row->name)
+												selected
+												@endif
+												>
+												{{ $row->name }}</option>
 											@endforeach
 											</select>
 										</div>
@@ -69,9 +75,15 @@
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label>Bank</label>
-											<select required name="bank" class="form-control input">
+											<select required name="bank" class="form-control input select">
 											@foreach($config['MasterBank'] as $row)
-											<option value="{{ $row->name }}" {{ isset($config['Participants']['bank']) and $config['Participants']['bank'] == $row->name ? 'selected' : ''}}>{{ $row->name }}</option>
+											<option 
+												value="{{ $row->name }}" 
+												@if(isset($config['Participants']['bank']) and $config['Participants']['bank'] == $row->name)
+												selected
+												@endif
+												>
+												{{ $row->name }}</option>
 											@endforeach
 											</select>
 										</div>

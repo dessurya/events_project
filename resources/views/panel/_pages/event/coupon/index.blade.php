@@ -22,7 +22,7 @@
 		var end_active = new Date(data.end_active);
 		var today = new Date();
 
-		if (data.id == "" && today >= start_active) {
+		if (data.id == "" && today > start_active) {
 			error.push('start_registration must greater than today');
 		}
 		if (data.flag_registration == 1 && start_registration > end_registration) {

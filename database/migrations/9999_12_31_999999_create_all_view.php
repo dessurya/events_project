@@ -25,10 +25,13 @@ class CreateAllView extends Migration
                     es.self_id as status_id,
                     er.value as registration_status_name,
                     er.self_id as registration_status_id,
+                    epu.value as participants_username_status,
+                    epu.self_id as participants_username_status_id,
                     gr.value as generate_ranks,
                     prize,
                     ett.created_at as created_at
                 FROM event_tournament_to ett
+                LEFT JOIN master_status_self epu ON epu.self_id = ett.flag_participants_username and epu.parent_id = 7
                 LEFT JOIN master_status_self er ON er.self_id = ett.flag_registration and er.parent_id = 6
                 LEFT JOIN master_status_self es ON es.self_id = ett.flag_status and es.parent_id = 1
                 LEFT JOIN master_status_self gr ON gr.self_id = ett.generate_ranks and gr.parent_id = 2
