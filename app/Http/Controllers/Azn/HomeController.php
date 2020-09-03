@@ -18,7 +18,10 @@ class HomeController extends Controller
         $InterfaceConfig = [
             'about_us' => InterfaceConfig::where('key','about_us')->first()->content
         ];
-        return view('azn.page.home.index', compact('MainSlider', 'InterfaceConfig'));
+        $eventGetUpComming = $this->eventGetUpComming(6);
+        $eventGetOnGoing = $this->eventGetOnGoing(3);
+        $eventGetPast = $this->eventGetPast(7);
+        return view('azn.page.home.index', compact('MainSlider', 'InterfaceConfig', 'eventGetUpComming', 'eventGetOnGoing', 'eventGetPast'));
 	}
 
 	public static function eventGetOnGoing($limit)
@@ -29,6 +32,11 @@ class HomeController extends Controller
     public static function eventGetUpComming($limit)
     {
         return ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('start_event','desc')->limit($limit)->get();
+    }
+
+    public static function eventGetPast($limit)
+    {
+        return ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('end_event','desc')->limit($limit)->get();
     }
 
 	public static function interfaceGetTitle()
@@ -42,7 +50,7 @@ class HomeController extends Controller
         $InterfaceConfig = InterfaceConfig::where('key','icon')->first();
         echo asset($InterfaceConfig->content);
     }
-    
+
     public static function interfaceGetFooter()
     {
         $InterfaceConfig = InterfaceConfig::where('key','footer')->first();
@@ -54,5 +62,11 @@ class HomeController extends Controller
         $texts = RunningText::orderBy('order','asc')->get();
         $html = view('azn.layout.trending-animated', compact('texts'))->render();
         echo $html;
+    }
+
+    public function contact()
+    {
+        $InterfaceConfig = InterfaceConfig::where('key','contact_us')->first()->content;
+        return view('azn.page.contact.index', compact('InterfaceConfig'));
     }
 }

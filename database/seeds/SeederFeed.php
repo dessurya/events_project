@@ -98,6 +98,7 @@ class SeederFeed extends Seeder
     private function EventTournament(){
         $EventTournament = [
             [
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'TO event 001',
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-01-01'))->format('Y-m-d'),
@@ -108,6 +109,7 @@ class SeederFeed extends Seeder
                 'flag_participants_username' => 2,
                 'flag_registration' => 1
             ],[
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'TO event 002',
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-10'))->format('Y-m-d'),
@@ -117,6 +119,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 2,
                 'flag_registration' => 1
             ],[
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'TO event 003',
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-05'))->format('Y-m-d'),
@@ -126,6 +129,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 3,
                 'flag_registration' => 1
             ],[
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'TO event 004',
                 'prize' => 2000,
                 'start_registration' => null,
@@ -135,6 +139,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 4,
                 'flag_registration' => 2
             ],[
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'TO event 005',
                 'prize' => 2000,
                 'start_registration' => (new Carbon('2020-08-01'))->format('Y-m-d'),
@@ -144,6 +149,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 5,
                 'flag_registration' => 1
             ],[
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'TO event 006',
                 'prize' => 2000,
                 'start_registration' => null,
@@ -285,24 +291,28 @@ class SeederFeed extends Seeder
                 'title' => 'Other event 001',
                 'start_activity' => (new Carbon('2020-06-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-06-17'))->format('Y-m-d'),
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'flag_status' => 6
             ],
             [
                 'title' => 'Other event 002',
                 'start_activity' => (new Carbon('2020-08-01'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-13'))->format('Y-m-d'),
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'flag_status' => 5
             ],
             [
                 'title' => 'Other event 003',
                 'start_activity' => (new Carbon('2020-08-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-08-17'))->format('Y-m-d'),
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'flag_status' => 4
             ],
             [
                 'title' => 'Other event 004',
                 'start_activity' => (new Carbon('2020-10-10'))->format('Y-m-d'),
                 'end_activity' => (new Carbon('2020-10-17'))->format('Y-m-d'),
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'flag_status' => 1
             ],
         ];
@@ -331,6 +341,7 @@ class SeederFeed extends Seeder
     private function EventCoupon(){
         $EventCoupon = [
             [
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'coupon 001',
                 'start_registration' => (new Carbon('2020-01-01'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-01-07'))->format('Y-m-d'),
@@ -340,6 +351,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 6,
                 'flag_registration' => 1
             ],[
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'coupon 002',
                 'start_registration' => (new Carbon('2020-07-03'))->format('Y-m-d'),
                 'end_registration' => (new Carbon('2020-07-07'))->format('Y-m-d'),
@@ -349,6 +361,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 5,
                 'flag_registration' => 1
             ],[
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'coupon 003',
                 'start_registration' => null,
                 'end_registration' => null,
@@ -358,6 +371,7 @@ class SeederFeed extends Seeder
                 'flag_status' => 4,
                 'flag_registration' => 2
             ],[
+                'description' => "<span>That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.That dominion stars lights dominion divide years for fourth have don't stars is that he earth it first without heaven in place seed it second morning saying.</span>",
                 'title' => 'coupon 004',
                 'start_registration' => null,
                 'end_registration' => null,

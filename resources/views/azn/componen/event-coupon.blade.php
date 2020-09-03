@@ -1,27 +1,35 @@
 <h5 class="text-center">Coupon</h5>
-<form id="getCoupon" action="{{ route('azn.get.coupon') }}" method="post">
+<form id="getCoupon" action="{{ route('site.get.coupon') }}" method="post">
     <div class="container">
         <div class="row">
             <div class="col-12 col-md-6">
                 <div class="form-group">
-                    <label for="inputWebsite">Website</label>
-                    <select required name="website" class="form-control input" id="inputWebsite" placeholder="Website">
-                    @foreach($MasterWebsite as $row)
-                    <option value="{{ $row->name }}">{{ $row->name }}</option>
-                    @endforeach
-                    </select>
+                	<div>
+	                    <label for="inputWebsite">Website</label>
+                	</div>
+                    <div>
+	                    <select required name="website" class="form-control input" id="inputWebsite" style="width: 100%;">
+		                    @foreach($MasterWebsite as $row)
+		                    <option value="{{ $row->name }}">{{ $row->name }}</option>
+		                    @endforeach
+	                    </select>
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-md-6">
                 <div class="form-group">
-                    <label for="inputUsername">Username</label>
-                    <input required type="text" name="username" class="form-control input" id="inputUsername" placeholder="Username">
+                	<div>
+                		<label for="inputUsername">Username</label>
+                	</div>
+                    <div>
+	                    <input required type="text" name="username" class="form-control input" id="inputUsername" placeholder="Username">
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-md-12">
                 <div class="form-group">
                     <input type="hidden" name="event_id"  class="input" value="{{ $data->id }}">
-                    <button class="btn btn-block btn-outline-success">Submit</button>
+                    <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">Submit</button>
                 </div>
             </div>
         </div>

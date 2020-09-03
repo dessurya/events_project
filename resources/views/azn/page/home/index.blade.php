@@ -4,9 +4,6 @@
 Home
 @endsection
 
-@php $eventGetUpComming = App\Http\Controllers\Azn\HomeController::eventGetUpComming(6); @endphp
-@php $eventGetOnGoing = App\Http\Controllers\Azn\HomeController::eventGetOnGoing(4); @endphp
-
 @push('link')
 <style type="text/css">
 	#single-slick .slick-item .img{
@@ -22,6 +19,23 @@ Home
 
     #upcomming-slick .weekly-single .weekly-img .img{
     	height: 260px;
+    	background-position: center;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        border-radius: 7px;
+    }
+
+    #eventGetOnGoing .single-bottom .trend-bottom-img .img{
+    	height: 210px;
+    	background-position: center;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        border-radius: 7px;
+    }
+
+    #eventGetPast .trand-right-single .trand-right-img .img{
+    	width: 120px;
+    	height: 100px;
     	background-position: center;
         background-size: 100% 100%;
         background-repeat: no-repeat;
@@ -100,18 +114,56 @@ Home
 							@endforeach
 						</div>
 					</div>
-				</div>
-				@if(count($eventGetOnGoing) > 0)
-				<div class="col-lg-4">
-					<div class="section-tittle">
-						<h3>On Going Event</h3>
+					@if(count($eventGetOnGoing) > 0)
+					<div id="eventGetOnGoing" class="trending-bottom">
+						<div class="section-tittle text-center">
+							<h3>On Going Event</h3>
+						</div>
+						<div class="row">
+							@foreach($eventGetOnGoing as $key => $row)
+							<div class="col-lg-4">
+								<div class="single-bottom mb-35">
+									<div class="trend-bottom-img mb-30">
+										<div class="img d-block w-100" title="{{ asset($row->title) }}"
+										@if(!empty($row->picture))
+								        style="background-image : url({{ $row->picture }})"
+								        @else
+								        style="background-image : url({{ asset('images/manandapple.jpg') }})"
+								        @endif
+										></div>
+									</div>
+									<div class="trend-bottom-cap">
+										<span class="color{{ $key%2 == 0 ? 4 : 1 }}">{{ $row->event }}</span>
+										<h4><a href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">{{ Str::title($row->title) }}</a></h4>
+										<small>{{ $row->start_event.' - '.$row->end_event }}</small>
+									</div>
+								</div>
+							</div>
+							@endforeach
+						</div>
 					</div>
-					@foreach($eventGetOnGoing as $key => $row)
-					<div id="eventGetOnGoing" class="trand-right-single d-flex">
+					@endif
+				</div>
+				@if(count($eventGetPast) > 0)
+				<div id="eventGetPast" class="col-lg-4">
+					<div class="section-tittle text-center">
+						<h3>Past Event</h3>
+					</div>
+					@foreach($eventGetPast as $key => $row)
+					<div class="trand-right-single d-flex">
+						<div class="trand-right-img">
+                            <div class="img" title="{{ asset($row->title) }}"
+							@if(!empty($row->picture))
+					        style="background-image : url({{ $row->picture }})"
+					        @else
+					        style="background-image : url({{ asset('images/manandapple.jpg') }})"
+					        @endif
+							></div>
+                        </div>
 						<div class="trand-right-cap">
-							<span class="color{{ $key%2 == 0 ? 2 : 3 }}">Do Date : {{ $row->start_event.' - '.$row->end_event }}</span>
+							<span class="color{{ $row->event_id }}">{{ $row->event }}</span>
 							<h4><a href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">
-								{{ Str::title($row->title).' - '.$row->event }}
+								{{ Str::title($row->title) }}
 							</a></h4>
 						</div>
 					</div>
