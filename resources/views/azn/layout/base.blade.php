@@ -77,7 +77,7 @@
         
 		<!-- Jquery Plugins, main Jquery -->	
         <script src="{{ asset('vendor_azn/assets/js/plugins.js') }}"></script>
-        <script src="{{ asset('vendor_azn/assets/js/main.js') }}"></script>
+        <script src="{{ asset('vendor_azn/assets/js/main.js') }}?v=0.0.1"></script>
 
         <script type="text/javascript" src="{{ asset('vendors/pnotify/pnotify.custom.min.js') }}"></script>
         <script type="text/javascript">
