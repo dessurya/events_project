@@ -165,7 +165,8 @@ Home
             <div class="properties__button">
               <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <a class="nav-item nav-link active" id="nav-ongoing-tab" data-toggle="tab" href="#nav-ongoing" role="tab" aria-controls="nav-ongoing" aria-selected="false">On Going</a>
+                  <a class="nav-item nav-link active" id="nav-ongoing-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="false">All</a>
+                  <a class="nav-item nav-link" id="nav-ongoing-tab" data-toggle="tab" href="#nav-ongoing" role="tab" aria-controls="nav-ongoing" aria-selected="false">On Going</a>
                   <a class="nav-item nav-link" id="nav-upcoming-tab" data-toggle="tab" href="#nav-upcoming" role="tab" aria-controls="nav-upcoming" aria-selected="false">Upcoming</a>
                   <a class="nav-item nav-link" id="nav-past-tab" data-toggle="tab" href="#nav-past" role="tab" aria-controls="nav-past" aria-selected="false">Past</a>
                 </div>
@@ -176,7 +177,14 @@ Home
         <div class="row">
           <div class="col-12">
             <div class="tab-content" id="nav-tabContent">
-              <div class="tab-pane fade show active" id="nav-ongoing" role="tabpanel" aria-labelledby="nav-ongoing-tab">
+              <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+                <div class="row">
+                  @foreach($eventAll as $event)
+                  @include('azn.componen.event-card', ['event'=>$event])
+                  @endforeach
+                </div>
+              </div>
+              <div class="tab-pane fade" id="nav-ongoing" role="tabpanel" aria-labelledby="nav-ongoing-tab">
                 <div class="row">
                   @foreach($eventGetOnGoing as $event)
                   @include('azn.componen.event-card', ['event'=>$event])

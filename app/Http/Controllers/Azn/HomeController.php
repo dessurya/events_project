@@ -23,8 +23,10 @@ class HomeController extends Controller
         $eventGetUpComming = $this->eventGetUpComming(3);
         $eventGetOnGoing = $this->eventGetOnGoing(3);
         $eventGetPast = $this->eventGetPast(3);
+
+        $eventAll = ViewHistoryEvent::whereIn('status_id', [1,2,3,4])->orderBy('start_event','desc')->limit(6)->get();;
         $MasterWebsite = MasterWebsite::orderBy('name', 'asc')->get();
-        return view('azn.page.home.index', compact('MainSlider', 'InterfaceConfig', 'eventGetUpComming', 'eventGetOnGoing', 'eventGetPast', 'MasterWebsite'));
+        return view('azn.page.home.index', compact('MainSlider', 'InterfaceConfig', 'eventGetUpComming', 'eventGetOnGoing', 'eventGetPast', 'eventAll', 'MasterWebsite'));
 	}
 
 	public static function eventGetOnGoing($limit)
