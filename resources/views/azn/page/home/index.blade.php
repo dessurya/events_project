@@ -7,11 +7,25 @@ Home
 @push('link')
 <style type="text/css">
 	#single-slick .slick-item .img{
+		@if(count($eventGetPast) > 0)
         height: 425px;
+        @else
+        height: 625px;
+        @endif
         background-position: center;
         background-size: 100% 100%;
         background-repeat: no-repeat;
         border-radius: 7px;
+    }
+    @media screen and (max-width: 812px) and (min-width: 528px) {
+    	#single-slick .slick-item .img{
+    	    	height: 360px;
+    	}
+    }
+    @media (max-width: 528px) {
+    	#single-slick .slick-item .img{
+    	    	height: 300px;
+    	}
     }
     .trending-area .trending-main .trand-right-single{
     	padding-bottom: 0px;
@@ -72,22 +86,24 @@ Home
 		slidesToShow: 1,
 		slidesToScroll: 1
 	});
+</script>
 
+<script type="text/javascript">
 	$('#upcomming-slick').slick({
 		dots: true,
         infinite: true,
         speed: 500,
         arrows: false,
-        slidesToShow: {{ count($eventGetUpComming) > 3 ? 3 : 1 }},
+        slidesToShow: 3,
         slidesToScroll: 1,
         autoplay:true,
-        initialSlide: {{ count($eventGetUpComming) > 3 ? 3 : 1 }},
+        initialSlide: 0,
         loop:true,
         responsive: [
           {
             breakpoint: 1024,
             settings: {
-              slidesToShow: {{ count($eventGetUpComming) > 3 ? 3 : 1 }},
+              slidesToShow: 3,
               slidesToScroll: 1,
               infinite: true,
               dots: false,
@@ -113,6 +129,7 @@ Home
         ]
 	});
 </script>
+
 @endpush
 
 @push('content')
@@ -120,7 +137,7 @@ Home
 	<div class="container">
 		<div class="trending-main">
 			<div class="row">
-				<div class="col-lg-{{ count($eventGetOnGoing) > 0 ? 8 : 12}}">
+				<div class="col-lg-{{ count($eventGetPast) > 0 ? 8 : 12}}">
 					<div class="trending-top mb-35">
 						<div id="single-slick" class="trend-top-img">
 							@foreach($MainSlider as $slide)
@@ -261,6 +278,8 @@ Home
 		</div>
 	</div>
 </div>
+@else
+
 @endif
 
 @if(!empty($InterfaceConfig['about_us']))

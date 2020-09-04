@@ -89,7 +89,7 @@ class EventOtherController extends Controller
             'title' => 'Form Event Other',
             'action' => 'panel.event.other.store',
             'readonly' => [],
-            'required' => ['title', 'website_id', 'start_activity', 'end_activity']
+            'required' => ['title', 'website', 'start_activity', 'end_activity']
         ];
     }
 

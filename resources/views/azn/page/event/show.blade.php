@@ -99,7 +99,9 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 						@if(!empty($data->description))
 						<div class="mb-20">{!! $data->description !!}</div>
 						@endif
+						@if(!empty($data->terms_and_conditions))
 			            <div class="container gray-bg mb-20 pt-25 pb-20">{!! $data->terms_and_conditions !!}</div>
+						@endif
 			            @if($data->event_id == 1)
 			            <div class="board">
 			            	@include('azn.componen.event-leaderboard', ['participants'=>$param['participants'],'participants_username_status_id'=>$param['participants_username_status_id']])
