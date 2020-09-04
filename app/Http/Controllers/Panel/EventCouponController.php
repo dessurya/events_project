@@ -239,9 +239,9 @@ class EventCouponController extends Controller
             return ['success' => false, 'msg' => $msg.' and end_registration must be greater or equals than '.$date.' (today)'];
         }else if ((($event->flag_registration == 1 and $event->flag_status == 3) or ($event->flag_registration == 2 and $event->flag_status == 1) ) and $input->start_active < $date) {
             return ['success' => false, 'msg' => $msg.' and start_active must be greater or equals than '.$date.' (today)'];
-        }else if (in_array($event->flag_status,[4,5,6]) and $input->end_active < $date) {
+        }else if (in_array($event->flag_status,[4]) and $input->end_active < $date) {
             return ['success' => false, 'msg' => $msg.' and end_active must be greater or equals than '.$date.' (today)'];
-        }else if (in_array($event->flag_status,[5,6]) and $input->end_active > $date) {
+        }else if (in_array($event->flag_status,[5,6]) and $input->end_active >= $date) {
             return ['success' => false, 'msg' => $msg.' and end_active cannot be bigger than '.$date.' (today)'];
         }
         return ['success'=>true];

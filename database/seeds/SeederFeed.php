@@ -505,10 +505,10 @@ class SeederFeed extends Seeder
         $this->userStore();
         $this->Participants();
         $this->interfaceConfig();
-        $this->EventTournament();
-        $this->EventTournamentRegistration();
-        $this->EventOther();
-        $this->EventCoupon();
-        $this->EventCouponRegistration();
+        // $this->EventTournament();
+        // $this->EventTournamentRegistration();
+        // $this->EventOther();
+        // $this->EventCoupon();
+        // $this->EventCouponRegistration();
     }
 }

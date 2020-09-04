@@ -197,9 +197,9 @@ class EventOtherController extends Controller
         $msg = 'this event status is '.$event->getStatus->value.',';
         if ($event->flag_status == 1 and $input->start_activity < $date) {
             return ['success' => false, 'msg' => $msg.' and start_activity must be greater or equals than '.$date.' (today)'];
-        }else if (in_array($event->flag_status,[4,5,6]) and $input->end_activity < $date) {
+        }else if (in_array($event->flag_status,[4]) and $input->end_activity < $date) {
             return ['success' => false, 'msg' => $msg.' and end_activity must be greater or equals than '.$date.' (today)'];
-        }else if (in_array($event->flag_status,[5,6]) and $input->end_activity > $date) {
+        }else if (in_array($event->flag_status,[5,6]) and $input->end_activity >= $date) {
             return ['success' => false, 'msg' => $msg.' and end_activity cannot be bigger than '.$date.' (today)'];
         }
         return ['success'=>true];

@@ -88,6 +88,7 @@ Home
 	});
 </script>
 
+@if(count($eventGetUpComming) > 3)
 <script type="text/javascript">
 	$('#upcomming-slick').slick({
 		dots: true,
@@ -129,7 +130,7 @@ Home
         ]
 	});
 </script>
-
+@endif
 @endpush
 
 @push('content')

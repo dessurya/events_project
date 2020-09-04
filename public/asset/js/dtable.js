@@ -93,6 +93,7 @@ function show_tab(target) {
 }
 
 function fill_form(data) {
+    close_form(data.target)
     $(data.target).find('button').removeAttr('disabled');
     $(data.target).find('.input').val(null).removeAttr('required').removeAttr('readonly').removeAttr('disabled');
     $.each(data.required, function(key, target) {
@@ -117,7 +118,12 @@ function fill_form(data) {
 
 function close_form(target) {
     $(target).find('button').attr('disabled', 'true');
-    $(target).find('.input').val(null).removeAttr('required').removeAttr('readonly');
+    $.each($(target).find('.input'), function(key, val) {
+        if ($(this).is('textarea') && $(this).hasClass('summernote')) {
+            $(this).data('text', null).summernote('destroy');
+        }
+        $(this).val(null).removeAttr('required').removeAttr('disabled');
+    });
     $(target).find('.input').attr('readonly', 'true');
     $(target).find('img').attr('src', null).hide();
 }
