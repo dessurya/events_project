@@ -12,7 +12,7 @@
 			></div>
 		</div>
 		<div class="col-8">
-			<h6><a href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">{{ Str::title($row->title) }}</a></h6>
+			<h6><a class="hover" href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">{{ Str::title($row->title) }}</a></h6>
 			@if($date == 'start')
 			<small>{{ (new Carbon\Carbon($row->start_event))->format('F, d Y') }}</small>
 			@elseif($date == 'end')

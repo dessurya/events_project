@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\InterfaceConfig;
+use App\Models\Contact;
 use App\Models\RunningText;
 use App\Models\MainSlider;
 use App\Models\ViewHistoryEvent;
+use App\Models\MasterWebsite;
 
 class HomeController extends Controller
 {
@@ -18,10 +20,11 @@ class HomeController extends Controller
         $InterfaceConfig = [
             'about_us' => InterfaceConfig::where('key','about_us')->first()->content
         ];
-        $eventGetUpComming = $this->eventGetUpComming(6);
+        $eventGetUpComming = $this->eventGetUpComming(3);
         $eventGetOnGoing = $this->eventGetOnGoing(3);
-        $eventGetPast = $this->eventGetPast(4);
-        return view('azn.page.home.index', compact('MainSlider', 'InterfaceConfig', 'eventGetUpComming', 'eventGetOnGoing', 'eventGetPast'));
+        $eventGetPast = $this->eventGetPast(3);
+        $MasterWebsite = MasterWebsite::orderBy('name', 'asc')->get();
+        return view('azn.page.home.index', compact('MainSlider', 'InterfaceConfig', 'eventGetUpComming', 'eventGetOnGoing', 'eventGetPast', 'MasterWebsite'));
 	}
 
 	public static function eventGetOnGoing($limit)
@@ -77,10 +80,25 @@ class HomeController extends Controller
         $html = view('azn.layout.trending-animated', compact('texts'))->render();
         echo $html;
     }
+    
 
     public function contact()
     {
+        $params = [
+            [
+                'date' => 'start',
+                'title' => 'On Going Event',
+                'event' => $this->eventGetOnGoing(3)
+            ],
+            [
+                'date' => 'start',
+                'title' => 'Upcoming Event',
+                'event' => $this->eventGetUpComming(3)
+            ]
+        ];
         $InterfaceConfig = InterfaceConfig::where('key','contact_us')->first()->content;
-        return view('azn.page.contact.index', compact('InterfaceConfig'));
+        $MasterWebsite = MasterWebsite::orderBy('name', 'asc')->get();
+        $contact = Contact::orderBy('text','asc')->get();
+        return view('azn.page.contact.index', compact('InterfaceConfig','params','contact','MasterWebsite'));
     }
 }

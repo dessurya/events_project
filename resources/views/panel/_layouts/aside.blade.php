@@ -172,6 +172,12 @@
     							<p>Main Slider</p>
     						</a>
     					</li>
+						<li class="nav-item">
+    						<a href="{{ route('panel.interface.contact.list') }}" class="nav-link {{ Route::is('panel.interface.contact.list') ? 'active' : '' }}">
+    							<i class="far fa-circle nav-icon"></i>
+    							<p>Contact</p>
+    						</a>
+    					</li>
 					</ul>
     			</li>
 				<li class="nav-item">

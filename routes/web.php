@@ -38,6 +38,7 @@ Route::name('azn.')->group(function(){
     Route::get('/', 'Azn\HomeController@index')->name('home.index');
 
     Route::name('event.')->prefix('event/')->group(function(){
+        Route::get('/', 'Azn\EventController@index')->name('index');
         Route::get('/ongoing', 'Azn\EventController@ongoing')->name('ongoing');
         Route::post('/ongoing/load', 'Azn\EventController@ongoingLoad')->name('ongoingLoad');
 

@@ -8,8 +8,8 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="form-group">
-						<label>Name</label>
-						<input readonly name="name" type="text" class="form-control input">
+						<label>Text</label>
+						<input readonly name="text" type="text" class="form-control input">
 					</div>
 				</div>
                 <div class="col-sm-6">

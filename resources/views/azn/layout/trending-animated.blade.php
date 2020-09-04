@@ -4,7 +4,7 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="trending-tittle" style="padding-bottom: 0px;">
-						<strong>Trending now</strong>
+						<strong>Info Terkini</strong>
 						<div class="trending-animated">
 							<ul id="js-news" class="js-hidden">
 								@if(count($texts) > 0)

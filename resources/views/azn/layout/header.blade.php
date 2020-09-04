@@ -29,10 +29,10 @@
 								<ul id="navigation">
 									<li><a href="{{ route('azn.home.index') }}">Home</a></li>
 									<li>
-										<a href="#">Our Event</a>
+										<a href="{{ route('azn.event.index') }}">Our Event</a>
 										<ul class="submenu">
 											<li><a href="{{ route('azn.event.ongoing') }}">On Going</a></li>
-											<li><a href="{{ route('azn.event.upcomming') }}">Up Comming</a></li>
+											<li><a href="{{ route('azn.event.upcomming') }}">Upcoming</a></li>
 											<li><a href="{{ route('azn.event.past') }}">Past</a></li>
 										</ul>
 									</li>

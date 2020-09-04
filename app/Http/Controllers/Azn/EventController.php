@@ -20,6 +20,28 @@ use App\Models\MasterBank;
 
 class EventController extends Controller
 {
+    public function index()
+    {
+        $events = [
+            [
+                'title' => 'On Going Event',
+                'route' => 'azn.event.ongoing',
+                'events' => ViewHistoryEvent::whereIn('status_id', [4])->orderBy('start_event','desc')->paginate(3)
+            ],
+            [
+                'title' => 'Upcoming Event',
+                'route' => 'azn.event.upcomming',
+                'events' => ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('start_event','desc')->paginate(3)
+            ],
+            [
+                'title' => 'Past Event',
+                'route' => 'azn.event.past',
+                'events' => ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('start_event','desc')->paginate(3)
+            ],
+        ];
+        return view('azn.page.event.index', compact('events'));
+    }
+
 	public function search(Request $input)
     {
         $config = [
@@ -186,9 +208,23 @@ class EventController extends Controller
         else if ($data->event_id == 3) { $website = EventOtherWebsite::with('website')->where('event_id',$data->id)->get(); }
 
         $param = [];
-        $param['ongoing'] = ViewHistoryEvent::where('event_id', $data->event_id)->where([ 'status_id'=> 4 ])->orderBy('start_event','desc')->limit(3)->get();
-	    $param['upcomming'] = ViewHistoryEvent::where('event_id', $data->event_id)->whereIn('status_id', [1,2,3])->orderBy('start_event','desc')->limit(3)->get();
-	    $param['past'] = ViewHistoryEvent::where('event_id', $data->event_id)->whereIn('status_id', [5,6])->orderBy('end_event','desc')->limit(3)->get();
+        $param['events'] = [
+            [
+                'date' => 'start',
+                'title' => 'On Going Event',
+                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->where([ 'status_id'=> 4 ])->orderBy('start_event','desc')->limit(3)->get()
+            ],
+            [
+                'date' => 'start',
+                'title' => 'Upcoming Event',
+                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->whereIn('status_id', [1,2,3])->orderBy('start_event','desc')->limit(3)->get()
+            ],
+            [
+                'date' => 'end',
+                'title' => 'Past Event',
+                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->whereIn('status_id', [5,6])->orderBy('end_event','desc')->limit(3)->get()
+            ]
+        ];
         if (base64_decode($type) == 1) {
             $param['participants'] = ViewEventTournamentParticipants::where([
                 'event_id' => base64_decode($encode),

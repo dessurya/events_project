@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class MasterWebsite extends Model
+class Contact extends Model
 {
-    protected $table = 'website';
+    protected $table = 'contact';
     public function getPictureAttribute($pic)
     {
         if (!empty($pic)) {

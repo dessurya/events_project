@@ -88,6 +88,14 @@ Route::middleware('users')->group(function() {
             Route::post('/store', 'MainSliderController@store')->name('store');
             Route::post('/delete', 'MainSliderController@delete')->name('delete');
         });
+
+        Route::name('contact.')->prefix('contact/')->group(function(){
+            Route::get('/list', 'ContactController@list')->name('list');
+            Route::post('/list', 'ContactController@getData')->name('getData');
+            Route::post('/form', 'ContactController@form')->name('form');
+            Route::post('/store', 'ContactController@store')->name('store');
+            Route::post('/delete', 'ContactController@delete')->name('delete');
+        });
     });
 
     Route::name('event.')->prefix('event/')->group(function(){

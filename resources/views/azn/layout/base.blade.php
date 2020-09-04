@@ -23,6 +23,14 @@
 		<link rel="stylesheet" href="{{ asset('vendor_azn/assets/css/style.css') }}">
 		<link rel="stylesheet" href="{{ asset('vendors/pnotify/pnotify.custom.min.css') }}">
 		@stack('link')
+		<style>
+			.hover{
+				transition: all .3s ease-out 0s;
+			}
+			.hover:hover{
+				color: #fc3f00 !important;
+			}
+		</style>
 	</head>
 	<body>
 		
@@ -155,22 +163,6 @@
 				$(data.target).append(atob(data.content));
 			}
 
-			// animate scrool to
-			    $(function() {
-			        $('a[href*="#"]:not([href="#"])').click(function() {
-			            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
-			                var target = $(this.hash);
-			                target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-			                if (target.length) {
-			                    $('html, body').animate({
-			                        scrollTop: target.offset().top - 150
-			                        }, 1500);
-			                    return false;
-			                }
-			            }
-			        });
-			    });
-			// animate scrool to
         </script>
         @stack('script')
 	</body>

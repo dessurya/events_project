@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\MasterWebsite;
+use App\Models\Contact;
 use Carbon\Carbon;
 
-class MasterWebsiteController extends Controller
+class ContactController extends Controller
 {
-	private function pageConfig(){
+    private function pageConfig(){
 		return [
-            'title' => 'Master Website Management',
+            'title' => 'Contact Management',
             'tabs' => [
                 'id_head' => 'custom-tabs-tab',
                 'id_content' => 'custom-tabs-tabContent',
@@ -39,21 +39,21 @@ class MasterWebsiteController extends Controller
     private function dtableConfig()
     {
         return [
-            'get_data_route' => 'panel.master.website.getData',
-            'table_id' => 'd_tables_website',
+            'get_data_route' => 'panel.interface.contact.getData',
+            'table_id' => 'd_tables_contact',
             'order' => [
-                'key' => 'name',
+                'key' => 'text',
                 'value' => 'asc'
             ],
             'componen' => [
-                ["data"=>"name","name"=>"name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"text","name"=>"text","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"url","name"=>"url","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"created_at","name"=>"created_at","searchable"=>true,"searchtype"=>"date","orderable"=>true]
             ],
             'action' => [
-                ["route" => "panel.master.website.form", "title" => "Add Website", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
-                ["route" => "panel.master.website.form", "title" => "Update Website", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
-                ["route" => "panel.master.website.delete", "title" => "Delete Website", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true]
+                ["route" => "panel.interface.contact.form", "title" => "Add Contact", "action" => "add", "select" => false, "confirm" => false, "multiple" => false],
+                ["route" => "panel.interface.contact.form", "title" => "Update Contact", "action" => "update", "select" => true, "confirm" => false, "multiple" => false],
+                ["route" => "panel.interface.contact.delete", "title" => "Delete Contact", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true]
             ]
         ];
     }
@@ -61,9 +61,9 @@ class MasterWebsiteController extends Controller
     private function formConfig()
     {
         return [
-            'id' => 'website_form',
-            'title' => 'Form Website',
-            'action' => 'panel.master.website.store',
+            'id' => 'contact_form',
+            'title' => 'Form Contact',
+            'action' => 'panel.interface.contact.store',
             'readonly' => [],
             'required' => ['name']
         ];
@@ -76,7 +76,7 @@ class MasterWebsiteController extends Controller
 
     private function getForm()
     {
-        return view('panel._pages.master.website.form', ['config' => $this->formConfig()])->render();
+        return view('panel._pages.contact.form', ['config' => $this->formConfig()])->render();
     }
     
     public function list(Request $input)
@@ -85,7 +85,7 @@ class MasterWebsiteController extends Controller
             "page" => $this->pageConfig(),
             "dtable" => $this->dtableConfig()
         ];
-        return view('panel._pages.master.website.index', compact('config'));
+        return view('panel._pages.contact.index', compact('config'));
     }
 
     public function getData(Request $input)
@@ -94,7 +94,7 @@ class MasterWebsiteController extends Controller
         if (isset($input->show) and !empty($input->show)) {
             $paginate = $input->show;
         }
-        $data = MasterWebsite::select('*');
+        $data = Contact::select('*');
         if (isset($input->order_key) and !empty($input->order_key)) {
             $data->orderBy($input->order_key, $input->order_val);
         }else{
@@ -107,8 +107,8 @@ class MasterWebsiteController extends Controller
         if (isset($input->to_created_at) and !empty($input->to_created_at)) {
             $data->whereDate('created_at', '<=', $input->to_created_at);
         }
-        if (isset($input->name) and !empty($input->name)){
-            $data->where('name', 'like', '%'.$input->name.'%');
+        if (isset($input->text) and !empty($input->text)){
+            $data->where('text', 'like', '%'.$input->text.'%');
         }
         if (isset($input->url) and !empty($input->url)){
             $data->where('url', 'like', '%'.$input->url.'%');
@@ -127,7 +127,7 @@ class MasterWebsiteController extends Controller
         $tab_show = '#'.$tab_show['tabs']['tab'][1]['id'];
         $find = null;
         if ($input->id != "true") {
-            $find = MasterWebsite::find($input->id);
+            $find = Contact::find($input->id);
         }
         return [
             'show_tab' => true,
@@ -153,7 +153,7 @@ class MasterWebsiteController extends Controller
         if (!file_exists($url)){
             mkdir($url, 0777);
         }
-        $url .= 'master_website/';
+        $url .= 'contact/';
         if (!file_exists($url)){
             mkdir($url, 0777);
         }
@@ -163,9 +163,9 @@ class MasterWebsiteController extends Controller
     public function store(Request $input)
     {
         if (empty($input->id)) {
-            $store = new MasterWebsite;
+            $store = new Contact;
         }else{
-            $store = MasterWebsite::find($input->id);
+            $store = Contact::find($input->id);
         }
         if (!empty($input->picture)) {
             $url = $this->getDirFile();
@@ -188,10 +188,10 @@ class MasterWebsiteController extends Controller
             }
             $store->picture = $file_dir;
         }
-        $store->name = $input->name;
+        $store->text = $input->text;
         $store->url = $input->url;
         $store->save();
-        $find = MasterWebsite::find($store->id);
+        $find = Contact::find($store->id);
         $formConfig = $this->formConfig();
         $tab_show = $this->pageConfig();
         $tab_show = '#'.$tab_show['tabs']['tab'][0]['id'];
@@ -212,7 +212,7 @@ class MasterWebsiteController extends Controller
     private function getDataIn($stringId)
     {
         $ids = explode('^', $stringId);
-        return MasterWebsite::whereIn('id', $ids)->get();
+        return Contact::whereIn('id', $ids)->get();
     }
 
     public function delete(Request $input)

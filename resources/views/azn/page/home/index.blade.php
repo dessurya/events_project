@@ -7,11 +7,7 @@ Home
 @push('link')
 <style type="text/css">
 	#single-slick .slick-item .img{
-		@if(count($eventGetPast) > 0)
-        height: 425px;
-        @else
-        height: 625px;
-        @endif
+        height: 525px;
         background-position: center;
         background-size: 100% 100%;
         background-repeat: no-repeat;
@@ -31,37 +27,13 @@ Home
     	padding-bottom: 0px;
     }
 
-    #upcomming-slick .weekly2-single .weekly2-img .img{
+	#webiste-slick .weekly2-single .weekly2-img .img{
     	height: 260px;
     	background-position: center;
         background-size: 100% 100%;
         background-repeat: no-repeat;
         border-radius: 7px;
     }
-
-    #eventGetOnGoing .single-bottom .trend-bottom-img .img{
-    	height: 210px;
-    	background-position: center;
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-        border-radius: 7px;
-    }
-
-    #eventGetPast .trand-right-single .trand-right-img .img{
-    	width: 120px;
-    	height: 100px;
-    	background-position: center;
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-        border-radius: 7px;
-    }
-    .hover{
-    	transition: all .3s ease-out 0s;
-    }
-    .hover:hover{
-    	color: #fc3f00 !important;
-    }
-
     .weekly2-pading{
 		padding-top: 60px;
 		padding-bottom: 60px;
@@ -71,6 +43,31 @@ Home
 			padding-top: 60px;
 			padding-bottom: 60px;
 		}
+    }
+
+  .blog_item .blog_item_img .img{
+      height: 260px;
+      background-position: center;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        border-radius: 7px;
+    }
+
+    .blog_item_img .blog_item_date.color-1{
+      background-color: #fc0000;
+    }
+    .blog_item_img .blog_item_date.color-2{
+      background-color: #2f00fc;
+    }
+    .blog_item_img .blog_item_date.color-3{
+      background-color: #fc008d;
+    }
+    .blog_item_img .blog_item_date.color-4{
+      background-color: #fca400;
+    }
+    .blog_item_img .blog_item_date.color-5,
+    .blog_item_img .blog_item_date.color-6{
+      background-color: #625454;
     }
 </style>
 @endpush
@@ -88,9 +85,9 @@ Home
 	});
 </script>
 
-@if(count($eventGetUpComming) > 3)
+@if(count($MasterWebsite) > 3)
 <script type="text/javascript">
-	$('#upcomming-slick').slick({
+	$('#webiste-slick').slick({
 		dots: true,
         infinite: true,
         speed: 500,
@@ -138,7 +135,7 @@ Home
 	<div class="container">
 		<div class="trending-main">
 			<div class="row">
-				<div class="col-lg-{{ count($eventGetPast) > 0 ? 8 : 12}}">
+				<div class="col-lg-12">
 					<div class="trending-top mb-35">
 						<div id="single-slick" class="trend-top-img">
 							@foreach($MainSlider as $slide)
@@ -148,139 +145,68 @@ Home
 							@endforeach
 						</div>
 					</div>
-					@if(count($eventGetOnGoing) > 0)
-					<div id="eventGetOnGoing" class="trending-bottom">
-						<div class="section-tittle text-center mb-35">
-							<h3>
-								<a class="hover" href="{{ route('azn.event.ongoing') }}">
-									On Going Event
-								</a>
-							</h3>
-						</div>
-						<div class="row">
-							@foreach($eventGetOnGoing as $key => $row)
-							<div class="col-lg-4">
-								<div class="single-bottom mb-35">
-									<div class="trend-bottom-img mb-30">
-										<div class="img d-block w-100" title="{{ asset($row->title) }}"
-										@if(!empty($row->picture))
-								        style="background-image : url({{ $row->picture }})"
-								        @else
-								        style="background-image : url({{ asset('images/manandapple.jpg') }})"
-								        @endif
-										></div>
-									</div>
-									<div class="trend-bottom-cap">
-										<span class="color{{ $key%2 == 0 ? 4 : 1 }}">{{ $row->event }}</span>
-										<h4>
-											<a href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">
-												{{ Str::title($row->title) }}
-											</a>
-										</h4>
-										<small class="mb-10">{{ (new Carbon\Carbon($row->start_event))->format('F, d Y') }}</small>
-										@if(!empty($row->description))
-										<p class="text-justify">{!! Str::words(strip_tags($row->description), 10, '...') !!}</p>
-										@endif
-									</div>
-								</div>
-							</div>
-							@endforeach
-						</div>
-					</div>
-					@endif
-				</div>
-				@if(count($eventGetPast) > 0)
-				<div id="eventGetPast" class="col-lg-4">
-					<div class="section-tittle text-center mb-35">
-						<h3>
-							<a class="hover" href="{{ route('azn.event.past') }}">
-								Past Event
-							</a>
-						</h3>
-					</div>
-					@foreach($eventGetPast as $key => $row)
-					<div class="trand-right-single d-flex">
-						<div class="trand-right-img">
-                            <div class="img" title="{{ asset($row->title) }}"
-							@if(!empty($row->picture))
-					        style="background-image : url({{ $row->picture }})"
-					        @else
-					        style="background-image : url({{ asset('images/manandapple.jpg') }})"
-					        @endif
-							></div>
-                        </div>
-						<div class="trand-right-cap">
-							<span class="color{{ $row->event_id }}">{{ $row->event }}</span>
-							<h4>
-								<a href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">
-									{{ Str::title($row->title) }}
-								</a>
-							</h4>
-							<small class="mb-10">{{ (new Carbon\Carbon($row->start_event))->format('F, d Y') }}</small>
-							@if(!empty($row->description))
-							<p class="text-justify">{!! Str::words(strip_tags($row->description), 10, '...') !!}</p>
-							@endif
-						</div>
-					</div>
-					@endforeach
-				</div>
-				@endif
-			</div>
-		</div>
-	</div>
-</div>
-
-@if(count($eventGetUpComming) > 0)
-<div class="weekly2-news-area  weekly2-pading">
-	<div class="container">
-		<div class="weekly2-wrapper">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="section-tittle mb-50">
-						<h3>
-							<a class="hover" href="{{ route('azn.event.past') }}">
-								Up Comming Event
-							</a>
-						</h3>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
-					<div id="upcomming-slick" class="dot-style d-flex dot-style">
-						@foreach($eventGetUpComming as $key => $row)
-						<div class="weekly2-single">
-							<div class="weekly2-img">
-								<div class="img d-block w-100" title="{{ asset($row->title) }}"
-								@if(!empty($row->picture))
-						        style="background-image : url({{ $row->picture }})"
-						        @else
-						        style="background-image : url({{ asset('images/manandapple.jpg') }})"
-						        @endif
-								></div>
-							</div>
-							<div class="weekly2-caption">
-								<span class="color{{ $row->status_id }}">{{ $row->event }}</span>
-								<h4>
-									<a href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">
-										{{ $row->title }}
-									</a>
-								</h4>
-								<small class="mb-10">{{ (new Carbon\Carbon($row->start_event))->format('F, d Y') }}</small>
-								@if(!empty($row->description))
-								<p class="text-justify">{!! Str::words(strip_tags($row->description), 10, '...') !!}</p>
-								@endif
-							</div>
-						</div>
-						@endforeach
-					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-@else
 
+<section class="whats-news-area pt-50 pb-20">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="row d-flex justify-content-between">
+          <div class="col-lg-3 col-md-3">
+            <div class="section-tittle mb-30">
+              <h3>Our Events</h3>
+            </div>
+          </div>
+          <div class="col-lg-9 col-md-9">
+            <div class="properties__button">
+              <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                  <a class="nav-item nav-link active" id="nav-ongoing-tab" data-toggle="tab" href="#nav-ongoing" role="tab" aria-controls="nav-ongoing" aria-selected="false">On Going</a>
+                  <a class="nav-item nav-link" id="nav-upcoming-tab" data-toggle="tab" href="#nav-upcoming" role="tab" aria-controls="nav-upcoming" aria-selected="false">Upcoming</a>
+                  <a class="nav-item nav-link" id="nav-past-tab" data-toggle="tab" href="#nav-past" role="tab" aria-controls="nav-past" aria-selected="false">Past</a>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-ongoing" role="tabpanel" aria-labelledby="nav-ongoing-tab">
+                <div class="row">
+                  @foreach($eventGetOnGoing as $event)
+                  @include('azn.componen.event-card', ['event'=>$event])
+                  @endforeach
+                </div>
+              </div>
+              <div class="tab-pane fade" id="nav-upcoming" role="tabpanel" aria-labelledby="nav-upcoming-tab">
+                <div class="row">
+                  @foreach($eventGetUpComming as $event)
+                  @include('azn.componen.event-card', ['event'=>$event])
+                  @endforeach
+                </div>
+              </div>
+              <div class="tab-pane fade" id="nav-past" role="tabpanel" aria-labelledby="nav-past-tab">
+                <div class="row">
+                  @foreach($eventGetPast as $event)
+                  @include('azn.componen.event-card', ['event'=>$event])
+                  @endforeach
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@if(count($MasterWebsite) > 0)
+@include('azn.componen.our-website',['MasterWebsite'=>$MasterWebsite])
 @endif
 
 @if(!empty($InterfaceConfig['about_us']))

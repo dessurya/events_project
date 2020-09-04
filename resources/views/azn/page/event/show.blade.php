@@ -134,17 +134,11 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 						@endif
 					</aside>
 
-					@if(count($param['ongoing']))
-					@include('azn.componen.event-show-widget',['date'=>'end','param'=>$param['ongoing'],'widget_title'=>'On Going Event'])
+					@foreach($param['events'] as $param)
+					@if(count($param['event']) > 0)
+					@include('azn.componen.event-show-widget',['date'=>$param['date'],'param'=>$param['event'],'widget_title'=>$param['title']])
 					@endif
-
-					@if(count($param['upcomming']))
-					@include('azn.componen.event-show-widget',['date'=>'start','param'=>$param['upcomming'],'widget_title'=>'Up Comming Event'])
-					@endif
-
-					@if(count($param['past']))
-					@include('azn.componen.event-show-widget',['date'=>'end','param'=>$param['past'],'widget_title'=>'Past Event'])
-					@endif
+					@endforeach
 
 					@if(in_array($data->event_id, [1,2]) and in_array($data->status_id, [2,3,4]) and $data->registration_status_id == 1)
 					<aside class="single_sidebar_widget evnt_recent">
