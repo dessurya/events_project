@@ -1,5 +1,5 @@
-<h5 class="text-center">Leaderboard</h5>
-
+@if(count($participants) > 0)
+<h5 class="text-center mb-30">Leaderboard</h5>
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
@@ -26,3 +26,4 @@
         </tbody>
     </table>
 </div>
+@endif

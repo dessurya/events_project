@@ -7,7 +7,7 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 
 		<title>{{ App\Http\Controllers\Azn\HomeController::interfaceGetTitle() }} - @yield('title')</title>
-		<link rel="icon" type="image/png" href="{{ App\Http\Controllers\Site\HomeController::interfaceGetIcon() }}" />
+		<link rel="icon" type="image/png" href="{{ App\Http\Controllers\Azn\HomeController::interfaceGetIcon() }}" />
 
 		<link rel="stylesheet" href="{{ asset('vendor_azn/assets/css/bootstrap.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('vendor_azn/assets/css/owl.carousel.min.css') }}">
@@ -154,6 +154,23 @@
 			function append(data) {
 				$(data.target).append(atob(data.content));
 			}
+
+			// animate scrool to
+			    $(function() {
+			        $('a[href*="#"]:not([href="#"])').click(function() {
+			            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+			                var target = $(this.hash);
+			                target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+			                if (target.length) {
+			                    $('html, body').animate({
+			                        scrollTop: target.offset().top - 150
+			                        }, 1500);
+			                    return false;
+			                }
+			            }
+			        });
+			    });
+			// animate scrool to
         </script>
         @stack('script')
 	</body>

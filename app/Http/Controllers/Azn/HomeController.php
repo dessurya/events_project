@@ -20,7 +20,7 @@ class HomeController extends Controller
         ];
         $eventGetUpComming = $this->eventGetUpComming(6);
         $eventGetOnGoing = $this->eventGetOnGoing(3);
-        $eventGetPast = $this->eventGetPast(7);
+        $eventGetPast = $this->eventGetPast(4);
         return view('azn.page.home.index', compact('MainSlider', 'InterfaceConfig', 'eventGetUpComming', 'eventGetOnGoing', 'eventGetPast'));
 	}
 
@@ -48,7 +48,21 @@ class HomeController extends Controller
     public static function interfaceGetIcon()
     {
         $InterfaceConfig = InterfaceConfig::where('key','icon')->first();
-        echo asset($InterfaceConfig->content);
+        if (empty($InterfaceConfig->content)) {
+            echo asset('images/loading_1.gif');
+        }else{
+            echo asset($InterfaceConfig->content);
+        }
+    }
+
+    public static function interfaceGetLogo()
+    {
+        $InterfaceConfig = InterfaceConfig::where('key','logo')->first();
+        if (empty($InterfaceConfig->content)) {
+            echo asset('images/loading_1.gif');
+        }else{
+            echo asset($InterfaceConfig->content);
+        }
     }
 
     public static function interfaceGetFooter()

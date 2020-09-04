@@ -16,6 +16,10 @@
         background-size: 100% 100%;
         background-repeat: no-repeat;
 	}
+	.board{
+		padding-top: 30px;
+		padding-bottom: 30px;
+	}
 </style>
 @endpush
 
@@ -95,11 +99,13 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 						@if(!empty($data->description))
 						<div class="mb-20">{!! $data->description !!}</div>
 						@endif
-			            <div class="container gray-bg mb-20">{!! $data->terms_and_conditions !!}</div>
+			            <div class="container gray-bg mb-20 pt-25 pb-20">{!! $data->terms_and_conditions !!}</div>
 			            @if($data->event_id == 1)
-			            <div>@include('azn.componen.event-leaderboard', ['participants'=>$param['participants'],'participants_username_status_id'=>$param['participants_username_status_id']])</div>
+			            <div class="board">
+			            	@include('azn.componen.event-leaderboard', ['participants'=>$param['participants'],'participants_username_status_id'=>$param['participants_username_status_id']])
+			            </div>
 			            @elseif($data->event_id == 2)
-			            <div>
+			            <div class="board">
 			            	@include('azn.componen.event-coupon', ['MasterWebsite'=>$MasterWebsite])
 			            </div>
 			            @endif
@@ -127,78 +133,21 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 					</aside>
 
 					@if(count($param['ongoing']))
-					<aside class="single_sidebar_widget evnt_recent">
-						<h3 class="widget_title">On Going Event</h3>
-						@foreach($param['ongoing'] as $row)
-						<div class="row mb-20">
-							<div class="col-4">
-								<div class="img d-block w-100" title="{{ Str::title($row->title) }}"
-								@if(!empty($row->picture))
-						        style="background-image : url({{ $row->picture }})"
-						        @else
-						        style="background-image : url({{ asset('images/manandapple.jpg') }})"
-						        @endif
-								></div>
-							</div>
-							<div class="col-8">
-								<h6><a href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">{{ Str::title($row->title) }}</a></h6>
-								<small>{{ (new Carbon\Carbon($row->start_event))->format('F, d Y') }}</small>
-							</div>
-						</div>
-						@endforeach
-					</aside>
+					@include('azn.componen.event-show-widget',['date'=>'end','param'=>$param['ongoing'],'widget_title'=>'On Going Event'])
 					@endif
 
 					@if(count($param['upcomming']))
-					<aside class="single_sidebar_widget evnt_recent">
-						<h3 class="widget_title">Up Comming Event</h3>
-						@foreach($param['upcomming'] as $row)
-						<div class="row mb-20">
-							<div class="col-4">
-								<div class="img d-block w-100" title="{{ Str::title($row->title) }}"
-								@if(!empty($row->picture))
-						        style="background-image : url({{ $row->picture }})"
-						        @else
-						        style="background-image : url({{ asset('images/manandapple.jpg') }})"
-						        @endif
-								></div>
-							</div>
-							<div class="col-8">
-								<h6><a href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">{{ Str::title($row->title) }}</a></h6>
-								<small>{{ (new Carbon\Carbon($row->start_event))->format('F, d Y') }}</small>
-							</div>
-						</div>
-						@endforeach
-					</aside>
+					@include('azn.componen.event-show-widget',['date'=>'start','param'=>$param['upcomming'],'widget_title'=>'Up Comming Event'])
 					@endif
 
 					@if(count($param['past']))
-					<aside class="single_sidebar_widget evnt_recent">
-						<h3 class="widget_title">Past Event</h3>
-						@foreach($param['past'] as $row)
-						<div class="row mb-20">
-							<div class="col-4">
-								<div class="img d-block w-100" title="{{ Str::title($row->title) }}"
-								@if(!empty($row->picture))
-						        style="background-image : url({{ $row->picture }})"
-						        @else
-						        style="background-image : url({{ asset('images/manandapple.jpg') }})"
-						        @endif
-								></div>
-							</div>
-							<div class="col-8">
-								<h6><a href="{{ route('azn.event.show', ['type'=>base64_encode($row->event_id),'encode'=>base64_encode($row->id)]) }}">{{ Str::title($row->title) }}</a></h6>
-								<small>{{ (new Carbon\Carbon($row->start_event))->format('F, d Y') }}</small>
-							</div>
-						</div>
-						@endforeach
-					</aside>
+					@include('azn.componen.event-show-widget',['date'=>'end','param'=>$param['past'],'widget_title'=>'Past Event'])
 					@endif
 
 					@if(in_array($data->event_id, [1,2]) and in_array($data->status_id, [2,3,4]) and $data->registration_status_id == 1)
 					<aside class="single_sidebar_widget evnt_recent">
 						<h3 class="widget_title">Registration Form</h3>
-			            @include('site._componen.event-registration')
+			            @include('azn.componen.event-registration')
 					</aside>
 					@endif
 				</div>

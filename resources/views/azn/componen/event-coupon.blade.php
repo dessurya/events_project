@@ -1,6 +1,6 @@
-<h5 class="text-center">Coupon</h5>
+<h5 class="text-center mb-40">Coupon</h5>
 <form id="getCoupon" action="{{ route('site.get.coupon') }}" method="post">
-    <div class="container">
+    <div class="container mb-30">
         <div class="row">
             <div class="col-12 col-md-6">
                 <div class="form-group">
@@ -34,7 +34,6 @@
             </div>
         </div>
     </div>
-    
 </form>
 <div id="showCoupon" class="table-responsive">
     <table class="table table-striped">
