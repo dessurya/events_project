@@ -71,12 +71,12 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 @push('content')
 <section class="blog_area single-post-area section-padding">
 	<div class="container">
-		<div class="section-tittle text-center mb-30">
-			<h3>{{ Str::title($data->title) }}</h3>
-		</div>
 		<div class="row">
 			<div class="col-lg-8 posts-list">
 				<div class="single-post">
+					<div class="section-tittle text-center mb-30">
+						<h3>{{ Str::title($data->title) }}</h3>
+					</div>
 					<div class="feature-img text-center">
 						<img class="img-fluid" title="{{ $data->title }}" alt="{{ $data->title }}"
 						@if(!empty($data->picture))
