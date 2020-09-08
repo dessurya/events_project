@@ -7,7 +7,7 @@
 					<div class="col-xl-3 col-lg-3 col-md-3">
 						<div class="logo">
 							<a href="#">
-								<img style="max-height: 50px;" src="{{ App\Http\Controllers\Azn\HomeController::interfaceGetLogo() }}">
+								<img style="max-height: 100px;" src="{{ App\Http\Controllers\Azn\HomeController::interfaceGetLogo() }}">
 							</a>
 						</div>
 					</div>
@@ -21,7 +21,7 @@
 					<div class="col-xl-10 col-lg-10 col-md-12 header-flex">
 						<div class="sticky-logo">
 							<a href="#">
-								<img style="max-height: 50px;" src="{{ App\Http\Controllers\Azn\HomeController::interfaceGetLogo() }}">
+								<img style="max-height: 100px;" src="{{ App\Http\Controllers\Azn\HomeController::interfaceGetLogo() }}">
 							</a>
 						</div>
 						<div class="main-menu d-none d-md-block">

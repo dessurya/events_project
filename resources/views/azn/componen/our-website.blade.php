@@ -15,7 +15,7 @@
 					<div id="webiste-slick" class="dot-style d-flex dot-style">
 						@foreach($MasterWebsite as $key => $row)
 						<div class="weekly2-single">
-							<a href="{{ empty($row->url) ? '#' : $row->url }}">
+							<a href="{{ empty($row->url) ? '#' : $row->url }}" target="_blank">
 								<div class="weekly2-img">
 									<div class="img d-block w-100" title="{{ $row->name }}"
 									@if(!empty($row->picture))
