@@ -102,14 +102,17 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 						@if(!empty($data->terms_and_conditions))
 			            <div class="container gray-bg mb-20 pt-25 pb-20">{!! $data->terms_and_conditions !!}</div>
 						@endif
-			            @if($data->event_id == 1)
-			            <div class="board">
-			            	@include('azn.componen.event-leaderboard', ['participants'=>$param['participants'],'participants_username_status_id'=>$param['participants_username_status_id']])
-			            </div>
-			            @elseif($data->event_id == 2)
-			            <div class="board">
-			            	@include('azn.componen.event-coupon', ['MasterWebsite'=>$MasterWebsite])
-			            </div>
+
+						@if(!in_array($data->status_id, [1,2,3]))
+							@if($data->event_id == 1)
+							<div class="board">
+								@include('azn.componen.event-leaderboard', ['participants'=>$param['participants'],'participants_username_status_id'=>$param['participants_username_status_id']])
+							</div>
+							@elseif($data->event_id == 2)
+							<div class="board">
+								@include('azn.componen.event-coupon', ['MasterWebsite'=>$MasterWebsite])
+							</div>
+							@endif
 			            @endif
 					</div>
 				</div>
@@ -134,18 +137,18 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 						@endif
 					</aside>
 
-					@foreach($param['events'] as $param)
-					@if(count($param['event']) > 0)
-					@include('azn.componen.event-show-widget',['date'=>$param['date'],'param'=>$param['event'],'widget_title'=>$param['title']])
-					@endif
-					@endforeach
-
 					@if(in_array($data->event_id, [1,2]) and in_array($data->status_id, [2,3,4]) and $data->registration_status_id == 1)
 					<aside class="single_sidebar_widget evnt_recent">
 						<h3 class="widget_title">Registration Form</h3>
 			            @include('azn.componen.event-registration')
 					</aside>
 					@endif
+
+					@foreach($param['events'] as $param)
+					@if(count($param['event']) > 0)
+					@include('azn.componen.event-show-widget',['date'=>$param['date'],'param'=>$param['event'],'widget_title'=>$param['title']])
+					@endif
+					@endforeach
 				</div>
 			</div>
 		</div>

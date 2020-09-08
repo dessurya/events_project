@@ -33,21 +33,21 @@ class SeederFeed extends Seeder
         $userStore = [
             [ 'username' => 'admasd', 'name' => 'admin asd', 'password' => 'asdasd' ],
             [ 'username' => 'admin01', 'name' => 'admin 01', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin02', 'name' => 'admin 02', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin03', 'name' => 'admin 03', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin04', 'name' => 'admin 04', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin05', 'name' => 'admin 05', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin06', 'name' => 'admin 06', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin07', 'name' => 'admin 07', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin08', 'name' => 'admin 08', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin09', 'name' => 'admin 09', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin10', 'name' => 'admin 10', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin11', 'name' => 'admin 11', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin12', 'name' => 'admin 12', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin13', 'name' => 'admin 13', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin14', 'name' => 'admin 14', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin15', 'name' => 'admin 15', 'password' => 'openbyadmin' ],
-            [ 'username' => 'admin16', 'name' => 'admin 16', 'password' => 'openbyadmin' ]
+            // [ 'username' => 'admin02', 'name' => 'admin 02', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin03', 'name' => 'admin 03', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin04', 'name' => 'admin 04', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin05', 'name' => 'admin 05', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin06', 'name' => 'admin 06', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin07', 'name' => 'admin 07', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin08', 'name' => 'admin 08', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin09', 'name' => 'admin 09', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin10', 'name' => 'admin 10', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin11', 'name' => 'admin 11', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin12', 'name' => 'admin 12', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin13', 'name' => 'admin 13', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin14', 'name' => 'admin 14', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin15', 'name' => 'admin 15', 'password' => 'openbyadmin' ],
+            // [ 'username' => 'admin16', 'name' => 'admin 16', 'password' => 'openbyadmin' ]
         ];
 
         foreach ($userStore as $store) {
@@ -528,17 +528,17 @@ class SeederFeed extends Seeder
     {
         $this->MasterStatusParent();
         $this->MasterStatusSelf();
-        $this->MasterWebsite();
+        // $this->MasterWebsite();
         $this->MasterBank();
 
         $this->userStore();
-        $this->Participants();
+        // $this->Participants();
         $this->interfaceConfig();
-        $this->Contact();
-        $this->EventTournament();
+        // $this->Contact();
+        // $this->EventTournament();
         // $this->EventTournamentRegistration();
-        $this->EventOther();
-        $this->EventCoupon();
+        // $this->EventOther();
+        // $this->EventCoupon();
         // $this->EventCouponRegistration();
     }
 }
