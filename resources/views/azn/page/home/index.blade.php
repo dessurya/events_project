@@ -224,7 +224,7 @@ Home
     <?php
     // {!! $InterfaceConfig['about_us'] !!}
     ?>
-    <img src="{{ asset('images/lOGO.png') }}" alt="">
+    <img src="{{ asset('images/lOGO.png') }}" alt="" width="100%">
 	</div>
 </div>
 @endif
