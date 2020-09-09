@@ -95,6 +95,7 @@ Home
         slidesToShow: 3,
         slidesToScroll: 1,
         autoplay:true,
+        autoplaySpeed:1250,
         initialSlide: 0,
         loop:true,
         responsive: [
@@ -219,8 +220,11 @@ Home
 
 @if(!empty($InterfaceConfig['about_us']))
 <div class="about-area pt-50 pb-50 gray-bg mb-0">
-	<div class="container">
-		{!! $InterfaceConfig['about_us'] !!}
+	<div class="container text-center">
+    <?php
+    // {!! $InterfaceConfig['about_us'] !!}
+    ?>
+    <img src="{{ asset('images/lOGO.png') }}" alt="">
 	</div>
 </div>
 @endif

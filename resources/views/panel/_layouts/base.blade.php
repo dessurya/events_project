@@ -98,7 +98,7 @@
 
 			function cekNewRegister() {
 				var url = '{!! route("panel.newRegisterEventCheck") !!}';
-				postData(null,url);
+				postData(null,url,false);
 				window.setTimeout(function() { 
 					cekNewRegister();
 				// }, 5000); // 5 second waiting end run again
@@ -200,7 +200,8 @@
 				}
 			}
 
-			function postData(data,url) {
+			function postData(data,url,loading = true) {
+				if (loading == true) { $('#loading-page').show(); }
 				$.ajax({
 					url: url,
 					type: 'post',
@@ -208,7 +209,6 @@
 					data: data,
 					beforeSend: function() {
 						@stack('script.postDataBeforeSend')
-						$('#loading-page').show();
 					},
 					success: function(data) {
 						responsePostData(data);
