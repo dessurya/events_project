@@ -30,6 +30,20 @@
 			.hover:hover{
 				color: #fc3f00 !important;
 			}
+
+			.trending-animated marquee{
+				display:none;
+			}
+
+			@media screen and (max-width: 812px) and (min-width: 376px) {
+				.ticker, .ticker-wrapper.has-js{
+					display: none !important;
+					height: 0 !important;
+				}
+				.trending-animated marquee{
+					display: block;
+				}
+			}
 		</style>
 	</head>
 	<body>

@@ -108,7 +108,7 @@ class EventCouponController extends Controller
             'title' => 'Form Event Coupon',
             'action' => 'panel.event.coupon.store',
             'readonly' => [],
-            'required' => ['title', 'website', 'flag_registration', 'start_active', 'end_active', 'max_coupon']
+            'required' => ['title', 'website', 'flag_status', 'flag_registration', 'start_active', 'end_active', 'max_coupon']
         ];
     }
 
@@ -119,7 +119,7 @@ class EventCouponController extends Controller
 
     private function getForm()
     {
-        return view('panel._pages.event.coupon.form', ['config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get(), 'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get()])->render();
+        return view('panel._pages.event.coupon.form', ["status_event" => MasterStatusSelf::where('parent_id',1)->orderBy('self_id', 'asc')->get(), 'config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get(), 'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get()])->render();
     }
 
     public function list(Request $input)
@@ -249,6 +249,14 @@ class EventCouponController extends Controller
 
     public function store(Request $input)
     {
+        if ($input->flag_registration == 2 and in_array($input->flag_status, [2,3])) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Fail, Flag Registration is Deny and event status cannot start registration or end registration!'
+            ];
+        }
+
         if (empty($input->id)) {
             $store = new EventCoupon;
         }else{
@@ -283,6 +291,7 @@ class EventCouponController extends Controller
             }
             $store->picture = $file_dir;
         }
+        $store->flag_status = $input->flag_status;
         $store->title = $input->title;
         $store->max_coupon = $input->max_coupon;
         $store->terms_and_conditions = $input->terms_and_conditions;

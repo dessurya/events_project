@@ -108,7 +108,7 @@ class EventTournamentController extends Controller
             'title' => 'Form Tournament TO',
             'action' => 'panel.event.tournament.store',
             'readonly' => [],
-            'required' => ['title', 'prize', 'website', 'start_activity', 'end_activity', 'flag_registration']
+            'required' => ['title', 'prize', 'website', 'start_activity', 'end_activity', 'flag_status', 'flag_registration']
         ];
     }
 
@@ -119,7 +119,7 @@ class EventTournamentController extends Controller
 
     private function getForm()
     {
-        return view('panel._pages.event.tournament.form', ['config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get(), 'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get()])->render();
+        return view('panel._pages.event.tournament.form', ["status_event" => MasterStatusSelf::where('parent_id',1)->orderBy('self_id', 'asc')->get(), 'config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get(), 'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get()])->render();
     }
     
     public function list(Request $input)
@@ -254,6 +254,14 @@ class EventTournamentController extends Controller
 
     public function store(Request $input)
     {
+        if ($input->flag_registration == 2 and in_array($input->flag_status, [2,3])) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Fail, Flag Registration is Deny and event status cannot start registration or end registration!'
+            ];
+        }
+        
         if (empty($input->id)) {
             $store = new EventTournament;
         }else{
@@ -288,6 +296,8 @@ class EventTournamentController extends Controller
             }
             $store->picture = $file_dir;
         }
+        
+        $store->flag_status = $input->flag_status;
         $store->title = $input->title;
         $store->prize = $input->prize;
         $store->terms_and_conditions = $input->terms_and_conditions;

@@ -10,6 +10,7 @@ use App\Models\EventOther;
 use App\Models\EventOtherWebsite;
 use App\Models\ViewEventOther;
 use App\Models\MasterWebsite;
+use App\Models\MasterStatusSelf;
 use Carbon\Carbon;
 
 class EventOtherController extends Controller
@@ -89,7 +90,7 @@ class EventOtherController extends Controller
             'title' => 'Form Event Other',
             'action' => 'panel.event.other.store',
             'readonly' => [],
-            'required' => ['title', 'website', 'start_activity', 'end_activity']
+            'required' => ['title', 'website', 'start_activity', 'end_activity', 'flag_status']
         ];
     }
 
@@ -100,7 +101,7 @@ class EventOtherController extends Controller
 
     private function getForm()
     {
-        return view('panel._pages.event.other.form', ['config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get()])->render();
+        return view('panel._pages.event.other.form', ["status_event" => MasterStatusSelf::where('parent_id',1)->whereNotIn('self_id',[2,3])->orderBy('self_id', 'asc')->get(), 'config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get()])->render();
     }
 
     public function list(Request $input)
@@ -246,6 +247,7 @@ class EventOtherController extends Controller
         $store->description = $input->description;
         $store->end_activity = $input->end_activity;
         $store->start_activity = $input->start_activity;
+        $store->flag_status = $input->flag_status;
         $store->save();
         $find = EventOther::find($store->id);
         EventOtherWebsite::where('event_id',$find->id)->delete();

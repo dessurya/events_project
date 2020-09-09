@@ -22,6 +22,16 @@
 						</select>
 					</div>
 				</div>
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Event Status</label>
+						<select disabled name="flag_status" class="form-control input select">
+						@foreach($status_event as $row)
+						<option value="{{$row->self_id}}">{{$row->value}}</option>
+						@endforeach
+						</select>
+					</div>
+				</div>
                 <div class="col-sm-6">
 					<div class="form-group">
 						<label>Activity Start On : </label>
