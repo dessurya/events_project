@@ -32,16 +32,34 @@
 						</select>
 					</div>
 				</div>
-                <div class="col-sm-6">
-					<div class="form-group">
-						<label>Activity Start On : </label>
-						<input disabled name="start_activity" type="date" class="form-control input date">
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="form-group">
-						<label>Activity End On : </label>
-						<input disabled name="end_activity" type="date" class="form-control input date">
+				<div class="col-sm-12">
+					<div class="card card-secondary">
+						<div class="card-header">
+							<div class="form-group">
+								<label>Auto Generate Event Status And Config Date : </label>
+								<select onchange="toggleDateConfig()" disabled name="flag_gs_n_date" class="form-control input select">
+								@foreach($flag_gs_n_date as $row)
+								<option value="{{$row->self_id}}">{{$row->value}}</option>
+								@endforeach
+								</select>
+							</div>
+						</div>
+						<div id="gsndateConfig" class="card-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>Activity Start On : </label>
+										<input disabled name="start_activity" type="date" class="form-control input date">
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>Activity End On : </label>
+										<input disabled name="end_activity" type="date" class="form-control input date">
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="col-sm-12">

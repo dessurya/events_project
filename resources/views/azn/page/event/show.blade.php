@@ -91,7 +91,7 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 						<ul class="blog-info-link mt-3 mb-4">
 							@foreach($website as $item)
 							<li>
-								<a href="{{ empty($item->website->url) ? '#' : $item->website->url }}">{{ $item->website->name }}</a>
+								<a href="{{ empty($item->website->url) ? '#' : $item->website->url }}" @if(!empty($item->website->url)) target="_blank" @endif>{{ $item->website->name }}</a>
 							</li>
 							@endforeach
 						</ul>

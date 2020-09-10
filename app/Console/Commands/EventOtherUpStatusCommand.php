@@ -42,7 +42,7 @@ class EventOtherUpStatusCommand extends Command
     public function handle()
     {
         $date = Carbon::now()->format('Y-m-d');
-        $events = EventOther::whereNotIn('flag_status', [6])->get();
+        $events = EventOther::whereNotIn('flag_status', [6])->where('flag_gs_n_date',1)->get();
         foreach ($events as $event) {
             if (
                 ($event->flag_status == 1 and $date >= $event->start_activity) or

@@ -62,6 +62,7 @@ class EventTournamentController extends Controller
             'componen' => [
                 ["data"=>"title","name"=>"title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
+                ["data"=>"auto_generate_status","name"=>"auto_generate_status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"registration_status_name","name"=>"registration_status_name","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"generate_ranks","name"=>"generate_ranks","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"participants_username_status","name"=>"participants_username_status","searchable"=>true,"searchtype"=>"text","orderable"=>true],
@@ -108,7 +109,7 @@ class EventTournamentController extends Controller
             'title' => 'Form Tournament TO',
             'action' => 'panel.event.tournament.store',
             'readonly' => [],
-            'required' => ['title', 'prize', 'website', 'start_activity', 'end_activity', 'flag_status', 'flag_registration']
+            'required' => ['title', 'prize', 'website', 'start_activity', 'end_activity', 'flag_status', 'flag_gs_n_date']
         ];
     }
 
@@ -119,7 +120,13 @@ class EventTournamentController extends Controller
 
     private function getForm()
     {
-        return view('panel._pages.event.tournament.form', ["status_event" => MasterStatusSelf::where('parent_id',1)->orderBy('self_id', 'asc')->get(), 'config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get(), 'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get()])->render();
+        return view('panel._pages.event.tournament.form', [
+            'config' => $this->formConfig(),
+            "status_event" => MasterStatusSelf::where('parent_id',1)->orderBy('self_id', 'asc')->get(),
+            'website' => MasterWebsite::orderBy('name', 'asc')->get(),
+            'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get(),
+            'flag_gs_n_date' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',8)->get()
+        ])->render();
     }
     
     public function list(Request $input)
@@ -190,6 +197,9 @@ class EventTournamentController extends Controller
         if (isset($input->participants_username_status) and !empty($input->participants_username_status)){
             $data->where('participants_username_status', 'like', '%'.$input->participants_username_status.'%');
         }
+        if (isset($input->auto_generate_status) and !empty($input->auto_generate_status)){
+            $data->where('auto_generate_status', 'like', '%'.$input->auto_generate_status.'%');
+        }
         $data = $data->paginate($paginate);
         return [
             'renderGetData' => true,
@@ -254,7 +264,7 @@ class EventTournamentController extends Controller
 
     public function store(Request $input)
     {
-        if ($input->flag_registration == 2 and in_array($input->flag_status, [2,3])) {
+        if ($input->flag_gs_n_date == 1 and $input->flag_registration == 2 and in_array($input->flag_status, [2,3])) {
             return [
                 'pnotify' => true,
                 'pnotify_type' => 'error',
@@ -266,13 +276,15 @@ class EventTournamentController extends Controller
             $store = new EventTournament;
         }else{
             $store = EventTournament::with('getStatus')->find($input->id);
-            $checkDate = $this->checkDate($store,$input);
-            if ($checkDate['success'] == false) {
-                return [
-                    'pnotify' => true,
-                    'pnotify_type' => 'error',
-                    'pnotify_text' => $checkDate['msg']
-                ];
+            if($input->flag_gs_n_date == 1){
+                $checkDate = $this->checkDate($store,$input);
+                if ($checkDate['success'] == false) {
+                    return [
+                        'pnotify' => true,
+                        'pnotify_type' => 'error',
+                        'pnotify_text' => $checkDate['msg']
+                    ];
+                }
             }
         }
         if (!empty($input->picture)) {
@@ -302,16 +314,26 @@ class EventTournamentController extends Controller
         $store->prize = $input->prize;
         $store->terms_and_conditions = $input->terms_and_conditions;
         $store->description = $input->description;
-        $store->end_activity = $input->end_activity;
-        $store->start_activity = $input->start_activity;
-        $store->flag_registration = $input->flag_registration;
-        if ($input->flag_registration == 2) {
+        $store->flag_gs_n_date = $input->flag_gs_n_date;
+        if ($input->flag_gs_n_date == 1) {
+            $store->end_activity = $input->end_activity;
+            $store->start_activity = $input->start_activity;
+            $store->flag_registration = $input->flag_registration;
+            if ($input->flag_registration == 2) {
+                $store->start_registration = null;
+                $store->end_registration = null;
+            }else{
+                $store->start_registration = $input->start_registration;
+                $store->end_registration = $input->end_registration;
+            }
+        }else if ($input->flag_gs_n_date == 2) {
+            $store->end_activity = null;
+            $store->start_activity = null;
             $store->start_registration = null;
             $store->end_registration = null;
-        }else{
-            $store->start_registration = $input->start_registration;
-            $store->end_registration = $input->end_registration;
+            $store->flag_registration = 2;
         }
+        
         $store->save();
         $find = EventTournament::find($store->id);
         EventTournamentWebsite::where('event_id',$find->id)->delete();

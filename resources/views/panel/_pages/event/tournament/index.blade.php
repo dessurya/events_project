@@ -14,30 +14,38 @@
 @include('panel._componen.select2_script', ['config' => $config['dtable']])
 @include('panel._componen.dtables_script', ['config' => $config['dtable']])
 <script type="text/javascript">
+	function toggleDateConfig() {
+		var newVal = $('[name=flag_gs_n_date]').val();
+		if (newVal == null || newVal == 1) { $('#gsndateConfig').show(); }
+		else if (newVal == 2) { $('#gsndateConfig').hide(); }
+	}
+	function toggleFlagRegistration() {
+		var newVal = $('[name=flag_registration]').val();
+		if (newVal == null || newVal == 1) { 
+			$('.target_flag_registration_col').removeClass('col-sm-12').removeClass('col-sm-4').addClass('col-sm-4'); 
+			$('.target_flag_registration_hide').show();
+		}
+		else if (newVal == 2) { 
+			$('.target_flag_registration_col').removeClass('col-sm-12').removeClass('col-sm-4').addClass('col-sm-12'); 
+			$('.target_flag_registration_hide').hide();
+		 }
+	}
+
 	function validateForm(data) {
+		if (data.flag_gs_n_date == 2) { return false; }
 		var error = [];
 		var start_registration = new Date(data.start_registration);
 		var end_registration = new Date(data.end_registration);
 		var start_activity = new Date(data.start_activity);
 		var end_activity = new Date(data.end_activity);
 		var today = new Date();
-
-		if (data.id == "" && today > start_activity) {
-			error.push('start_registration must greater than today');
-		}
-		if (data.flag_registration == 1 && start_registration > end_registration) {
-			error.push('end_registration must greater than start_registration');
-		}
-		if (data.flag_registration == 1 && end_registration > start_activity) {
-			error.push('start_activity must greater than end_registration');
-		}
-		if (start_activity > end_activity) {
-			error.push('end_activity must greater than start_activity');
-		}
+		if (data.flag_registration == null) { error.push('field registration required!'); }
+		if (data.id == "" && today > start_activity) { error.push('start_registration must greater than today'); }
+		if (data.flag_registration == 1 && start_registration > end_registration) { error.push('end_registration must greater than start_registration'); }
+		if (data.flag_registration == 1 && end_registration > start_activity) { error.push('start_activity must greater than end_registration'); }
+		if (start_activity > end_activity) { error.push('end_activity must greater than start_activity'); }
 		if(error.length > 0){
-			$.each(error, function(index, val){
-				pnotify({"title":"info","type":"dangger","text":val});
-			});
+			$.each(error, function(index, val){ pnotify({"title":"info","type":"dangger","text":val}); });
 			return true;
 		}
 		return false;

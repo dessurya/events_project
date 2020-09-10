@@ -53,6 +53,7 @@ class EventOtherController extends Controller
             'componen' => [
                 ["data"=>"title","name"=>"title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
+                ["data"=>"auto_generate_status","name"=>"auto_generate_status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"start_activity","name"=>"start_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"end_activity","name"=>"end_activity","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"created_at","name"=>"created_at","searchable"=>false,"searchtype"=>"date","orderable"=>true]
@@ -90,7 +91,7 @@ class EventOtherController extends Controller
             'title' => 'Form Event Other',
             'action' => 'panel.event.other.store',
             'readonly' => [],
-            'required' => ['title', 'website', 'start_activity', 'end_activity', 'flag_status']
+            'required' => ['title', 'website', 'flag_status', 'flag_gs_n_date']
         ];
     }
 
@@ -101,7 +102,12 @@ class EventOtherController extends Controller
 
     private function getForm()
     {
-        return view('panel._pages.event.other.form', ["status_event" => MasterStatusSelf::where('parent_id',1)->whereNotIn('self_id',[2,3])->orderBy('self_id', 'asc')->get(), 'config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get()])->render();
+        return view('panel._pages.event.other.form', [
+            'config' => $this->formConfig(),
+            "status_event" => MasterStatusSelf::where('parent_id',1)->whereNotIn('self_id',[2,3])->orderBy('self_id', 'asc')->get(),
+            'website' => MasterWebsite::orderBy('name', 'asc')->get(),
+            'flag_gs_n_date' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',8)->get()
+        ])->render();
     }
 
     public function list(Request $input)
@@ -153,6 +159,9 @@ class EventOtherController extends Controller
         }
         if (isset($input->website) and !empty($input->website)){
             $data->where('website', 'like', '%'.$input->website.'%');
+        }
+        if (isset($input->auto_generate_status) and !empty($input->auto_generate_status)){
+            $data->where('auto_generate_status', 'like', '%'.$input->auto_generate_status.'%');
         }
         $data = $data->paginate($paginate);
         return [
@@ -212,13 +221,15 @@ class EventOtherController extends Controller
             $store = new EventOther;
         }else{
             $store = EventOther::with('getStatus')->find($input->id);
-            $checkDate = $this->checkDate($store,$input);
-            if ($checkDate['success'] == false) {
-                return [
-                    'pnotify' => true,
-                    'pnotify_type' => 'error',
-                    'pnotify_text' => $checkDate['msg']
-                ];
+            if($input->flag_gs_n_date == 1){
+                $checkDate = $this->checkDate($store,$input);
+                if ($checkDate['success'] == false) {
+                    return [
+                        'pnotify' => true,
+                        'pnotify_type' => 'error',
+                        'pnotify_text' => $checkDate['msg']
+                    ];
+                }
             }
         }
         if (!empty($input->picture)) {
@@ -245,9 +256,15 @@ class EventOtherController extends Controller
         $store->title = $input->title;
         $store->terms_and_conditions = $input->terms_and_conditions;
         $store->description = $input->description;
-        $store->end_activity = $input->end_activity;
-        $store->start_activity = $input->start_activity;
         $store->flag_status = $input->flag_status;
+        $store->flag_gs_n_date = $input->flag_gs_n_date;
+        if($input->flag_gs_n_date == 1){
+            $store->end_activity = $input->end_activity;
+            $store->start_activity = $input->start_activity;
+        } else if ($input->flag_gs_n_date == 2) {
+            $store->end_activity = null;
+            $store->start_activity = null;
+        }
         $store->save();
         $find = EventOther::find($store->id);
         EventOtherWebsite::where('event_id',$find->id)->delete();

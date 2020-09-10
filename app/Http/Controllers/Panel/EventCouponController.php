@@ -65,6 +65,7 @@ class EventCouponController extends Controller
                 ["data"=>"max_coupon","name"=>"max_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"available_coupon","name"=>"available_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"gifted_coupon","name"=>"gifted_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"auto_generate_status","name"=>"auto_generate_status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"registration_status_name","name"=>"registration_status_name","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"start_active","name"=>"start_active","searchable"=>true,"searchtype"=>"date","orderable"=>true],
@@ -108,7 +109,7 @@ class EventCouponController extends Controller
             'title' => 'Form Event Coupon',
             'action' => 'panel.event.coupon.store',
             'readonly' => [],
-            'required' => ['title', 'website', 'flag_status', 'flag_registration', 'start_active', 'end_active', 'max_coupon']
+            'required' => ['title', 'website', 'flag_status', 'flag_gs_n_date', 'start_active', 'end_active', 'max_coupon']
         ];
     }
 
@@ -119,7 +120,13 @@ class EventCouponController extends Controller
 
     private function getForm()
     {
-        return view('panel._pages.event.coupon.form', ["status_event" => MasterStatusSelf::where('parent_id',1)->orderBy('self_id', 'asc')->get(), 'config' => $this->formConfig(), 'website' => MasterWebsite::orderBy('name', 'asc')->get(), 'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get()])->render();
+        return view('panel._pages.event.coupon.form', [
+            'config' => $this->formConfig(),
+            "status_event" => MasterStatusSelf::where('parent_id',1)->orderBy('self_id', 'asc')->get(),
+            'website' => MasterWebsite::orderBy('name', 'asc')->get(),
+            'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get(),
+            'flag_gs_n_date' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',8)->get()
+            ])->render();
     }
 
     public function list(Request $input)
@@ -183,6 +190,9 @@ class EventCouponController extends Controller
         }
         if (isset($input->registration_status_name) and !empty($input->registration_status_name)){
             $data->where('registration_status_name', 'like', '%'.$input->registration_status_name.'%');
+        }
+        if (isset($input->auto_generate_status) and !empty($input->auto_generate_status)){
+            $data->where('auto_generate_status', 'like', '%'.$input->auto_generate_status.'%');
         }
         $data = $data->paginate($paginate);
         return [
@@ -249,7 +259,7 @@ class EventCouponController extends Controller
 
     public function store(Request $input)
     {
-        if ($input->flag_registration == 2 and in_array($input->flag_status, [2,3])) {
+        if ($input->flag_gs_n_date == 1 and $input->flag_registration == 2 and in_array($input->flag_status, [2,3])) {
             return [
                 'pnotify' => true,
                 'pnotify_type' => 'error',
@@ -261,13 +271,15 @@ class EventCouponController extends Controller
             $store = new EventCoupon;
         }else{
             $store = EventCoupon::with('getStatus')->find($input->id);
-            $checkDate = $this->checkDate($store,$input);
-            if ($checkDate['success'] == false) {
-                return [
-                    'pnotify' => true,
-                    'pnotify_type' => 'error',
-                    'pnotify_text' => $checkDate['msg']
-                ];
+            if($input->flag_gs_n_date == 1){
+                $checkDate = $this->checkDate($store,$input);
+                if ($checkDate['success'] == false) {
+                    return [
+                        'pnotify' => true,
+                        'pnotify_type' => 'error',
+                        'pnotify_text' => $checkDate['msg']
+                    ];
+                }
             }
         }
         if (!empty($input->picture)) {
@@ -296,16 +308,26 @@ class EventCouponController extends Controller
         $store->max_coupon = $input->max_coupon;
         $store->terms_and_conditions = $input->terms_and_conditions;
         $store->description = $input->description;
-        $store->end_active = $input->end_active;
-        $store->start_active = $input->start_active;
-        $store->flag_registration = $input->flag_registration;
-        if ($input->flag_registration == 2) {
+        $store->flag_gs_n_date = $input->flag_gs_n_date;
+        if ($input->flag_gs_n_date == 1) {
+            $store->flag_registration = $input->flag_registration;
+            $store->end_active = $input->end_active;
+            $store->start_active = $input->start_active;
+            if ($input->flag_registration == 2) {
+                $store->start_registration = null;
+                $store->end_registration = null;
+            }else{
+                $store->start_registration = $input->start_registration;
+                $store->end_registration = $input->end_registration;
+            }
+        } else if ($input->flag_gs_n_date == 2) {
+            $store->flag_registration = 2;
             $store->start_registration = null;
             $store->end_registration = null;
-        }else{
-            $store->start_registration = $input->start_registration;
-            $store->end_registration = $input->end_registration;
+            $store->end_active = null;
+            $store->start_active = null;
         }
+        
         $store->max_coupon = $input->max_coupon;
         $store->save();
         $find = EventCoupon::find($store->id);
