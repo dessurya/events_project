@@ -24,19 +24,19 @@ class EventController extends Controller
     {
         $events = [
             [
-                'title' => 'On Going Event',
+                'title' => 'Live Event',
                 'route' => 'azn.event.ongoing',
-                'events' => ViewHistoryEvent::whereIn('status_id', [4])->orderBy('start_event','desc')->paginate(3)
+                'events' => ViewHistoryEvent::whereIn('status_id', [4])->orderBy('created_at','desc')->paginate(3)
             ],
             [
                 'title' => 'Upcoming Event',
                 'route' => 'azn.event.upcomming',
-                'events' => ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('start_event','desc')->paginate(3)
+                'events' => ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('created_at','desc')->paginate(3)
             ],
             [
                 'title' => 'Past Event',
                 'route' => 'azn.event.past',
-                'events' => ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('start_event','desc')->paginate(3)
+                'events' => ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('created_at','desc')->paginate(3)
             ],
         ];
         return view('azn.page.event.index', compact('events'));
@@ -47,14 +47,14 @@ class EventController extends Controller
         $config = [
             'title' => 'Search Event List',
             'route' => 'azn.event.searchLoad',
-            'data' => ViewHistoryEvent::where('title', 'like', '%'.$input->search.'%')->orderBy('start_event','desc')->paginate(6)
+            'data' => ViewHistoryEvent::where('title', 'like', '%'.$input->search.'%')->orderBy('created_at','desc')->paginate(6)
         ];
         return view('azn.page.event.list', compact('config'));
     }
 
     public function searchLoad(Request $input)
     {
-        $data = ViewHistoryEvent::where('title', 'like', '%'.$input->search.'%')->orderBy('start_event','desc')->paginate(6);
+        $data = ViewHistoryEvent::where('title', 'like', '%'.$input->search.'%')->orderBy('created_at','desc')->paginate(6);
         if(count($data) > 0){
             $html = "";
             foreach ($data as $event){
@@ -83,16 +83,16 @@ class EventController extends Controller
     public function ongoing(Request $input)
     {
         $config = [
-            'title' => 'On Going Event List',
+            'title' => 'Live Event List',
             'route' => 'azn.event.ongoingLoad',
-            'data' => ViewHistoryEvent::whereIn('status_id', [4])->orderBy('start_event','desc')->paginate(6)
+            'data' => ViewHistoryEvent::whereIn('status_id', [4])->orderBy('created_at','desc')->paginate(6)
         ];
         return view('azn.page.event.list', compact('config'));
     }
 
     public function ongoingLoad(Request $input)
     {
-        $data = ViewHistoryEvent::whereIn('status_id', [4])->orderBy('start_event','desc')->paginate(6);
+        $data = ViewHistoryEvent::whereIn('status_id', [4])->orderBy('created_at','desc')->paginate(6);
         if(count($data) > 0){
             $html = "";
             foreach ($data as $event){
@@ -124,14 +124,14 @@ class EventController extends Controller
         $config = [
             'title' => 'Upcomming Event List',
             'route' => 'azn.event.upcommingLoad',
-            'data' => ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('start_event','desc')->paginate(6)
+            'data' => ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('created_at','desc')->paginate(6)
         ];
         return view('azn.page.event.list', compact('config'));
     }
 
     public function upcommingLoad(Request $input)
     {
-        $data = ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('start_event','desc')->paginate(6);
+        $data = ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('created_at','desc')->paginate(6);
         if(count($data) > 0){
             $html = "";
             foreach ($data as $event){
@@ -163,14 +163,14 @@ class EventController extends Controller
         $config = [
             'title' => 'Past Event List',
             'route' => 'azn.event.pastLoad',
-            'data' => ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('start_event','desc')->paginate(6)
+            'data' => ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('created_at','desc')->paginate(6)
         ];
         return view('azn.page.event.list', compact('config'));
     }
 
     public function pastLoad(Request $input)
     {
-        $data = ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('start_event','desc')->paginate(6);
+        $data = ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('created_at','desc')->paginate(6);
         if(count($data) > 0){
             $html = "";
             foreach ($data as $event){
@@ -211,13 +211,13 @@ class EventController extends Controller
         $param['events'] = [
             [
                 'date' => 'start',
-                'title' => 'On Going Event',
-                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->where([ 'status_id'=> 4 ])->orderBy('start_event','desc')->limit(3)->get()
+                'title' => 'Live Event',
+                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->where([ 'status_id'=> 4 ])->orderBy('created_at','desc')->limit(3)->get()
             ],
             [
                 'date' => 'start',
                 'title' => 'Upcoming Event',
-                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->whereIn('status_id', [1,2,3])->orderBy('start_event','desc')->limit(3)->get()
+                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->whereIn('status_id', [1,2,3])->orderBy('created_at','desc')->limit(3)->get()
             ],
             [
                 'date' => 'end',

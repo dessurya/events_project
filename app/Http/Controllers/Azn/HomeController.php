@@ -24,24 +24,24 @@ class HomeController extends Controller
         $eventGetOnGoing = $this->eventGetOnGoing(3);
         $eventGetPast = $this->eventGetPast(3);
 
-        $eventAll = ViewHistoryEvent::whereIn('status_id', [1,2,3,4])->orderBy('start_event','desc')->limit(6)->get();;
+        $eventAll = ViewHistoryEvent::whereIn('status_id', [1,2,3,4])->orderBy('created_at','desc')->limit(6)->get();;
         $MasterWebsite = MasterWebsite::orderBy('name', 'asc')->get();
         return view('azn.page.home.index', compact('MainSlider', 'InterfaceConfig', 'eventGetUpComming', 'eventGetOnGoing', 'eventGetPast', 'eventAll', 'MasterWebsite'));
 	}
 
 	public static function eventGetOnGoing($limit)
     {
-        return ViewHistoryEvent::where([ 'status_id'=> 4 ])->orderBy('start_event','desc')->limit($limit)->get();
+        return ViewHistoryEvent::where([ 'status_id'=> 4 ])->orderBy('created_at','desc')->limit($limit)->get();
     }
 
     public static function eventGetUpComming($limit)
     {
-        return ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('start_event','desc')->limit($limit)->get();
+        return ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('created_at','desc')->limit($limit)->get();
     }
 
     public static function eventGetPast($limit)
     {
-        return ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('end_event','desc')->limit($limit)->get();
+        return ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('created_at','desc')->limit($limit)->get();
     }
 
 	public static function interfaceGetTitle()
@@ -89,7 +89,7 @@ class HomeController extends Controller
         $params = [
             [
                 'date' => 'start',
-                'title' => 'On Going Event',
+                'title' => 'Live Event',
                 'event' => $this->eventGetOnGoing(3)
             ],
             [

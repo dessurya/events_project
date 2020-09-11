@@ -69,6 +69,21 @@ Home
     .blog_item_img .blog_item_date.color-6{
       background-color: #625454;
     }
+    .weekly2-news-area .weekly2-wrapper .weekly2-single .weekly2-caption span{
+      border-radius: 0 7px 0 7px;
+      padding: 10px 25px;
+      font-size: 18pt;
+      color:white;
+      border: 2px solid rgba(0,0,0,0);
+      box-shadow: 5px 10px 10px gray;
+      transition: all 1.11s;
+    }
+    .weekly2-news-area .weekly2-wrapper .weekly2-single:hover .weekly2-caption span{
+      box-shadow: 0px 0px 0px gray;
+      color:black;
+      border: 2px solid black;
+      background: rgba(255,255,255,.9);
+    }
 </style>
 @endpush
 
@@ -167,7 +182,7 @@ Home
               <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                   <a class="nav-item nav-link active" id="nav-ongoing-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="false">All</a>
-                  <a class="nav-item nav-link" id="nav-ongoing-tab" data-toggle="tab" href="#nav-ongoing" role="tab" aria-controls="nav-ongoing" aria-selected="false">On Going</a>
+                  <a class="nav-item nav-link" id="nav-ongoing-tab" data-toggle="tab" href="#nav-ongoing" role="tab" aria-controls="nav-ongoing" aria-selected="false">Live</a>
                   <a class="nav-item nav-link" id="nav-upcoming-tab" data-toggle="tab" href="#nav-upcoming" role="tab" aria-controls="nav-upcoming" aria-selected="false">Upcoming</a>
                   <a class="nav-item nav-link" id="nav-past-tab" data-toggle="tab" href="#nav-past" role="tab" aria-controls="nav-past" aria-selected="false">Past</a>
                 </div>
@@ -218,14 +233,20 @@ Home
 @include('azn.componen.our-website',['MasterWebsite'=>$MasterWebsite])
 @endif
 
-@if(!empty($InterfaceConfig['about_us']))
-<div class="about-area pt-50 pb-50 gray-bg mb-0">
-	<div class="container text-center">
-    <?php
-    // {!! $InterfaceConfig['about_us'] !!}
-    ?>
-    <img src="{{ asset('images/lOGO.png') }}" alt="" width="100%">
-	</div>
-</div>
-@endif
+<?php
+// <div class="about-area pt-50 pb-50 gray-bg mb-0">
+// 	<div class="container text-center">
+//     <img src="{{ asset('images/lOGO.png') }}" alt="" width="100%">
+//     </div>
+// </div>
+// @if(!empty($InterfaceConfig['about_us']))
+// <div class="about-area pt-50 pb-50 gray-bg mb-0">
+// 	<div class="container text-center">
+//     {!! $InterfaceConfig['about_us'] !!}
+//     </div>
+// </div>
+// @endif
+?>
+
+
 @endpush

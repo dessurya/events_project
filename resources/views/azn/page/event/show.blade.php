@@ -88,13 +88,16 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 					</div>
 					<div class="blog_details">
 						@if(count($website) > 0)
-						<ul class="blog-info-link mt-3 mb-4">
+						<div class="text-center mb-15">
+							<span>Kunjungin Website Kami</span>
+						</div>
+						<div class="row">
 							@foreach($website as $item)
-							<li>
+							<div class="col-6 col-sm-3 mb-10 text-center">
 								<a href="{{ empty($item->website->url) ? '#' : $item->website->url }}" @if(!empty($item->website->url)) target="_blank" @endif>{{ $item->website->name }}</a>
-							</li>
+							</div>
 							@endforeach
-						</ul>
+						</div>
 						@endif
 						@if(!empty($data->description))
 						<div class="mb-20">{!! $data->description !!}</div>
@@ -110,7 +113,7 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 							</div>
 							@elseif($data->event_id == 2)
 							<div class="board">
-								@include('azn.componen.event-coupon', ['MasterWebsite'=>$MasterWebsite])
+								@include('azn.componen.event-coupon', ['MasterWebsite'=>$website])
 							</div>
 							@endif
 			            @endif

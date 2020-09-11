@@ -41,6 +41,21 @@ Contact Us
 		padding-top: 60px;
 		padding-bottom: 60px;
 	}
+	.weekly2-news-area .weekly2-wrapper .weekly2-single .weekly2-caption span{
+      border-radius: 0 7px 0 7px;
+      padding: 10px 25px;
+      font-size: 18pt;
+      color:white;
+      border: 2px solid rgba(0,0,0,0);
+      box-shadow: 5px 10px 10px gray;
+      transition: all 1.11s;
+    }
+    .weekly2-news-area .weekly2-wrapper .weekly2-single:hover .weekly2-caption span{
+      box-shadow: 0px 0px 0px gray;
+      color:black;
+      border: 2px solid black;
+      background: rgba(255,255,255,.9);
+    }
     @media only screen and (max-width: 1199px) and (min-width: 992px){
 		.weekly2-pading{
 			padding-top: 60px;

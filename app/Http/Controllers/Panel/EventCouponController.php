@@ -109,7 +109,7 @@ class EventCouponController extends Controller
             'title' => 'Form Event Coupon',
             'action' => 'panel.event.coupon.store',
             'readonly' => [],
-            'required' => ['title', 'website', 'flag_status', 'flag_gs_n_date', 'start_active', 'end_active', 'max_coupon']
+            'required' => ['title', 'website', 'flag_status', 'flag_gs_n_date', 'max_coupon']
         ];
     }
 
