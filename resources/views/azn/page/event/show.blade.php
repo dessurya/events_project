@@ -120,7 +120,8 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 
 			<div class="col-lg-4">
 				<div class="blog_right_sidebar">
-					
+				
+					@if(!empty($data->start_registration) and !empty($data->start_event))
 					<aside class="single_sidebar_widget">
 						<h3 class="widget_title">{{ $data->status }}</h3>
 						@if(!empty($data->start_registration))
@@ -136,6 +137,7 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 						</p>
 						@endif
 					</aside>
+					@endif
 
 					@if(in_array($data->event_id, [1,2]) and in_array($data->status_id, [2,3,4]) and $data->registration_status_id == 1)
 					<aside class="single_sidebar_widget evnt_recent">
