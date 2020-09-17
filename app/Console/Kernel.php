@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\EventOtherUpStatusCommand',
         'App\Console\Commands\EventCouponUpStatusCommand',
         'App\Console\Commands\EventTournamentToUpStatusCommand',
+        'App\Console\Commands\EventCouponGenerateNewCoupon',
         'App\Console\Commands\EventTournamantToLeaderboardRankCommand'
     ];
 
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('EventCoupon:status_update')->dailyAt('0:15');
         $schedule->command('tourneTo:status_update')->dailyAt('0:10');
         $schedule->command('tourneTo:leaderboard_rank')->cron('0 */3 * * *'); // every 3 hour
+        $schedule->command('EventCoupon:GenerateNewCoupon')->cron('0 */3 * * *'); // every 3 hour
     }
 
     /**

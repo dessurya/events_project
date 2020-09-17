@@ -13,11 +13,19 @@
         </li>
         <li class="page-item">
           <a 
-              onclick="prepareGiftCoupon('.prepareGiftCoupon.giftList','.preparePostData.giftList')" 
-              class="page-link prepareGiftCoupon giftList"
+              onclick="prepareGenerateCoupon('.prepareGenerateCoupon.giftList','.preparePostData.giftList')" 
+              class="page-link prepareGenerateCoupon giftList"
+              data-id=""
+              title="Generate Coupon"
+              href="{{ route('panel.event.coupon.generatecoupon') }}"><i class="fas fa-medal"></i></a>
+        </li>
+        <li class="page-item">
+          <a 
+              onclick="prepareGiftAddPoints('.prepareGiftAddPoints.giftList','.preparePostData.giftList')" 
+              class="page-link prepareGiftAddPoints giftList"
               data-id=""
               title="Add Points"
-              href="{{ route('panel.event.coupon.gifted') }}"><i class="fas fa-save"></i></a>
+              href="{{ route('panel.event.coupon.addpoints') }}"><i class="fas fa-save"></i></a>
         </li>
       </ul>
     </div>
@@ -30,11 +38,12 @@
           <th>Website</th>
           <th>Username</th>
           <th>Name</th>
+          <th>Turnover Point</th>
           <th>Have Coupon</th>
           <th></th>
         </tr>
       </thead>
-      <tbody><tr><td colspan="6" class="text-center">-</td></tr></tbody>
+      <tbody><tr><td colspan="7" class="text-center">-</td></tr></tbody>
     </table>
   </div>
 </div>

@@ -38,6 +38,22 @@
 						</select>
 					</div>
 				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>Coupon Type</label>
+						<select disabled name="flag_coupon_type" class="form-control input select">
+						@foreach($flag_coupon_type as $row)
+						<option value="{{$row->self_id}}">{{$row->value}}</option>
+						@endforeach
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>Threshold Turnover</label>
+						<input disabled name="threshold_turnover" type="number" step="1000" class="form-control input">
+					</div>
+				</div>
 				<div class="col-sm-12">
 					<div class="card card-secondary">
 						<div class="card-header">

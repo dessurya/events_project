@@ -445,6 +445,8 @@ class SeederFeed extends Seeder
             ['id'=>6,'value'=>'Event Registration Status'],
             ['id'=>7,'value'=>'Event Tournament TO Participants Username'],
             ['id'=>8,'value'=>'Event Generate Status and Date Configuration'],
+            ['id'=>9,'value'=>'Event Coupon Generate Coupon'],
+            ['id'=>10,'value'=>'Event Coupon Type Of Coupon'],
         ];
         foreach ($MasterStatusParent as $store) {
             MasterStatusParent::create($store);
@@ -478,6 +480,11 @@ class SeederFeed extends Seeder
             ['parent_id'=>7,'self_id'=>2,'value'=>'Restricted'],
             ['parent_id'=>8,'self_id'=>1,'value'=>'Allow'],
             ['parent_id'=>8,'self_id'=>2,'value'=>'Deny'],
+            ['parent_id'=>9,'self_id'=>1,'value'=>'Not Start'],
+            ['parent_id'=>9,'self_id'=>2,'value'=>'Waiting'],
+            ['parent_id'=>9,'self_id'=>3,'value'=>'Done'],
+            ['parent_id'=>10,'self_id'=>1,'value'=>'Multiple'],
+            ['parent_id'=>10,'self_id'=>2,'value'=>'Single'],
         ];
         foreach ($MasterStatusSelf as $store) {
             MasterStatusSelf::create($store);
@@ -531,17 +538,17 @@ class SeederFeed extends Seeder
     {
         $this->MasterStatusParent();
         $this->MasterStatusSelf();
-        // $this->MasterWebsite();
+        $this->MasterWebsite();
         $this->MasterBank();
 
         $this->userStore();
-        // $this->Participants();
+        $this->Participants();
         $this->interfaceConfig();
         // $this->Contact();
-        // $this->EventTournament();
+        $this->EventTournament();
         // $this->EventTournamentRegistration();
-        // $this->EventOther();
-        // $this->EventCoupon();
-        // $this->EventCouponRegistration();
+        $this->EventOther();
+        $this->EventCoupon();
+        $this->EventCouponRegistration();
     }
 }

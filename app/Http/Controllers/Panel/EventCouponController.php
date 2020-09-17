@@ -62,12 +62,15 @@ class EventCouponController extends Controller
             ],
             'componen' => [
                 ["data"=>"title","name"=>"title","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"threshold_turnover","name"=>"threshold_turnover","searchable"=>false,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"coupon_type","name"=>"coupon_type","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"max_coupon","name"=>"max_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"available_coupon","name"=>"available_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"gifted_coupon","name"=>"gifted_coupon","searchable"=>false,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"auto_generate_status","name"=>"auto_generate_status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"status","name"=>"status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
-                ["data"=>"registration_status_name","name"=>"registration_status_name","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
+                ["data"=>"registration_status","name"=>"registration_status","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
+                ["data"=>"generate_coupon","name"=>"generate_coupon","searchable"=>true,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"start_active","name"=>"start_active","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"end_active","name"=>"end_active","searchable"=>true,"searchtype"=>"date","orderable"=>true],
                 ["data"=>"start_registration","name"=>"start_registration","searchable"=>true,"searchtype"=>"date","orderable"=>true],
@@ -109,7 +112,7 @@ class EventCouponController extends Controller
             'title' => 'Form Event Coupon',
             'action' => 'panel.event.coupon.store',
             'readonly' => [],
-            'required' => ['title', 'website', 'flag_status', 'flag_gs_n_date', 'max_coupon']
+            'required' => ['title', 'website', 'flag_status', 'flag_gs_n_date', 'max_coupon', 'generate_coupon', 'flag_coupon_type']
         ];
     }
 
@@ -123,10 +126,11 @@ class EventCouponController extends Controller
         return view('panel._pages.event.coupon.form', [
             'config' => $this->formConfig(),
             "status_event" => MasterStatusSelf::where('parent_id',1)->orderBy('self_id', 'asc')->get(),
+            "flag_coupon_type" => MasterStatusSelf::where('parent_id',10)->orderBy('self_id', 'asc')->get(),
             'website' => MasterWebsite::orderBy('name', 'asc')->get(),
             'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get(),
             'flag_gs_n_date' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',8)->get()
-            ])->render();
+        ])->render();
     }
 
     public function list(Request $input)
@@ -188,11 +192,17 @@ class EventCouponController extends Controller
         if (isset($input->status) and !empty($input->status)){
             $data->where('status', 'like', '%'.$input->status.'%');
         }
-        if (isset($input->registration_status_name) and !empty($input->registration_status_name)){
-            $data->where('registration_status_name', 'like', '%'.$input->registration_status_name.'%');
+        if (isset($input->registration_status) and !empty($input->registration_status)){
+            $data->where('registration_status', 'like', '%'.$input->registration_status.'%');
         }
         if (isset($input->auto_generate_status) and !empty($input->auto_generate_status)){
             $data->where('auto_generate_status', 'like', '%'.$input->auto_generate_status.'%');
+        }
+        if (isset($input->generate_coupon) and !empty($input->generate_coupon)){
+            $data->where('generate_coupon', 'like', '%'.$input->generate_coupon.'%');
+        }
+        if (isset($input->coupon_type) and !empty($input->coupon_type)){
+            $data->where('coupon_type', 'like', '%'.$input->coupon_type.'%');
         }
         $data = $data->paginate($paginate);
         return [
@@ -328,6 +338,8 @@ class EventCouponController extends Controller
             $store->start_active = null;
         }
         
+        $store->threshold_turnover = $input->threshold_turnover;
+        $store->flag_coupon_type = $input->flag_coupon_type;
         $store->max_coupon = $input->max_coupon;
         $store->save();
         $find = EventCoupon::find($store->id);
@@ -406,12 +418,58 @@ class EventCouponController extends Controller
 	        	'data' => ViewEventCouponRegistration::where([
                     'event_id' => $input->id,
                     'participants_status_id' => 3
-                    ])->orderBy('confirm_at', 'asc')->get()
+                    ])->orderBy('id', 'asc')->get()
 	        ]
 		];
     }
 
-    public function gifted(Request $input)
+    // public function gifted(Request $input)
+    // {
+    //     $event = EventCoupon::find($input->event_id);
+    //     if (!in_array($event->flag_status,[2,3,4,5])) {
+    //         return [
+	// 	    	'pnotify' => true,
+	// 	        'pnotify_type' => 'error',
+	// 	        'pnotify_text' => 'Fail! event not start!'
+    // 		];
+    //     }
+    //     foreach ($input->coupons as $coupon) {
+    //         $register = EventCouponRegistration::find($coupon['id']);
+    //         $gifts = explode('^',$coupon['coupon']);
+    //         for ($i=0; $i < $coupon['coupon']; $i++) { 
+    //                 $ParticipantsCoupon = new ParticipantsCoupon;
+    //                 $ParticipantsCoupon->participants_id = $register->participants_id;
+    //                 $ParticipantsCoupon->participants_username = $register->participants_username;
+    //                 $ParticipantsCoupon->event_coupon_id = $register->event_coupon_id;
+    //                 $ParticipantsCoupon->save();
+    //                 $event->gifted_coupon += 1;
+    //                 $event->save();
+    //                 $register->have_coupon += 1;
+    //                 $register->save();
+    //                 $carbon = Carbon::now();
+    //                 $newcodecoupon = rand(0,9);
+    //                 $newcodecoupon .= $register->participants_id;
+    //                 $newcodecoupon .= $carbon->format('m');
+    //                 $newcodecoupon .= $event->gifted_coupon;
+    //                 $newcodecoupon .= $carbon->format('Y');
+    //                 $newcodecoupon .= rand(0,9);
+    //                 $newcodecoupon .= $register->have_coupon;
+    //                 $newcodecoupon .= $event->id;
+    //                 $newcodecoupon .= rand(0,9);
+    //                 $newcodecoupon .= $carbon->format('d');
+    //                 $newcodecoupon .= rand(0,9);
+    //                 $ParticipantsCoupon->coupon_code = $newcodecoupon;
+    //                 $ParticipantsCoupon->save();
+    //         }
+    //     }
+    //     return [
+    //         'rebuildTable' => true,
+    //         'preparePostData' => true,
+    //         'preparePostData_target' => $input->target
+    //     ];
+    // }
+
+    public function addpoints(Request $input)
     {
         $event = EventCoupon::find($input->event_id);
         if (!in_array($event->flag_status,[2,3,4,5])) {
@@ -421,24 +479,13 @@ class EventCouponController extends Controller
 		        'pnotify_text' => 'Fail! event not start!'
     		];
         }
-        foreach ($input->coupons as $coupon) {
-            $register = EventCouponRegistration::find($coupon['id']);
-            $gifts = explode('^',$coupon['coupon']);
-            for ($i=0; $i < $coupon['coupon']; $i++) { 
-                    $ParticipantsCoupon = new ParticipantsCoupon;
-                    $ParticipantsCoupon->participants_id = $register->participants_id;
-                    $ParticipantsCoupon->participants_username = $register->participants_username;
-                    $ParticipantsCoupon->event_coupon_id = $register->event_coupon_id;
-                    $ParticipantsCoupon->save();
-                    $event->gifted_coupon += 1;
-                    $event->save();
-                    $register->have_coupon += 1;
-                    $register->save();
-                    $carbon = Carbon::now();
-                    $ParticipantsCoupon->coupon_code = base64_encode(rand(10,99).$register->participants_id.$event->gifted_coupon.$register->have_coupon).$carbon->format('m').$event->id.$carbon->format('d').$carbon->format('Y');
-                    $ParticipantsCoupon->save();
-            }
+        foreach ($input->points as $point) {
+            $register = EventCouponRegistration::find($point['id']);
+            $register->participants_point_turnover = $register->participants_point_turnover+$point['point'];
+            $register->save();
         }
+        $event->generate_coupon = 2;
+        $event->save();
         return [
             'rebuildTable' => true,
             'preparePostData' => true,
@@ -454,6 +501,18 @@ class EventCouponController extends Controller
             'pnotify' => true,
             'pnotify_type' => 'success',
             'pnotify_text' => 'Success generate status event coupon'
+        ];
+    }
+
+    public function generatecoupon(Request $input)
+    {
+        Artisan::call('EventCoupon:GenerateNewCoupon', [
+            '--event' => $input->id
+        ]);
+        return [
+            'rebuildTable' => true,
+            'preparePostData' => true,
+            'preparePostData_target' => $input->target
         ];
     }
 

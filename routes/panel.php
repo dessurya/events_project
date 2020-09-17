@@ -119,9 +119,12 @@ Route::middleware('users')->group(function() {
             Route::post('/store', 'EventCouponController@store')->name('store');
             Route::post('/delete', 'EventCouponController@delete')->name('delete');
             Route::post('/gift', 'EventCouponController@gift')->name('gift');
-            Route::post('/gifted', 'EventCouponController@gifted')->name('gifted');
             Route::post('/generatestatus', 'EventCouponController@generatestatus')->name('generatestatus');
             Route::post('/addparticipants', 'EventCouponController@addparticipants')->name('addparticipants');
+
+            // Route::post('/gifted', 'EventCouponController@gifted')->name('gifted');
+            Route::post('/addpoints', 'EventCouponController@addpoints')->name('addpoints');
+            Route::post('/generatecoupon', 'EventCouponController@generatecoupon')->name('generatecoupon');
         });
         Route::name('other.')->prefix('other/')->group(function(){
             Route::get('/list', 'EventOtherController@list')->name('list');

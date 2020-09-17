@@ -67,33 +67,33 @@
 		postData({"id":tId}, $(target).attr('href'));
 	}
 
-	function prepareGiftCoupon(target,refresh) {
+	function prepareGiftAddPoints(target,refresh) {
 		event.preventDefault();
 		if ($(target).hasClass('process')) { return false; }
 		$(target).toggleClass('process');
 		var tId = $(target).data('id');
 		if (checkPrepareId(target) == false) { return false; }
-		var coupons = [];
-		$.each($('.gift.gift-coupon'), function () {
+		var points = [];
+		$.each($('.gift.add-point'), function () {
 			if ($(this).val() != '' && $(this).val() != undefined) {
-				var coupon = {};
-				coupon['id'] = $(this).data('id');
-				coupon['coupon'] = $(this).val();
-				coupons.push(coupon);
+				var point = {};
+				point['id'] = $(this).data('id');
+				point['point'] = $(this).val();
+				points.push(point);
 			}
 		});
-		if(coupons.length == 0){
+		if(points.length == 0){
 			$(target).toggleClass('process');
-			pnotify({"title":"info","type":"info","text":"Not Gift Coupon"});
+			pnotify({"title":"info","type":"info","text":"Not Add Points!"});
 			return false;
 		}
-		$('.gift.gift-coupon').val(null);
+		$('.gift.add-point').val(null);
 		pnotifyConfirm({
             "title" : "Warning",
             "type" : "info",
-            "text" : "Are You Sure Gift All Coupons?",
+            "text" : "Are You Sure Add All Points?",
             "formData" : false,
-            "data" : {'event_id':tId,'coupons':coupons,'target':refresh},
+            "data" : {'event_id':tId,'points':points,'target':refresh},
             "url" : $(target).attr('href')
         });
 		$(target).toggleClass('process');
@@ -102,7 +102,7 @@
 	function buildInGiftList(config) {
 		var result = '';
         if (config.data.length == 0) {
-            result += '<tr><td colspan="6" class="text-center">Not data found!</td></tr>';
+            result += '<tr><td colspan="7" class="text-center">Not data found!</td></tr>';
         }else{
         	var loop = 0;
             $.each(config.data, function(index, val){
@@ -112,14 +112,29 @@
                 result += '<td>'+val.participants_website+'</td>';
                 result += '<td>'+val.participants_username+'</td>';
                 result += '<td>'+val.participants_name+'</td>';
+                result += '<td>'+val.participants_point_turnover+'</td>';
                 result += '<td>'+val.have_coupon+'</td>';
-                result += '<td><input data-id="'+val.id+'" class="gift gift-coupon form-control" type="number" placeholder="add coupon" ></td>';
+                result += '<td><input data-id="'+val.id+'" class="gift add-point form-control" type="number" step="100" placeholder="add point" ></td>';
                 result += '</tr>';
             });
         }
         $(config.target+' table tbody').html(result);
         $(config.target+' .card-header .card-title strong').html(config.event.title);
         $(config.target+' .pagination .page-item a.page-link').data('id',config.event.id);
+	}
+
+	function prepareGenerateCoupon(target,refresh) {
+		event.preventDefault();
+		var tId = $(target).data('id');
+		if (checkPrepareId(target) == false) { return false; }
+		pnotifyConfirm({
+            "title" : "Warning",
+            "type" : "info",
+            "text" : "Are You Sure Generate Coupon?",
+            "formData" : false,
+            "data" : {'id':tId,'target':refresh},
+            "url" : $(target).attr('href')
+        });
 	}
 </script>
 @endpush
