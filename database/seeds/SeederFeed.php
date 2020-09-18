@@ -538,17 +538,17 @@ class SeederFeed extends Seeder
     {
         $this->MasterStatusParent();
         $this->MasterStatusSelf();
-        // $this->MasterWebsite();
+        $this->MasterWebsite();
         $this->MasterBank();
 
         $this->userStore();
-        // $this->Participants();
+        $this->Participants();
         $this->interfaceConfig();
         // $this->Contact();
-        // $this->EventTournament();
+        $this->EventTournament();
         // $this->EventTournamentRegistration();
         // $this->EventOther();
-        // $this->EventCoupon();
+        $this->EventCoupon();
         // $this->EventCouponRegistration();
     }
 }

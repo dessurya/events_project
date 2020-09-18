@@ -60,7 +60,8 @@ class ParticipantsController extends Controller
             ],
             'action' => [
                 ["route" => "panel.master.participants.add", "title" => "Add Participants", "action" => "show", "select" => false, "confirm" => false, "multiple" => false],
-                ["route" => "panel.master.participants.show", "title" => "Show Participants", "action" => "show", "select" => true, "confirm" => false, "multiple" => false]
+                ["route" => "panel.master.participants.show", "title" => "Show Participants", "action" => "show", "select" => true, "confirm" => false, "multiple" => false],
+                ["route" => "panel.master.participants.delete", "title" => "Delete Participants", "action" => "delete", "select" => true, "confirm" => true, "multiple" => true],
             ]
         ];
     }
@@ -302,5 +303,27 @@ class ParticipantsController extends Controller
                 'change_page_coupon_val' => $input->page-1
             ];
         }
+    }
+
+    public function delete(Request $input)
+    {
+        $input->id = explode('^', $input->id);
+        Participants::whereIn('id', $input->id)->get()->each->delete();
+        $tab_show = $this->pageConfig();
+        $tab_render = '#'.$tab_show['tabs']['tab'][1]['href'];
+        $tab_show = '#'.$tab_show['tabs']['tab'][0]['id'];
+        return [
+            'show_tab' => true,
+            'show_tab_target' => $tab_show,
+            'rebuildTable' => true,
+            'pnotify' => true,
+            'pnotify_type' => 'success',
+            'pnotify_text' => 'Success delete Participants',
+            'render' => true,
+            'render_config' => [
+                'target' => $tab_render,
+                'content' => base64_encode('<div></div>')
+            ]
+        ];
     }
 }

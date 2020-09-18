@@ -13,6 +13,7 @@
 @include('panel._componen.summernote_script', ['config' => $config['dtable']])
 @include('panel._componen.select2_script', ['config' => $config['dtable']])
 @include('panel._componen.dtables_script', ['config' => $config['dtable']])
+@include('panel._componen.read_excel_file')
 <script type="text/javascript">
 	function toggleDateConfig() {
 		var newVal = $('[name=flag_gs_n_date]').val();
@@ -118,9 +119,24 @@
                 result += '</tr>';
             });
         }
-        $(config.target+' table tbody').html(result);
+        $(config.target+' table#render tbody').html(result);
         $(config.target+' .card-header .card-title strong').html(config.event.title);
-        $(config.target+' .pagination .page-item a.page-link').data('id',config.event.id);
+		$(config.target+' .pagination .page-item a.page-link').data('id',config.event.id);
+		$(config.target+' #importWrapper button').removeAttr('disabled');
+		$(config.target+' #importWrapper #importExcelFile').data('id',config.event.id);
+		prepareFormAddParticipants(config.event.id, config.website);
+	}
+
+	function prepareFormAddParticipants(eventid, website) {
+		$('#formInputAddPerticipants .input').val(null).removeAttr('disabled').attr('required', 'true');
+		$('#formInputAddPerticipants [name=id]').val(eventid);
+		$('#formInputAddPerticipants button').removeAttr('disabled');
+		$('#formInputAddPerticipants [name=website]').html(null);
+		$.each(website,function(key,val){ $('#formInputAddPerticipants [name=website]').append("<option value='"+val+"'>"+val+"</option>") });
+	}
+
+	function clickTarget(target) {
+		$(target).focus().trigger('click');
 	}
 
 	function prepareGenerateCoupon(target,refresh) {
@@ -136,6 +152,45 @@
             "url" : $(target).attr('href')
         });
 	}
+
+	$(document).on('submit', 'form#formInputAddPerticipants', function(){
+		var input = {};
+		input['form_id'] = $(this).attr('id');
+		$.each($(this).find('.input'), function() {
+			if ($(this).hasClass('select')) { input[$(this).attr('name')] = $(this).find('option:selected').val() }
+			else{ input[$(this).attr('name')] = $(this).val() }
+		});
+		pnotifyConfirm({
+			"title": "Warning",
+			"type": "info",
+			"text": "Are You Sure Add New Participants?",
+			"formData": false,
+			"data": input,
+			"url": $(this).attr('action')
+		});
+		return false;
+	});
+
+	$(document).on('change', '#importExcelFile', function (evt) {
+		if (checkPrepareId('#importExcelFile') == false) { 
+			$(this).val(null); 
+			return false; 
+		}
+		var readFile;
+		if(evt.target.files[0] != undefined) {
+			readFile = readExcelFile(evt.target.files[0]);
+			$(this).val(null);
+		}
+		console.log(readFile);
+		pnotifyConfirm({
+			"title": "Warning",
+			"type": "info",
+			"text": "Are You Sure Do Import New Participants?",
+			"formData": false,
+			"data": {'read_file' : readFile, 'id' : $(this).data('id')},
+			"url": "{{ route('panel.event.coupon.importaddparticipants') }}"
+		});
+	});
 </script>
 @endpush
 

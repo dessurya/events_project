@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use App\Models\Participants;
 use App\Models\EventCoupon;
 use App\Models\EventCouponWebsite;
 use App\Models\EventCouponRegistration;
@@ -15,6 +16,7 @@ use App\Models\MasterWebsite;
 use App\Models\MasterStatusSelf;
 use App\Models\ParticipantsCoupon;
 use Carbon\Carbon;
+use stdClass;
 
 class EventCouponController extends Controller
 {
@@ -408,13 +410,17 @@ class EventCouponController extends Controller
     	$pageConfig = $this->pageConfig();
         $target = '#'.$pageConfig['tabs']['tab'][2]['href'];
         $tab_show = '#'.$pageConfig['tabs']['tab'][2]['id'];
+        $event = EventCoupon::with('websites.website')->find($input->id);
+        $web = [];
+        foreach ($event->websites as $key => $value) { $web[] = $value->website->name; }
     	return [
     		'show_tab' => true,
             'show_tab_target' => $tab_show,
 	    	'buildInGiftList' => true,
 	        'buildInGiftList_config' => [
+                'website' => $web,
 	        	'target' => $target,
-	        	'event' => EventCoupon::select('id','title')->find($input->id),
+	        	'event' => $event->only(['id','title']),
 	        	'data' => ViewEventCouponRegistration::where([
                     'event_id' => $input->id,
                     'participants_status_id' => 3
@@ -533,5 +539,108 @@ class EventCouponController extends Controller
                 'routeStore' => route('panel.register.coupon.store', ['id'=>base64_encode($evt->id)])
             ]
         ];
+    }
+
+    public function inputaddparticipants(Request $input)
+    {
+        $event = EventCoupon::find($input->id);
+        if (in_array($event->flag_status,[6])) {
+            return [
+		    	'pnotify' => true,
+		        'pnotify_type' => 'error',
+		        'pnotify_text' => 'Fail! this past event!'
+    		];
+        }
+        $Participants = Participants::where([
+            'username' => $input->username,
+            'website' => $input->website
+        ])->get();
+        if (count($Participants) == 0) {
+            return [
+		    	'pnotify' => true,
+		        'pnotify_type' => 'error',
+		        'pnotify_text' => 'Fail! not found data on master participants!'
+    		];
+        }
+        $input->participants = $Participants[0]->id;
+        $exec = new RegisterCouponController;
+        $ret = $exec->formStore($input);
+        if ($ret['success_store'] == true) {
+            $ret['rebuildTable'] = true;
+            $ret['preparePostData'] = true;
+            $ret['preparePostData_target'] = '.preparePostData.giftList';
+            $event->generate_coupon = 2;
+            $event->save();
+        }
+        return $ret;
+    }
+
+    public function importaddparticipants(Request $input)
+    {
+        $event = EventCoupon::find($input->id);
+        if (in_array($event->flag_status,[6])) {
+            return [
+		    	'pnotify' => true,
+		        'pnotify_type' => 'error',
+		        'pnotify_text' => 'Fail! this past event!'
+    		];
+        }
+        if (
+            !isset($input->read_file['import_participants'])
+            OR !isset($input->read_file['import_participants'][0]['USERNAME'])
+            OR !isset($input->read_file['import_participants'][0]['WEBSITE'])
+            OR !isset($input->read_file['import_participants'][0]['TURNOVER POINT'])
+        ) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Fail! your excel format its wrong'
+            ];
+        }
+        $pnotify_arr_data = [];
+        $success = 0;
+        foreach ($input->read_file['import_participants'] as $row => $data) {
+            $Participants = Participants::where([
+                'username' => $data['USERNAME'],
+                'website' => $data['WEBSITE']
+            ])->get();
+            if (count($Participants) == 0) {
+                $pnotify_arr_data[] = [
+                    'type' => 'error',
+                    'text' => 'Fail, website : '.$data['WEBSITE'].' and username '.$data['USERNAME'].' not found data on master participants!'
+                ];
+            }else{
+                $nObj = new stdClass();
+                $nObj->id = $input->id;
+                $nObj->participants = $Participants[0]->id;
+                $nObj->point = $data['TURNOVER POINT'];
+                $nObj->ip = $input->ip();
+                $exec = new RegisterCouponController;
+                $run = $exec->formStore($nObj);
+                if ($run['success_store'] == false) { $pnotify_arr_data[] = $run['pnotify_arr_data'][0]; }
+                else{ $success++; }
+            }
+        }
+
+        $ret = [];
+        $content = '<div></div>';
+        if (count($pnotify_arr_data) > 0) {
+            $content = '<table class="table table-striped"><thead><tr><th>Error Report</th></tr></thead><tbody>';
+            foreach ($pnotify_arr_data as $data) { $content .= '<tr><td>'.$data['text'].'</td></tr>'; }
+            $content .= '</tbody></table>';
+        }
+        $ret['append'] = true;
+        $ret['append_config'] = [
+            'target' => '#importWrapper #errorReport',
+            'content' => base64_encode($content)
+        ];
+        if ($success > 0) {
+            $ret['rebuildTable'] = true;
+            $ret['preparePostData'] = true;
+            $ret['preparePostData_target'] = '.preparePostData.giftList';
+            $event->generate_coupon = 2;
+            $event->save();
+        }
+        return $ret;
     }
 }

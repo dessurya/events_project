@@ -170,7 +170,7 @@ $(document).on('click', '#dTableAction a.action-item', function() {
 $(document).on('submit', 'form.postData', function() {
     var input = {};
     input['form_id'] = $(this).attr('id');
-    $.each($('.input'), function() {
+    $.each($(this).find('.input'), function() {
         input[$(this).attr('name')] = $(this).val();
         if ($(this).attr('type') == 'file' && $(this).hasClass('file')) {
             var thisFile = $(this).prop('files')[0];

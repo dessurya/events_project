@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Panel\RegisterTournamentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use App\Models\Participants;
 use App\Models\EventTournament;
 use App\Models\EventTournamentWebsite;
 use App\Models\EventTournamentRegistration;
@@ -14,6 +16,7 @@ use App\Models\ViewEventTournamentParticipants;
 use App\Models\MasterWebsite;
 use App\Models\MasterStatusSelf;
 use Carbon\Carbon;
+use stdClass;
 
 class EventTournamentController extends Controller
 {
@@ -415,13 +418,17 @@ class EventTournamentController extends Controller
     	$pageConfig = $this->pageConfig();
         $target = '#'.$pageConfig['tabs']['tab'][2]['href'];
         $tab_show = '#'.$pageConfig['tabs']['tab'][2]['id'];
+        $event = EventTournament::with('websites.website')->find($input->id);
+        $web = [];
+        foreach ($event->websites as $key => $value) { $web[] = $value->website->name; }
     	return [
     		'show_tab' => true,
             'show_tab_target' => $tab_show,
 	    	'buildInLeaderboard' => true,
 	        'buildInLeaderboard_config' => [
+                'website' => $web,
 	        	'target' => $target,
-	        	'event' => EventTournament::select('id','title')->find($input->id),
+	        	'event' => $event->only(['id','title']),
 	        	'data' => ViewEventTournamentParticipants::where([
                     'event_id' => $input->id,
                     'participants_status_id' => 3
@@ -459,6 +466,7 @@ class EventTournamentController extends Controller
             '--event' => $input->id
         ]);
         return [
+            'rebuildTable' => true,
             'preparePostData' => true,
             'preparePostData_target' => $input->target
         ];
@@ -492,5 +500,108 @@ class EventTournamentController extends Controller
                 'routeStore' => route('panel.register.tournament.store', ['id'=>base64_encode($evt->id)])
             ]
         ];
+    }
+
+    public function inputaddparticipants(Request $input)
+    {
+        $event = EventTournament::find($input->id);
+        if (in_array($event->flag_status,[6])) {
+            return [
+		    	'pnotify' => true,
+		        'pnotify_type' => 'error',
+		        'pnotify_text' => 'Fail! this past event!'
+    		];
+        }
+        $Participants = Participants::where([
+            'username' => $input->username,
+            'website' => $input->website
+        ])->get();
+        if (count($Participants) == 0) {
+            return [
+		    	'pnotify' => true,
+		        'pnotify_type' => 'error',
+		        'pnotify_text' => 'Fail! not found data on master participants!'
+    		];
+        }
+        $input->participants = $Participants[0]->id;
+        $exec = new RegisterTournamentController;
+        $ret = $exec->formStore($input);
+        if ($ret['success_store'] == true) {
+            $ret['rebuildTable'] = true;
+            $ret['preparePostData'] = true;
+            $ret['preparePostData_target'] = '.preparePostData.leaderboard';
+            $event->generate_ranks = 2;
+            $event->save();
+        }
+        return $ret;
+    }
+
+    public function importaddparticipants(Request $input)
+    {
+        $event = EventTournament::find($input->id);
+        if (in_array($event->flag_status,[6])) {
+            return [
+		    	'pnotify' => true,
+		        'pnotify_type' => 'error',
+		        'pnotify_text' => 'Fail! this past event!'
+    		];
+        }
+        if (
+            !isset($input->read_file['import_participants'])
+            OR !isset($input->read_file['import_participants'][0]['USERNAME'])
+            OR !isset($input->read_file['import_participants'][0]['WEBSITE'])
+            OR !isset($input->read_file['import_participants'][0]['TURNOVER POINT'])
+        ) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Fail! your excel format its wrong'
+            ];
+        }
+        $pnotify_arr_data = [];
+        $success = 0;
+        foreach ($input->read_file['import_participants'] as $row => $data) {
+            $Participants = Participants::where([
+                'username' => $data['USERNAME'],
+                'website' => $data['WEBSITE']
+            ])->get();
+            if (count($Participants) == 0) {
+                $pnotify_arr_data[] = [
+                    'type' => 'error',
+                    'text' => 'Fail, website : '.$data['WEBSITE'].' and username '.$data['USERNAME'].' not found data on master participants!'
+                ];
+            }else{
+                $nObj = new stdClass();
+                $nObj->id = $input->id;
+                $nObj->participants = $Participants[0]->id;
+                $nObj->point = $data['TURNOVER POINT'];
+                $nObj->ip = $input->ip();
+                $exec = new RegisterTournamentController;
+                $run = $exec->formStore($nObj);
+                if ($run['success_store'] == false) { $pnotify_arr_data[] = $run['pnotify_arr_data'][0]; }
+                else{ $success++; }
+            }
+        }
+
+        $ret = [];
+        $content = '<div></div>';
+        if (count($pnotify_arr_data) > 0) {
+            $content = '<table class="table table-striped"><thead><tr><th>Error Report</th></tr></thead><tbody>';
+            foreach ($pnotify_arr_data as $data) { $content .= '<tr><td>'.$data['text'].'</td></tr>'; }
+            $content .= '</tbody></table>';
+        }
+        $ret['append'] = true;
+        $ret['append_config'] = [
+            'target' => '#importWrapper #errorReport',
+            'content' => base64_encode($content)
+        ];
+        if ($success > 0) {
+            $ret['rebuildTable'] = true;
+            $ret['preparePostData'] = true;
+            $ret['preparePostData_target'] = '.preparePostData.leaderboard';
+            $event->generate_ranks = 2;
+            $event->save();
+        }
+        return $ret;
     }
 }

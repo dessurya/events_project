@@ -61,6 +61,7 @@ Route::middleware('users')->group(function() {
             Route::post('/add', 'ParticipantsController@add')->name('add');
             Route::post('/show', 'ParticipantsController@show')->name('show');
             Route::post('/store', 'ParticipantsController@store')->name('store');
+            Route::post('/delete', 'ParticipantsController@delete')->name('delete');
 
             Route::post('/tourne', 'ParticipantsController@tourne')->name('tourne');
             Route::post('/coupon', 'ParticipantsController@coupon')->name('coupon');
@@ -111,6 +112,9 @@ Route::middleware('users')->group(function() {
             Route::post('/generatestatus', 'EventTournamentController@generatestatus')->name('generatestatus');
             Route::post('/fullRestrictedParticipantsUsername', 'EventTournamentController@fullRestrictedParticipantsUsername')->name('fullRestrictedParticipantsUsername');
             Route::post('/addparticipants', 'EventTournamentController@addparticipants')->name('addparticipants');
+
+            Route::post('/inputaddparticipants', 'EventTournamentController@inputaddparticipants')->name('inputaddparticipants');
+            Route::post('/importaddparticipants', 'EventTournamentController@importaddparticipants')->name('importaddparticipants');
         });
         Route::name('coupon.')->prefix('coupon/')->group(function(){
             Route::get('/list', 'EventCouponController@list')->name('list');
@@ -125,6 +129,9 @@ Route::middleware('users')->group(function() {
             // Route::post('/gifted', 'EventCouponController@gifted')->name('gifted');
             Route::post('/addpoints', 'EventCouponController@addpoints')->name('addpoints');
             Route::post('/generatecoupon', 'EventCouponController@generatecoupon')->name('generatecoupon');
+
+            Route::post('/inputaddparticipants', 'EventCouponController@inputaddparticipants')->name('inputaddparticipants');
+            Route::post('/importaddparticipants', 'EventCouponController@importaddparticipants')->name('importaddparticipants');
         });
         Route::name('other.')->prefix('other/')->group(function(){
             Route::get('/list', 'EventOtherController@list')->name('list');
