@@ -212,17 +212,17 @@ class EventController extends Controller
             [
                 'date' => 'start',
                 'title' => 'Live Event',
-                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->where([ 'status_id'=> 4 ])->orderBy('created_at','desc')->limit(3)->get()
+                'event' => ViewHistoryEvent::where([ 'status_id'=> 4 ])->orderBy('created_at','desc')->limit(5)->get()
             ],
             [
                 'date' => 'start',
                 'title' => 'Upcoming Event',
-                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->whereIn('status_id', [1,2,3])->orderBy('created_at','desc')->limit(3)->get()
+                'event' => ViewHistoryEvent::whereIn('status_id', [1,2,3])->orderBy('created_at','desc')->limit(5)->get()
             ],
             [
                 'date' => 'end',
                 'title' => 'Past Event',
-                'event' => ViewHistoryEvent::where('event_id', $data->event_id)->whereIn('status_id', [5,6])->orderBy('end_event','desc')->limit(3)->get()
+                'event' => ViewHistoryEvent::whereIn('status_id', [5,6])->orderBy('end_event','desc')->limit(5)->get()
             ]
         ];
         if (base64_decode($type) == 1) {

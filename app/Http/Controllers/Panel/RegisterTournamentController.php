@@ -225,20 +225,26 @@ class RegisterTournamentController extends Controller
         $eachParticipants = explode('^',$input->participants);
         foreach ($eachParticipants as $participants_id) {
             $Participants = Participants::find($participants_id);
-            if (EventTournamentRegistration::where(['participants_id'=>$participants_id,'event_tournament_id'=>$event_id])->count() > 0) {
+            $store = EventTournamentRegistration::where(['participants_id'=>$participants_id,'event_tournament_id'=>$event_id])->get();
+            if (count($store) > 0 and !isset($input->point)) {
                 $pnotify_arr_data[] = [
                     'type' => 'error',
                     'text' => 'Fail, '.$Participants->name.' ( '.$Participants->username.' ) already register'
                 ];
-            }else{ 
-                $store = new EventTournamentRegistration;
-                $store->status = 3;
-                if (isset($input->ip)) { $store->registration_ip	= $input->ip; }
-                else { $store->registration_ip	= $input->ip(); }
-                $store->participants_username = $Participants->username;
-                $store->participants_id	= $Participants->id;
-                $store->event_tournament_id	= $event_id;
-                if (isset($input->point)) { $store->participants_point_board = $input->point; }
+            }else{
+                if (count($store) > 0) {
+                    $store = $store[0];
+                    $store->participants_point_board = $store->participants_point_board+$input->point;
+                }else{
+                    $store = new EventTournamentRegistration;
+                    $store->status = 3;
+                    if (isset($input->ip)) { $store->registration_ip	= $input->ip; }
+                    else { $store->registration_ip	= $input->ip(); }
+                    $store->participants_username = $Participants->username;
+                    $store->participants_id	= $Participants->id;
+                    $store->event_tournament_id	= $event_id;
+                    $store->participants_point_board = $input->point;
+                }
                 $store->save();
                 $success++;
             }

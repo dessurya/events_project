@@ -541,6 +541,24 @@ class EventCouponController extends Controller
         ];
     }
 
+    private function addNewParticipants($username, $website)
+    {
+        $store = new Participants;
+        $store->username = $username;
+        $store->name = $username;
+        $store->website = $website;
+        $store->save();
+        return Participants::where([
+            'username' => $username,
+            'website' => $website
+        ])->get();
+    }
+
+    private function availWebOnEvent($event_id)
+    {
+        return MasterWebsite::whereIn('id', EventCouponWebsite::where('event_id',$event_id)->pluck('website_id'))->pluck('name')->toArray();
+    }
+
     public function inputaddparticipants(Request $input)
     {
         $event = EventCoupon::find($input->id);
@@ -551,17 +569,18 @@ class EventCouponController extends Controller
 		        'pnotify_text' => 'Fail! this past event!'
     		];
         }
+        if (!in_array($input->website,$this->availWebOnEvent($input->id))) {
+            return [
+		    	'pnotify' => true,
+		        'pnotify_type' => 'error',
+		        'pnotify_text' => 'Fail!'.$input->website.' not avail in this event!'
+    		];
+        }
         $Participants = Participants::where([
             'username' => $input->username,
             'website' => $input->website
         ])->get();
-        if (count($Participants) == 0) {
-            return [
-		    	'pnotify' => true,
-		        'pnotify_type' => 'error',
-		        'pnotify_text' => 'Fail! not found data on master participants!'
-    		];
-        }
+        if (count($Participants) == 0) { $Participants = $this->addNewParticipants($input->username, $input->website); }
         $input->participants = $Participants[0]->id;
         $exec = new RegisterCouponController;
         $ret = $exec->formStore($input);
@@ -600,25 +619,29 @@ class EventCouponController extends Controller
         $pnotify_arr_data = [];
         $success = 0;
         foreach ($input->read_file['import_participants'] as $row => $data) {
-            $Participants = Participants::where([
-                'username' => $data['USERNAME'],
-                'website' => $data['WEBSITE']
-            ])->get();
-            if (count($Participants) == 0) {
+            if (!in_array($data['WEBSITE'],$this->availWebOnEvent($input->id))) {
                 $pnotify_arr_data[] = [
                     'type' => 'error',
-                    'text' => 'Fail, website : '.$data['WEBSITE'].' and username '.$data['USERNAME'].' not found data on master participants!'
+                    'text' => 'Fail! '.$data['WEBSITE'].' not avail in this event! ('.$data['USERNAME'].')'
                 ];
             }else{
-                $nObj = new stdClass();
-                $nObj->id = $input->id;
-                $nObj->participants = $Participants[0]->id;
-                $nObj->point = $data['TURNOVER POINT'];
-                $nObj->ip = $input->ip();
-                $exec = new RegisterCouponController;
-                $run = $exec->formStore($nObj);
-                if ($run['success_store'] == false) { $pnotify_arr_data[] = $run['pnotify_arr_data'][0]; }
-                else{ $success++; }
+                $Participants = Participants::where([
+                    'username' => $data['USERNAME'],
+                    'website' => $data['WEBSITE']
+                ])->get();
+                if (count($Participants) == 0) {
+                    $Participants = $this->addNewParticipants($data['USERNAME'], $data['WEBSITE']);
+                }else{
+                    $nObj = new stdClass();
+                    $nObj->id = $input->id;
+                    $nObj->participants = $Participants[0]->id;
+                    $nObj->point = $data['TURNOVER POINT'];
+                    $nObj->ip = $input->ip();
+                    $exec = new RegisterCouponController;
+                    $run = $exec->formStore($nObj);
+                    if ($run['success_store'] == false) { $pnotify_arr_data[] = $run['pnotify_arr_data'][0]; }
+                    else{ $success++; }
+                }
             }
         }
 

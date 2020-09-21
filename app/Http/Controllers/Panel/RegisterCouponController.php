@@ -234,21 +234,27 @@ class RegisterCouponController extends Controller
         $eachParticipants = explode('^',$input->participants);
         foreach ($eachParticipants as $participants_id) {
             $Participants = Participants::find($participants_id);
-            if (EventCouponRegistration::where(['participants_id'=>$participants_id,'event_coupon_id'=>$event_id])->count() > 0) {
+            $store = EventCouponRegistration::where(['participants_id'=>$participants_id,'event_coupon_id'=>$event_id])->get();
+            if (count($store) > 0  and !isset($input->point)) {
                 $pnotify_arr_data[] = [
                     'type' => 'error',
                     'text' => 'Fail, '.$Participants->name.' ( '.$Participants->username.' ) already register'
                 ];
             }else{
-                $store = new EventCouponRegistration;
-                $store->status = 3;
-                if (isset($input->ip)) { $store->registration_ip	= $input->ip; }
-                else { $store->registration_ip	= $input->ip(); }
-                $store->participants_username = $Participants->username;
-                $store->participants_id	= $Participants->id;
-                $store->event_coupon_id	= $event_id;
-                if (isset($input->point)) { $store->participants_point_turnover = $input->point; }
-                $store->confirm_at = Carbon::now()->format('Y-m-d H:i:s');
+                if (count($store) > 0) {
+                    $store = $store[0];
+                    $store->participants_point_turnover = $store->participants_point_turnover+$input->point;
+                }else{
+                    $store = new EventCouponRegistration;
+                    $store->status = 3;
+                    if (isset($input->ip)) { $store->registration_ip	= $input->ip; }
+                    else { $store->registration_ip	= $input->ip(); }
+                    $store->participants_username = $Participants->username;
+                    $store->participants_id	= $Participants->id;
+                    $store->event_coupon_id	= $event_id;
+                    $store->confirm_at = Carbon::now()->format('Y-m-d H:vi:s');
+                    $store->participants_point_turnover = $input->point;
+                }
                 $store->save();
                 $success++;
             }
