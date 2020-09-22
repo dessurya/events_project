@@ -158,7 +158,7 @@
         }
     }
     function renderActionEventAddParticipants(getItem) {
-        PNotifynotice({'title':'Warning! Event Add Participants','type':'error','url':'{!! route('panel.master.participants.list') !!}','text':getItem.msg+'. For continue please click SHOW button'});
+        // PNotifynotice({'title':'Warning! Event Add Participants','type':'error','url':'{!! route('panel.master.participants.list') !!}','text':getItem.msg+'. For continue please click SHOW button'});
         var renderContent = '<div class="container"><div class="row"><div class="col-12"><div class="card"><div class="card-body">';
         renderContent += '<h5 class="card-title">'+getItem.msg+'</h5>';
         renderContent += '<br><br>';
@@ -186,7 +186,7 @@
     }
     function render(data) {
         var render = null;
-        if (data.content != null) { $render = atob(data.content) }
+        if (data.content != null) { render = atob(data.content) }
         $(data.target).html(render);
     }
     function prepend(data) {

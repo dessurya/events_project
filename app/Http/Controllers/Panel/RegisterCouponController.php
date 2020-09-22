@@ -252,7 +252,7 @@ class RegisterCouponController extends Controller
                     $store->participants_username = $Participants->username;
                     $store->participants_id	= $Participants->id;
                     $store->event_coupon_id	= $event_id;
-                    $store->confirm_at = Carbon::now()->format('Y-m-d H:vi:s');
+                    $store->confirm_at = Carbon::now()->format('Y-m-d H:i:s');
                     $store->participants_point_turnover = $input->point;
                 }
                 $store->save();
