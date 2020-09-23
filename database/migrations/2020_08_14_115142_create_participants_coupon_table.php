@@ -15,7 +15,7 @@ class CreateParticipantsCouponTable extends Migration
     {
         Schema::create('participants_coupon', function (Blueprint $table) {
             $table->id();
-            $table->string('coupon_code')->nullable();
+            $table->bigInteger('coupon_code')->nullable();
             $table->integer('coupon_status')->comment('master_status_parent : 5')->default('1');
             $table->string('participants_username')->nullable();
             $table->integer('participants_id')->nullable();

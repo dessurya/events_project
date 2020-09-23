@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Models\EventCoupon;
 use App\Models\EventCouponRegistration;
 use App\Models\ParticipantsCoupon;
@@ -56,6 +57,9 @@ class EventCouponGenerateNewCoupon extends Command
 
     private function GenerateCoupon($event)
     {
+        $queue = [];
+        $event->generate_coupon = 3;
+        $event->save();
         $registers = EventCouponRegistration::where([
             'event_coupon_id'=>$event->id,
             'status'=>3
@@ -66,15 +70,22 @@ class EventCouponGenerateNewCoupon extends Command
                 if ($event->flag_coupon_type == 1) { $newCp -= $register->have_coupon; }
                 else if ($event->flag_coupon_type == 2 and $register->have_coupon == 0) { $newCp = 1; }
                 else{ $newCp = 0; }
-                for ($i=0; $i < $newCp; $i++) { $this->addCoupon($event,$register); }
+                for ($i=0; $i < $newCp; $i++) { $queue[] = $register; }
             }
         }
-        $event->generate_coupon = 3;
-        $event->save();
-        Log::notice('event coupon : '.$event->title.' || success generate new coupon');
+        $newcodecoupon = ParticipantsCoupon::where('event_coupon_id',$event->id)->max('coupon_code');
+        if (empty($newcodecoupon)) { $newcodecoupon = 0; }
+        if (count($queue) > 0) {
+            $queue = collect($queue)->shuffle();
+            foreach ($queue as $key => $participant) {
+                $newcodecoupon++;
+                $this->addCoupon($event,$participant,$newcodecoupon);
+            }
+            Log::notice('event coupon : '.$event->title.' || success generate new '.$newcodecoupon.' coupon');
+        }
     }
 
-    private function addCoupon($event,$register)
+    private function addCoupon($event,$register,$newcodecoupon)
     {
         $carbon = Carbon::now();
         $ParticipantsCoupon = new ParticipantsCoupon;
@@ -86,17 +97,6 @@ class EventCouponGenerateNewCoupon extends Command
         $event->save();
         $register->have_coupon += 1;
         $register->save();
-        $newcodecoupon = rand(0,9);
-        $newcodecoupon .= $register->participants_id;
-        $newcodecoupon .= $carbon->format('m');
-        $newcodecoupon .= $event->gifted_coupon;
-        $newcodecoupon .= $carbon->format('Y');
-        $newcodecoupon .= rand(0,9);
-        $newcodecoupon .= $register->have_coupon;
-        $newcodecoupon .= $event->id;
-        $newcodecoupon .= rand(0,9);
-        $newcodecoupon .= $carbon->format('d');
-        $newcodecoupon .= rand(0,9);
         $ParticipantsCoupon->coupon_code = $newcodecoupon;
         $ParticipantsCoupon->save();
     }

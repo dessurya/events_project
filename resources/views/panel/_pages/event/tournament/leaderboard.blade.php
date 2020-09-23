@@ -13,19 +13,19 @@
         </li>
         <li class="page-item">
           <a 
-              onclick="prepareGenerateRank('.prepareGenerateRank.leaderboard','.preparePostData.leaderboard')" 
-              class="page-link prepareGenerateRank leaderboard"
-              data-id=""
-              title="Generate Ranks"
-              href="{{ route('panel.event.tournament.leaderboardGenerateRank') }}"><i class="fas fa-medal"></i></a>
-        </li>
-        <li class="page-item">
-          <a 
               onclick="prepareAddPoint('.prepareAddPoint.leaderboard','.preparePostData.leaderboard')" 
               class="page-link prepareAddPoint leaderboard"
               data-id=""
               title="Add Points"
               href="{{ route('panel.event.tournament.leaderboardAddPoint') }}"><i class="fas fa-save"></i></a>
+        </li>
+        <li class="page-item">
+          <a 
+              onclick="prepareGenerateRank('.prepareGenerateRank.leaderboard','.preparePostData.leaderboard')" 
+              class="page-link prepareGenerateRank leaderboard"
+              data-id=""
+              title="Generate Ranks"
+              href="{{ route('panel.event.tournament.leaderboardGenerateRank') }}">Generate Ranks</a>
         </li>
       </ul>
     </div>

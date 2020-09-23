@@ -115,7 +115,22 @@
                 result += '<td>'+val.participants_name+'</td>';
                 result += '<td>'+val.participants_point_turnover+'</td>';
                 result += '<td>'+val.have_coupon+'</td>';
-                result += '<td><input data-id="'+val.id+'" class="gift add-point form-control" type="number" step="100" placeholder="add point" ></td>';
+                result += '<td><input data-id="'+val.id+'" class="gift add-point form-control" type="number" step="100" placeholder="add turnover point" ></td>';
+                result += '</tr>';
+                result += '<tr>';
+				result += '<td>Coupon : </td>';
+                result += '<td colspan="6">';
+				if (val.has_coupon_code.length > 0) {
+					var code = '';
+					$.each(val.has_coupon_code, function(idx, cou){
+						code += cou.coupon_code+', ';
+					});
+					code = code.substr(0, code.length-2);
+					result += code;
+				}else{
+					result += '-';
+				}
+                result += '</td>';
                 result += '</tr>';
             });
         }

@@ -13,19 +13,19 @@
         </li>
         <li class="page-item">
           <a 
-              onclick="prepareGenerateCoupon('.prepareGenerateCoupon.giftList','.preparePostData.giftList')" 
-              class="page-link prepareGenerateCoupon giftList"
-              data-id=""
-              title="Generate Coupon"
-              href="{{ route('panel.event.coupon.generatecoupon') }}"><i class="fas fa-medal"></i></a>
-        </li>
-        <li class="page-item">
-          <a 
               onclick="prepareGiftAddPoints('.prepareGiftAddPoints.giftList','.preparePostData.giftList')" 
               class="page-link prepareGiftAddPoints giftList"
               data-id=""
               title="Add Points"
               href="{{ route('panel.event.coupon.addpoints') }}"><i class="fas fa-save"></i></a>
+        </li>
+        <li class="page-item">
+          <a 
+              onclick="prepareGenerateCoupon('.prepareGenerateCoupon.giftList','.preparePostData.giftList')" 
+              class="page-link prepareGenerateCoupon giftList"
+              data-id=""
+              title="Generate Coupon"
+              href="{{ route('panel.event.coupon.generatecoupon') }}">Generate Coupon</a>
         </li>
       </ul>
     </div>

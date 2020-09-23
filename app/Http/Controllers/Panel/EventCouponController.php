@@ -413,6 +413,7 @@ class EventCouponController extends Controller
         $event = EventCoupon::with('websites.website')->find($input->id);
         $web = [];
         foreach ($event->websites as $key => $value) { $web[] = $value->website->name; }
+
     	return [
     		'show_tab' => true,
             'show_tab_target' => $tab_show,
@@ -421,10 +422,10 @@ class EventCouponController extends Controller
                 'website' => $web,
 	        	'target' => $target,
 	        	'event' => $event->only(['id','title']),
-	        	'data' => ViewEventCouponRegistration::where([
+	        	'data' => ViewEventCouponRegistration::with('hasCouponCode')->where([
                     'event_id' => $input->id,
                     'participants_status_id' => 3
-                    ])->orderBy('id', 'asc')->get()
+                ])->orderBy('id', 'asc')->get()
 	        ]
 		];
     }
