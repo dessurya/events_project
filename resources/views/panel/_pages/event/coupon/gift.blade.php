@@ -67,7 +67,7 @@
     <div class="container mt-3">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Add Participants</h3>
+          <h3 class="card-title">Add Or Filter Participants</h3>
         </div>
         <div class="card-body p-0">
           <div class="container p-2">
@@ -92,9 +92,14 @@
                     <input disabled name="point" type="text" class="form-control input">
                   </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <div class="form-group">
                     <button disabled type="submit" class="btn btn-primary btn-block">Submit</button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <button disabled type="reset" onclick="prepareFilterList('.preparePostData.giftList')" class="btn btn-default btn-block">Filter</button>
                   </div>
                 </div>
               </div>

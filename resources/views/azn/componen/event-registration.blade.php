@@ -6,7 +6,7 @@
         <label for="inputWebsite">Website</label>
         <select required name="website" class="form-control input" id="inputWebsite" placeholder="Website">
         @foreach($MasterWebsite as $row)
-        <option value="{{ $row->name }}">{{ $row->name }}</option>
+        <option value="{{ $row->website->name }}">{{ $row->website->name }}</option>
         @endforeach
         </select>
     </div>

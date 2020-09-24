@@ -37,13 +37,16 @@ class RegisterTournamentController extends Controller
             'get_data_route' => 'panel.register.tournament.getData',
             'table_id' => 'd_tables_tournament_to_register',
             'order' => [
-                'key' => 'created_at',
-                'value' => 'desc'
+                'key' => 'participants_username',
+                'value' => 'asc'
             ],
             'componen' => [
-                ["data"=>"created_at","name"=>"created_at","searchable"=>true,"searchtype"=>"date","orderable"=>true],
-                ["data"=>"participants_username","name"=>"participants_username","searchable"=>true,"searchtype"=>"text","orderable"=>true],
-                ["data"=>"participants_name","name"=>"participants_name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"participants_username","name"=>"username","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"participants_name","name"=>"name","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"participants_phone","name"=>"phone","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"participants_bank","name"=>"bank","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"participants_no_rek","name"=>"nomer rekening","searchable"=>true,"searchtype"=>"text","orderable"=>true],
+                ["data"=>"participants_nama_rek","name"=>"atas nama rekening","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"participants_website","name"=>"participants_website","searchable"=>true,"searchtype"=>"text","orderable"=>true],
                 ["data"=>"participants_status","name"=>"participants_status","searchable"=>false,"searchtype"=>"text","orderable"=>true,"hight_light"=>true,"hight_light_class"=>"bg-info"],
                 ["data"=>"event_tittle","name"=>"event_tittle","searchable"=>true,"searchtype"=>"text","orderable"=>true],
@@ -136,6 +139,18 @@ class RegisterTournamentController extends Controller
         }
         if (isset($input->participants_website) and !empty($input->participants_website)){
             $data->where('participants_website', 'like', '%'.$input->participants_website.'%');
+        }
+        if (isset($input->participants_phone) and !empty($input->participants_phone)){
+            $data->where('participants_phone', 'like', '%'.$input->participants_phone.'%');
+        }
+        if (isset($input->participants_bank) and !empty($input->participants_bank)){
+            $data->where('participants_bank', 'like', '%'.$input->participants_bank.'%');
+        }
+        if (isset($input->participants_no_rek) and !empty($input->participants_no_rek)){
+            $data->where('participants_no_rek', 'like', '%'.$input->participants_no_rek.'%');
+        }
+        if (isset($input->participants_nama_rek) and !empty($input->participants_nama_rek)){
+            $data->where('participants_nama_rek', 'like', '%'.$input->participants_nama_rek.'%');
         }
         if (isset($input->event_tittle) and !empty($input->event_tittle)){
             $data->where('event_tittle', 'like', '%'.$input->event_tittle.'%');

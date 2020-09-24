@@ -37,7 +37,7 @@
                     </select> entries || Order By <select name="order_key" class="rebuildTable">
                         @foreach($config['componen'] as $list)
                         @if($list['orderable'] == true)
-                        <option {{ $config['order']['key'] == $list['name'] ? 'selected' : '' }} value="{{$list['name']}}">{{ str_replace('_',' ',Str::title($list['name'])) }}</option>
+                        <option {{ $config['order']['key'] == $list['data'] ? 'selected' : '' }} value="{{$list['data']}}">{{ str_replace('_',' ',Str::title($list['name'])) }}</option>
                         @endif
                         @endforeach
                     </select> : <select name="order_val" class="rebuildTable">
@@ -58,18 +58,18 @@
                                 @if($list['searchtype'] == 'date')
                                 <input 
                                     type="{{$list['searchtype']}}" 
-                                    name="from_{{$list['name']}}" 
+                                    name="from_{{$list['data']}}" 
                                     class="form-control rebuildTable hide" 
                                     placeholder="From Date">
                                 <input 
                                     type="{{$list['searchtype']}}" 
-                                    name="to_{{$list['name']}}" 
+                                    name="to_{{$list['data']}}" 
                                     class="form-control rebuildTable hide" 
                                     placeholder="To Date">
                                 @elseif($list['searchtype'] == 'text')
                                 <input 
                                     type="{{$list['searchtype']}}" 
-                                    name="{{$list['name']}}" 
+                                    name="{{$list['data']}}" 
                                     class="form-control rebuildTable hide" 
                                     placeholder="Search {{ str_replace('_',' ',Str::title($list['name'])) }}">
                                 @endif

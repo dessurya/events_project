@@ -106,7 +106,8 @@ class EventOtherController extends Controller
             'config' => $this->formConfig(),
             "status_event" => MasterStatusSelf::where('parent_id',1)->whereNotIn('self_id',[2,3])->orderBy('self_id', 'asc')->get(),
             'website' => MasterWebsite::orderBy('name', 'asc')->get(),
-            'flag_gs_n_date' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',8)->get()
+            'flag_gs_n_date' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',8)->get(),
+            'flag_youtube' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',11)->get()
         ])->render();
     }
 
@@ -221,16 +222,16 @@ class EventOtherController extends Controller
             $store = new EventOther;
         }else{
             $store = EventOther::with('getStatus')->find($input->id);
-            if($input->flag_gs_n_date == 1){
-                $checkDate = $this->checkDate($store,$input);
-                if ($checkDate['success'] == false) {
-                    return [
-                        'pnotify' => true,
-                        'pnotify_type' => 'error',
-                        'pnotify_text' => $checkDate['msg']
-                    ];
-                }
-            }
+            // if($input->flag_gs_n_date == 1){
+            //     $checkDate = $this->checkDate($store,$input);
+            //     if ($checkDate['success'] == false) {
+            //         return [
+            //             'pnotify' => true,
+            //             'pnotify_type' => 'error',
+            //             'pnotify_text' => $checkDate['msg']
+            //         ];
+            //     }
+            // }
         }
         if (!empty($input->picture)) {
             $url = $this->getDirFile();
@@ -265,6 +266,8 @@ class EventOtherController extends Controller
             $store->end_activity = null;
             $store->start_activity = null;
         }
+        $store->youtube_url = $input->youtube_url;
+        $store->youtube_flag = $input->youtube_flag;
         $store->save();
         $find = EventOther::find($store->id);
         EventOtherWebsite::where('event_id',$find->id)->delete();

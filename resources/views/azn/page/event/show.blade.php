@@ -85,6 +85,12 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 				        src="{{ asset('images/manandapple.jpg') }}"
 				        @endif
 						>
+						@if(!empty($data->youtube_url) and $data->youtube_flag == 1)
+						<hr>
+						<iframe width="100%" height="420"
+						src="https://www.youtube.com/embed/{{$data->youtube_url}}?autoplay=1&mute=1">
+						</iframe>
+				        @endif
 					</div>
 					<div class="blog_details">
 						@if(count($website) > 0)
@@ -145,7 +151,7 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 					@if(in_array($data->event_id, [1,2]) and in_array($data->status_id, [2,3,4]) and $data->registration_status_id == 1)
 					<aside class="single_sidebar_widget evnt_recent">
 						<h3 class="widget_title">Registration Form</h3>
-			            @include('azn.componen.event-registration')
+			            @include('azn.componen.event-registration', ['MasterWebsite'=>$website,'MasterBank'=>$MasterBank])
 					</aside>
 					@endif
 

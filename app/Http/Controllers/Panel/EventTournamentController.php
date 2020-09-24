@@ -112,7 +112,7 @@ class EventTournamentController extends Controller
             'title' => 'Form Tournament TO',
             'action' => 'panel.event.tournament.store',
             'readonly' => [],
-            'required' => ['title', 'prize', 'website', 'start_activity', 'end_activity', 'flag_status', 'flag_gs_n_date']
+            'required' => ['title', 'prize', 'website', 'flag_status', 'flag_gs_n_date']
         ];
     }
 
@@ -128,7 +128,8 @@ class EventTournamentController extends Controller
             "status_event" => MasterStatusSelf::where('parent_id',1)->orderBy('self_id', 'asc')->get(),
             'website' => MasterWebsite::orderBy('name', 'asc')->get(),
             'flag_registration' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',6)->get(),
-            'flag_gs_n_date' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',8)->get()
+            'flag_gs_n_date' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',8)->get(),
+            'flag_youtube' => MasterStatusSelf::orderBy('self_id', 'asc')->where('parent_id',11)->get()
         ])->render();
     }
     
@@ -267,28 +268,28 @@ class EventTournamentController extends Controller
 
     public function store(Request $input)
     {
-        if ($input->flag_gs_n_date == 1 and $input->flag_registration == 2 and in_array($input->flag_status, [2,3])) {
-            return [
-                'pnotify' => true,
-                'pnotify_type' => 'error',
-                'pnotify_text' => 'Fail, Flag Registration is Deny and event status cannot start registration or end registration!'
-            ];
-        }
+        // if ($input->flag_gs_n_date == 1 and $input->flag_registration == 2 and in_array($input->flag_status, [2,3])) {
+        //     return [
+        //         'pnotify' => true,
+        //         'pnotify_type' => 'error',
+        //         'pnotify_text' => 'Fail, Flag Registration is Deny and event status cannot start registration or end registration!'
+        //     ];
+        // }
         
         if (empty($input->id)) {
             $store = new EventTournament;
         }else{
             $store = EventTournament::with('getStatus')->find($input->id);
-            if($input->flag_gs_n_date == 1){
-                $checkDate = $this->checkDate($store,$input);
-                if ($checkDate['success'] == false) {
-                    return [
-                        'pnotify' => true,
-                        'pnotify_type' => 'error',
-                        'pnotify_text' => $checkDate['msg']
-                    ];
-                }
-            }
+            // if($input->flag_gs_n_date == 1){
+            //     $checkDate = $this->checkDate($store,$input);
+            //     if ($checkDate['success'] == false) {
+            //         return [
+            //             'pnotify' => true,
+            //             'pnotify_type' => 'error',
+            //             'pnotify_text' => $checkDate['msg']
+            //         ];
+            //     }
+            // }
         }
         if (!empty($input->picture)) {
             $url = $this->getDirFile();
@@ -336,7 +337,8 @@ class EventTournamentController extends Controller
             $store->end_registration = null;
             $store->flag_registration = 2;
         }
-        
+        $store->youtube_url = $input->youtube_url;
+        $store->youtube_flag = $input->youtube_flag;
         $store->save();
         $find = EventTournament::find($store->id);
         EventTournamentWebsite::where('event_id',$find->id)->delete();
@@ -421,6 +423,17 @@ class EventTournamentController extends Controller
         $event = EventTournament::with('websites.website')->find($input->id);
         $web = [];
         foreach ($event->websites as $key => $value) { $web[] = $value->website->name; }
+        $data = ViewEventTournamentParticipants::where([
+            'event_id' => $input->id,
+            'participants_status_id' => 3
+            ]);
+        if (isset($input->input['username']) and !empty($input->input['username'])) {
+            $data->where('participants_username', 'like', '%'.$input->input['username'].'%');
+        }
+        if (isset($input->input['website']) and !empty($input->input['website'])) {
+            $data->where('participants_website', 'like', '%'.$input->input['website'].'%');
+        }
+        $data = $data->orderBy('participants_rank_board', 'asc')->orderBy('created_at', 'asc')->get();
     	return [
     		'show_tab' => true,
             'show_tab_target' => $tab_show,
@@ -429,10 +442,7 @@ class EventTournamentController extends Controller
                 'website' => $web,
 	        	'target' => $target,
 	        	'event' => $event->only(['id','title']),
-	        	'data' => ViewEventTournamentParticipants::where([
-                    'event_id' => $input->id,
-                    'participants_status_id' => 3
-                    ])->orderBy('participants_rank_board', 'asc')->orderBy('created_at', 'asc')->get()
+	        	'data' => $data
 	        ]
 		];
     }

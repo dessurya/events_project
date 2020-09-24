@@ -42,9 +42,9 @@
 		var end_activity = new Date(data.end_activity);
 		var today = new Date();
 		if (data.flag_registration == null) { error.push('field registration required!'); }
-		if (data.id == "" && today > start_activity) { error.push('start_registration must greater than today'); }
+		// if (data.id == "" && today > start_activity) { error.push('start_registration must greater than today'); }
 		if (data.flag_registration == 1 && start_registration > end_registration) { error.push('end_registration must greater than start_registration'); }
-		if (data.flag_registration == 1 && end_registration > start_activity) { error.push('start_activity must greater than end_registration'); }
+		// if (data.flag_registration == 1 && end_registration > start_activity) { error.push('start_activity must greater than end_registration'); }
 		if (start_activity > end_activity) { error.push('end_activity must greater than start_activity'); }
 		if(error.length > 0){
 			$.each(error, function(index, val){ pnotify({"title":"info","type":"dangger","text":val}); });
@@ -62,11 +62,11 @@
 		return true;
 	}
 
-	function preparePostData(target) {
+	function preparePostData(target, input = null) {
 		event.preventDefault();
 		var tId = $(target).data('id');
 		if (checkPrepareId(target) == false) { return false; }
-		postData({"id":tId}, $(target).attr('href'));
+		postData({"id":tId, "input":input}, $(target).attr('href'));
 	}
 
 	function prepareGenerateRank(target,refresh) {
@@ -154,6 +154,15 @@
 		$(target).focus().trigger('click');
 	}
 
+	function prepareFilterList(target) {
+		var input = {};
+		$.each($("form#leaderboardAddPerticipants").find('.input'), function() {
+			if ($(this).hasClass('select')) { input[$(this).attr('name')] = $(this).find('option:selected').val() }
+			else{ input[$(this).attr('name')] = $(this).val() }
+		});
+		preparePostData(target,input);
+	}
+
 	$(document).on('submit', 'form#leaderboardAddPerticipants', function(){
 		var input = {};
 		input['form_id'] = $(this).attr('id');
@@ -179,18 +188,9 @@
 		}
 		var readFile;
 		if(evt.target.files[0] != undefined) {
-			readFile = readExcelFile(evt.target.files[0]);
+			readExcelFile(evt.target.files[0],"{{ route('panel.event.tournament.importaddparticipants') }}",$(this).data('id'));
 			$(this).val(null);
 		}
-		console.log(readFile);
-		pnotifyConfirm({
-			"title": "Warning",
-			"type": "info",
-			"text": "Are You Sure Do Import New Participants?",
-			"formData": false,
-			"data": {'read_file' : readFile, 'id' : $(this).data('id')},
-			"url": "{{ route('panel.event.tournament.importaddparticipants') }}"
-		});
 	});
 </script>
 @endpush

@@ -447,6 +447,7 @@ class SeederFeed extends Seeder
             ['id'=>8,'value'=>'Event Generate Status and Date Configuration'],
             ['id'=>9,'value'=>'Event Coupon Generate Coupon'],
             ['id'=>10,'value'=>'Event Coupon Type Of Coupon'],
+            ['id'=>11,'value'=>'Youtube Flag'],
         ];
         foreach ($MasterStatusParent as $store) {
             MasterStatusParent::create($store);
@@ -485,6 +486,8 @@ class SeederFeed extends Seeder
             ['parent_id'=>9,'self_id'=>3,'value'=>'Done'],
             ['parent_id'=>10,'self_id'=>1,'value'=>'Multiple'],
             ['parent_id'=>10,'self_id'=>2,'value'=>'Single'],
+            ['parent_id'=>11,'self_id'=>1,'value'=>'Allow'],
+            ['parent_id'=>11,'self_id'=>2,'value'=>'Deny'],
         ];
         foreach ($MasterStatusSelf as $store) {
             MasterStatusSelf::create($store);

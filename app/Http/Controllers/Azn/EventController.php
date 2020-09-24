@@ -237,10 +237,23 @@ class EventController extends Controller
             //     'participants_status_id' => 3
             //     ])->orderBy('confirm_at', 'asc')->get();
         }
-        $MasterWebsite = MasterWebsite::orderBy('name','asc')->get();
         $MasterBank = MasterBank::orderBy('name','asc')->get();
-        
-        return view('azn.page.event.show', compact('data','param','website','MasterWebsite','MasterBank'));
+        if (!empty($data->youtube_url)) {
+            $url = null;
+            $generateEmbed = explode('watch?',$data->youtube_url);
+            if (isset($generateEmbed[1])) {
+                $generateEmbed = explode('&', $generateEmbed[1]);
+                foreach ($generateEmbed as $embed) {
+                    $embedCek = explode('=',$embed);
+                    if ($embedCek[0] == 'v') {
+                        $url = $embedCek[1];
+                        break;
+                    }
+                }
+            }
+            $data->youtube_url = $url;
+        }
+        return view('azn.page.event.show', compact('data','param','website','MasterBank'));
     }
 
     public function registration(Request $input)

@@ -90,6 +90,22 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>Youtube Url</label>
+						<input disabled name="youtube_url" type="text" class="form-control input">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>Youtube Flag</label>
+						<select disabled name="youtube_flag" class="form-control input select">
+						@foreach($flag_youtube as $row)
+						<option value="{{$row->self_id}}">{{$row->value}}</option>
+						@endforeach
+						</select>
+					</div>
+				</div>
 				<div class="col-sm-12">
 					<div class="form-group">
 						<label>Description</label>

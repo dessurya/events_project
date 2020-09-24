@@ -41,9 +41,9 @@
 		var end_active = new Date(data.end_active);
 		var today = new Date();
 		if (data.flag_registration == null) { error.push('field registration required!'); }
-		if (data.id == "" && today > start_active) { error.push('start_registration must greater than today'); }
+		// if (data.id == "" && today > start_active) { error.push('start_registration must greater than today'); }
 		if (data.flag_registration == 1 && start_registration > end_registration) { error.push('end_registration must greater than start_registration'); }
-		if (data.flag_registration == 1 && end_registration > start_active) { error.push('start_active must greater than end_registration'); }
+		// if (data.flag_registration == 1 && end_registration > start_active) { error.push('start_active must greater than end_registration'); }
 		if (start_active > end_active) { error.push('end_active must greater than start_active'); }
 		if(error.length > 0){
 			$.each(error, function(index, val){ pnotify({"title":"info","type":"dangger","text":val}); });
@@ -61,11 +61,11 @@
 		return true;
 	}
 
-	function preparePostData(target) {
+	function preparePostData(target, input = null) {
 		event.preventDefault();
 		var tId = $(target).data('id');
 		if (checkPrepareId(target) == false) { return false; }
-		postData({"id":tId}, $(target).attr('href'));
+		postData({"id":tId, "input":input}, $(target).attr('href'));
 	}
 
 	function prepareGiftAddPoints(target,refresh) {
@@ -143,7 +143,7 @@
 	}
 
 	function prepareFormAddParticipants(eventid, website) {
-		$('#formInputAddPerticipants .input').val(null).removeAttr('disabled').attr('required', 'true');
+		$('#formInputAddPerticipants .input').val(null).removeAttr('disabled');
 		$('#formInputAddPerticipants [name=id]').val(eventid);
 		$('#formInputAddPerticipants button').removeAttr('disabled');
 		$('#formInputAddPerticipants [name=website]').html(null);
@@ -166,6 +166,15 @@
             "data" : {'id':tId,'target':refresh},
             "url" : $(target).attr('href')
         });
+	}
+
+	function prepareFilterList(target) {
+		var input = {};
+		$.each($("form#formInputAddPerticipants").find('.input'), function() {
+			if ($(this).hasClass('select')) { input[$(this).attr('name')] = $(this).find('option:selected').val() }
+			else{ input[$(this).attr('name')] = $(this).val() }
+		});
+		preparePostData(target,input);
 	}
 
 	$(document).on('submit', 'form#formInputAddPerticipants', function(){
@@ -193,18 +202,9 @@
 		}
 		var readFile;
 		if(evt.target.files[0] != undefined) {
-			readFile = readExcelFile(evt.target.files[0]);
+			readExcelFile(evt.target.files[0],"{{ route('panel.event.coupon.importaddparticipants') }}",$(this).data('id'));
 			$(this).val(null);
 		}
-		console.log(readFile);
-		pnotifyConfirm({
-			"title": "Warning",
-			"type": "info",
-			"text": "Are You Sure Do Import New Participants?",
-			"formData": false,
-			"data": {'read_file' : readFile, 'id' : $(this).data('id')},
-			"url": "{{ route('panel.event.coupon.importaddparticipants') }}"
-		});
 	});
 </script>
 @endpush
