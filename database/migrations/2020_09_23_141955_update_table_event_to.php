@@ -15,7 +15,7 @@ class UpdateTableEventTo extends Migration
     {
         Schema::table('event_tournament_to', function (Blueprint $table) {
             $table->string('youtube_url')->nullable()->after('prize');
-            $table->integer('youtube_flag')->default(1)->comment('master_status_parent : 11')->after('youtube_url');
+            $table->integer('youtube_flag')->nullable()->default(1)->comment('master_status_parent : 11')->after('youtube_url');
         });
     }
 

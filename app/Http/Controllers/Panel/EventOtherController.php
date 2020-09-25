@@ -267,7 +267,8 @@ class EventOtherController extends Controller
             $store->start_activity = null;
         }
         $store->youtube_url = $input->youtube_url;
-        $store->youtube_flag = $input->youtube_flag;
+        if (empty($input->youtube_flag)) { $store->youtube_flag = 2; }
+        else { $store->youtube_flag = $input->youtube_flag; }
         $store->save();
         $find = EventOther::find($store->id);
         EventOtherWebsite::where('event_id',$find->id)->delete();

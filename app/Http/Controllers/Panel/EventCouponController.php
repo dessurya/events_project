@@ -344,7 +344,8 @@ class EventCouponController extends Controller
         $store->threshold_turnover = $input->threshold_turnover;
         $store->flag_coupon_type = $input->flag_coupon_type;
         $store->youtube_url = $input->youtube_url;
-        $store->youtube_flag = $input->youtube_flag;
+        if (empty($input->youtube_flag)) { $store->youtube_flag = 2; }
+        else { $store->youtube_flag = $input->youtube_flag; }
         $store->max_coupon = $input->max_coupon;
         $store->save();
         $find = EventCoupon::find($store->id);

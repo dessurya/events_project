@@ -15,7 +15,7 @@ class UpdateTableEventOther extends Migration
     {
         Schema::table('event_other', function (Blueprint $table) {
             $table->string('youtube_url')->nullable()->after('picture');
-            $table->integer('youtube_flag')->default(1)->comment('master_status_parent : 11')->after('youtube_url');
+            $table->integer('youtube_flag')->nullable()->default(1)->comment('master_status_parent : 11')->after('youtube_url');
         });
     }
 

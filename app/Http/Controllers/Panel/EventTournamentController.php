@@ -338,7 +338,8 @@ class EventTournamentController extends Controller
             $store->flag_registration = 2;
         }
         $store->youtube_url = $input->youtube_url;
-        $store->youtube_flag = $input->youtube_flag;
+        if (empty($input->youtube_flag)) { $store->youtube_flag = 2; }
+        else { $store->youtube_flag = $input->youtube_flag; }
         $store->save();
         $find = EventTournament::find($store->id);
         EventTournamentWebsite::where('event_id',$find->id)->delete();

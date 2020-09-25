@@ -15,7 +15,7 @@ class UpdateTableEventCoupon extends Migration
     {
         Schema::table('event_coupon', function (Blueprint $table) {
             $table->string('youtube_url')->nullable()->after('threshold_turnover');
-            $table->integer('youtube_flag')->default(1)->comment('master_status_parent : 11')->after('youtube_url');
+            $table->integer('youtube_flag')->nullable()->default(1)->comment('master_status_parent : 11')->after('youtube_url');
         });
     }
 
