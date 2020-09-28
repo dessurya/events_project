@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::view('/generate', 'generate-number');
+
 Route::name('site.')->prefix('default/')->group(function(){
     Route::get('/', 'Site\HomeController@index')->name('home.index');
 
