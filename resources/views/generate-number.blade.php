@@ -7,6 +7,10 @@
     <title>generate number</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800&display=swap" rel="stylesheet">
     <style>
+        body{
+            background-color: #B8B8B8;
+            margin: 0;
+        }
         .section{
             position:relative;
             padding-top:2em;
@@ -23,7 +27,8 @@
             justify-content: center;
         }
         .wrapper-slot{
-            background-color: skyblue;
+            background-color: #000000;
+            border: solid #FFFFFF 4px;
         }
         .wrapper-slot .slot-box{
             position: relative;
@@ -31,7 +36,8 @@
             width: 200px;
             height: 200px;
             text-align: center;
-            background-color: antiquewhite;
+            background-color: #B8B8B8;
+            border-radius: 8px;
         }
         .wrapper-slot .slot-box .slot{
             position: absolute;
@@ -40,7 +46,8 @@
             width: 180px;
             height: 180px;
             overflow-y: hidden;
-            background-color: skyblue;
+            background-color: #FFFFFF;
+            border-radius: 8px;
         }
         .wrapper-slot .slot-box .slot > div {
             margin: 5px;
@@ -49,19 +56,13 @@
             border-radius: 12px;
             font-family: 'Roboto Slab', serif;
             font-size: 42pt;
+            color: #FFFFFF;
             line-height: 170px;
             transform: translate3d(0, 0, 0);
             transition: all 2s;
+            background-color: #333333;
         }
 
-        .wrapper-slot .slot-box:nth-child(odd) .slot > div{
-            background-color: rgba(255, 87, 34, .4);
-            
-        }
-        .wrapper-slot .slot-box:nth-child(even) .slot > div{
-            background-color: rgba(255, 235, 59,.4);
-            
-        }
         .form-group{
             line-height: 2;
             padding-left:1em;
@@ -90,18 +91,27 @@
             width:100%;
             text-align: center;
             border-radius: 3px;
-            border: solid 4px antiquewhite;
+            border: solid 4px #FFFFFF;
             padding : .6em 1em;
-            background: skyblue;
-            color: antiquewhite;
+            background: #333333;
+            color: #FFFFFF;
             font-family: 'Roboto Slab', serif;
             font-size:16pt;
+        }
+        img {
+            height: 60px;
+        }
+        .text-center{
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="section">
      <div class="container">
+        <div class="text-center">
+            <img src="{{ asset('images/logo_agenlive4d.png') }}" alt="logo">
+        </div>
         <div class="flex-wrap wrapper-slot">
             <div class="slot-box slot-box4">
                 <div class="slot"><div>0</div></div>
@@ -125,11 +135,11 @@
                 </div>
                 <div class="form-group">
                     <label for="min">Min Number</label>
-                    <input class="form-control" type="number" name="min" id="min" min="1" max="9998">
+                    <input required  class="form-control" type="number" name="min" id="min" min="1" max="9998">
                 </div>
                 <div class="form-group">
                     <label for="max">Max Number</label>
-                    <input class="form-control" type="number" name="max" id="max" min="1" max="9999">
+                    <input required  class="form-control" type="number" name="max" id="max" min="1" max="9999">
                 </div>
             </div>
             <div class="form-group">
@@ -142,28 +152,35 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         var number = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        var render = '';
         var degree = 0, timer;
+        var run = false;
+
+        function procesingGenerate() {
+            run = true;
+            $('form').hide();
+        }
+        function endGenerate() {
+            run = false;
+            $('form').show();
+        }
         function generate() {
+            procesingGenerate();
             var min = parseInt($('input[name=min]').val());
             var max = parseInt($('input[name=max]').val());
             var digits = $('input[name=digits]').val();
             if (min > max) {
+                endGenerate();
                 alert('minimal number tidak boleh lebih besar dari maksimal number');
                 return false;
             }
-            if (min >= 10 && digits == 1) { 
-                digits = 2;
-                $('input[name=digits]').val(digits);
-            }
-            else if (min >= 100 && digits == 2) { 
-                digits = 3;
-                $('input[name=digits]').val(digits);
-            }
-            else if (min >= 1000 && digits == 3) { 
-                digits = 4;
-                $('input[name=digits]').val(digits);
-            }
+            if (min >= 10 && digits == 1 ) {  digits = 2; }
+            else if (min >= 100 && digits == 2) {  digits = 3; }
+            else if (min >= 1000 && digits == 3) {  digits = 4; }
+            if (max <= 10 && digits >= 2  ) {  digits = 1; }
+            else if (max <= 100 && digits >= 3) {  digits = 2; }
+            else if (max <= 1000 && digits == 4) {  digits = 3; }
+            $('input[name=digits]').val(digits);
+            
             if (degree > 359) { degree = 0 }
             $('.wrapper-slot .slot-box .slot div').html('0');
             var findElem = [];
@@ -172,7 +189,7 @@
                 findElem[i] = '.wrapper-slot .slot-box'+i+' .slot';
                 countElem = i;
             }
-            rand($(findElem[1]), countElem, 1);
+            rand($(findElem[countElem]), countElem, countElem);
             event.preventDefault();
         }
 
@@ -183,9 +200,9 @@
             selector.find('div').html(randomItem);
             timer = setTimeout(function() { 
                 if (degree == 360) { 
-                    if (currentElem != countElem) { 
+                    if (currentElem != 1) { 
                         degree = 0;
-                        currentElem += 1;
+                        currentElem -= 1;
                         rand($('.wrapper-slot .slot-box'+currentElem+' .slot'), countElem, currentElem); 
                     }else{
                         checkResult();
@@ -205,7 +222,8 @@
             });
             res = parseInt(res);
             if (res < min && min > 0) { generate() }
-            if (res > max && max > 0) { generate() }
+            else if (res > max && max > 0) { generate() }
+            else { endGenerate() }
         }
     </script>
 </body>
