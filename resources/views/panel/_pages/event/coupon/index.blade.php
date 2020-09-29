@@ -140,6 +140,7 @@
 		$(config.target+' #importWrapper button').removeAttr('disabled');
 		$(config.target+' #importWrapper #importExcelFile').data('id',config.event.id);
 		prepareFormAddParticipants(config.event.id, config.website);
+		prepareFormExchangeCode(config.event.id, config.couponcode);
 	}
 
 	function prepareFormAddParticipants(eventid, website) {
@@ -148,6 +149,14 @@
 		$('#formInputAddPerticipants button').removeAttr('disabled');
 		$('#formInputAddPerticipants [name=website]').html(null);
 		$.each(website,function(key,val){ $('#formInputAddPerticipants [name=website]').append("<option value='"+val+"'>"+val+"</option>") });
+	}
+
+	function prepareFormExchangeCode(eventid, couponcode) {
+		$('#formExchangeCode .input').val(null).removeAttr('disabled').attr('required','true');
+		$('#formExchangeCode .input').attr('min',couponcode.min);
+		$('#formExchangeCode .input').attr('max',couponcode.max);
+		$('#formExchangeCode [name=id]').val(eventid);
+		$('#formExchangeCode button').removeAttr('disabled');
 	}
 
 	function clickTarget(target) {
@@ -176,6 +185,21 @@
 		});
 		preparePostData(target,input);
 	}
+
+	$(document).on('submit', 'form#formExchangeCode', function(){
+		var input = {};
+		input['form_id'] = $(this).attr('id');
+		$.each($(this).find('.input'), function() { input[$(this).attr('name')] = $(this).val() });
+		pnotifyConfirm({
+			"title": "Warning",
+			"type": "info",
+			"text": "Are You Sure To Exchange this coupon code?",
+			"formData": false,
+			"data": input,
+			"url": $(this).attr('action')
+		});
+		return false;
+	});
 
 	$(document).on('submit', 'form#formInputAddPerticipants', function(){
 		var input = {};

@@ -418,7 +418,7 @@ class EventCouponController extends Controller
         $web = [];
         foreach ($event->websites as $key => $value) { $web[] = $value->website->name; }
         $data = ViewEventCouponRegistration::with(['hasCouponCode' => function($query) use($input){
-            $query->where('event_coupon_id', $input->id);
+            $query->where('event_coupon_id', $input->id)->orderBy('coupon_code','asc');
         }])->where([ 'event_id' => $input->id, 'participants_status_id' => 3 ]);
         if (isset($input->input['username']) and !empty($input->input['username'])) {
             $data->where('participants_username', 'like', '%'.$input->input['username'].'%');
@@ -427,6 +427,8 @@ class EventCouponController extends Controller
             $data->where('participants_website', 'like', '%'.$input->input['website'].'%');
         }
         $data = $data->orderBy('id', 'asc')->get();
+        $couponcode = ParticipantsCoupon::where('event_coupon_id', $input->id)->orderBy('coupon_code', 'asc')->pluck('coupon_code')->toArray();
+        $couponcode = ['min'=>$couponcode[0], 'max'=>$couponcode[count($couponcode)-1]];
     	return [
     		'show_tab' => true,
             'show_tab_target' => $tab_show,
@@ -435,7 +437,8 @@ class EventCouponController extends Controller
                 'website' => $web,
 	        	'target' => $target,
 	        	'event' => $event->only(['id','title']),
-	        	'data' => $data
+                'data' => $data,
+                'couponcode' =>  $couponcode
 	        ]
 		];
     }
@@ -630,5 +633,22 @@ class EventCouponController extends Controller
             $event->save();
         }
         return $ret;
+    }
+
+    public function exchangecode(Request $input)
+    {
+        $code1 = ParticipantsCoupon::where('event_coupon_id', $input->id)->where('coupon_code', $input->code1)->first();
+        $code2 = ParticipantsCoupon::where('event_coupon_id', $input->id)->where('coupon_code', $input->code2)->first();
+        $code1->coupon_code = $input->code2;
+        $code1->save();
+        $code2->coupon_code = $input->code1;
+        $code2->save();
+        return [
+            'preparePostData' => true,
+            'preparePostData_target' => '.preparePostData.giftList',
+            'pnotify' => true,
+            'pnotify_type' => 'success',
+            'pnotify_text' => 'Success, exchange coupon code!'
+        ];
     }
 }

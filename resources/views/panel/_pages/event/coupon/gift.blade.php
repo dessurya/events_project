@@ -109,6 +109,40 @@
       </div>
     </div>
 
+    <div class="container mt-3">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Code Exchange</h3>
+        </div>
+        <div class="card-body p-0">
+          <div class="container p-2">
+            <form id="formExchangeCode" method="post" action="{{ route('panel.event.coupon.exchangecode') }}">
+              <input type="hidden" name="id" class="input">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Code 1</label>
+                    <input disabled name="code1" type="number" class="form-control input">
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Code 2</label>
+                    <input disabled name="code2" type="number" class="form-control input">
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <button disabled type="submit" class="btn btn-primary btn-block">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <table id="render" class="table table-striped">
       <thead>
         <tr>

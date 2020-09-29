@@ -132,6 +132,8 @@ Route::middleware('users')->group(function() {
 
             Route::post('/inputaddparticipants', 'EventCouponController@inputaddparticipants')->name('inputaddparticipants');
             Route::post('/importaddparticipants', 'EventCouponController@importaddparticipants')->name('importaddparticipants');
+            
+            Route::post('/exchangecode', 'EventCouponController@exchangecode')->name('exchangecode');
         });
         Route::name('other.')->prefix('other/')->group(function(){
             Route::get('/list', 'EventOtherController@list')->name('list');
