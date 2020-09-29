@@ -131,7 +131,7 @@
             <div class="flex-wrap">
                 <div class="form-group">
                     <label for="digits">Digits</label>
-                    <input required class="form-control" type="number" name="digits" id="digits" min="1" max="4" value="1">
+                    <input required class="form-control" type="number" name="digits" id="digits" min="1" max="4" value="4">
                 </div>
                 <div class="form-group">
                     <label for="min">Min Number</label>
@@ -173,6 +173,18 @@
                 alert('minimal number tidak boleh lebih besar dari maksimal number');
                 return false;
             }
+            if (digits < max.toString().length) {
+                max = '';
+                for (i = 0; i <= digits; i++) { max += '9'; }
+                max = parseInt(max);
+            }
+            var randomValue = Math.floor(Math.random() * (max - min + 1) + min);
+            randomValue = randomValue.toString();
+            if (randomValue.length < digits) {
+                for (i = 0; i <= digits-randomValue.length; i++){
+                    randomValue = '0'+randomValue;
+                }
+            }
             if (min >= 10 && digits == 1 ) {  digits = 2; }
             else if (min >= 100 && digits == 2) {  digits = 3; }
             else if (min >= 1000 && digits == 3) {  digits = 4; }
@@ -180,37 +192,41 @@
             else if (max <= 100 && digits >= 3) {  digits = 2; }
             else if (max <= 1000 && digits == 4) {  digits = 3; }
             $('input[name=digits]').val(digits);
-            
             if (degree > 359) { degree = 0 }
             $('.wrapper-slot .slot-box .slot div').html('0');
             var findElem = [];
+            var valuElem = [];
             var countElem = 0;
             for (i = 1; i <= digits; i++) {
+                var ranArrVal = randomValue.slice((i-1),i);
                 findElem[i] = '.wrapper-slot .slot-box'+i+' .slot';
+                valuElem[i] =  ranArrVal;
                 countElem = i;
             }
-            rand($(findElem[countElem]), countElem, countElem);
+            rand($(findElem[countElem]), countElem, countElem, valuElem, 1);
             event.preventDefault();
         }
 
-        function rand(selector, countElem, currentElem) {
+        function rand(selector, countElem, currentElem, valuElem, valQue) {
             var randomItem = number[Math.floor(Math.random()*number.length)];
             selector.css({ WebkitTransform: "rotatex("+degree+"deg)" });
             selector.css({ '-moz-transform': "rotatex("+degree+"deg)" });
             selector.find('div').html(randomItem);
             timer = setTimeout(function() { 
                 if (degree == 360) { 
+                    selector.find('div').html(valuElem[valQue]);
                     if (currentElem != 1) { 
                         degree = 0;
                         currentElem -= 1;
-                        rand($('.wrapper-slot .slot-box'+currentElem+' .slot'), countElem, currentElem); 
+                        valQue += 1;
+                        rand($('.wrapper-slot .slot-box'+currentElem+' .slot'), countElem, currentElem, valuElem, valQue); 
                     }else{
                         checkResult();
                     }
                 }
-                else{ rand(selector, countElem, currentElem); }
+                else{ rand(selector, countElem, currentElem, valuElem, valQue); }
                 ++degree; 
-            },5);
+            },1);
         }
 
         function checkResult() {
