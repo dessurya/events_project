@@ -22,7 +22,7 @@
     					<p>Dashboard</p>
     				</a>
     			</li>
-				<li class="nav-item">
+				<li class="nav-item {{ Route::is('panel.master*') ? 'menu-open' : '' }}">
     				<a href="#" class="nav-link {{ Route::is('panel.master*') ? 'active' : '' }} ">
     					<i class="nav-icon fas fa-database"></i>
     					<p>Master Data<i class="fas fa-angle-left right"></i></p>
@@ -48,7 +48,7 @@
     					</li>
     				</ul>
     			</li>
-    			<li class="nav-item">
+    			<li class="nav-item {{ Route::is('panel.event*') ? 'menu-open' : '' }}">
     				<a href="#" class="nav-link {{ Route::is('panel.event*') ? 'active' : '' }} ">
     					<i class="nav-icon fas fa-chess-rook"></i>
     					<p>Event Management<i class="fas fa-angle-left right"></i></p>
@@ -80,13 +80,13 @@
     					</li>
     				</ul>
     			</li>
-				<li class="nav-item">
+				<li class="nav-item {{ Route::is('panel.register*') ? 'menu-open' : '' }}">
     				<a href="#" class="nav-link {{ Route::is('panel.register*') ? 'active' : '' }} ">
     					<i class="nav-icon fas fa-file"></i>
     					<p>Register Management<i class="fas fa-angle-left right"></i></p>
     				</a>
     				<ul class="nav nav-treeview">
-    					<li class="nav-item">
+    					<li class="nav-item {{ Route::is('panel.register.tournament*') ? 'menu-open' : '' }}">
 							<a href="#" class="nav-link">
 								<i class="nav-icon fas fa-circle"></i>
 								<p>Tournament TO<i class="right fas fa-angle-left"></i></p>
@@ -112,7 +112,7 @@
 								</li>
 							</ul>
     					</li>
-						<li class="nav-item">
+						<li class="nav-item {{ Route::is('panel.register.coupon*') ? 'menu-open' : '' }}">
 							<a href="#" class="nav-link">
 								<i class="nav-icon fas fa-circle"></i>
 								<p>Coupon<i class="right fas fa-angle-left"></i></p>
@@ -148,7 +148,7 @@
     			// 	</a>
 				// </li>
 				?>
-				<li class="nav-item">
+				<li class="nav-item {{ Route::is('panel.interface*') ? 'menu-open' : '' }}">
     				<a href="#" class="nav-link {{ Route::is('panel.interface*') ? 'active' : '' }} ">
     					<i class="nav-icon fas fa-solar-panel"></i>
     					<p>Setting Interface<i class="fas fa-angle-left right"></i></p>
@@ -180,7 +180,7 @@
     					</li>
 					</ul>
     			</li>
-				<li class="nav-item">
+				<li class="nav-item {{ Route::is('panel.user*') ? 'menu-open' : '' }}">
     				<a href="#" class="nav-link {{ Route::is('panel.user*') ? 'active' : '' }} ">
     					<i class="nav-icon fas fa-cogs"></i>
     					<p>User Management<i class="fas fa-angle-left right"></i></p>
