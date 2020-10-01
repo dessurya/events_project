@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        'App\Console\Commands\GenerateNumberPeriodeRecord',
         'App\Console\Commands\EventOtherUpStatusCommand',
         'App\Console\Commands\EventCouponUpStatusCommand',
         'App\Console\Commands\EventTournamentToUpStatusCommand',
@@ -33,6 +34,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('tourneTo:status_update')->dailyAt('0:10');
         $schedule->command('tourneTo:leaderboard_rank')->cron('0 */3 * * *'); // every 3 hour
         $schedule->command('EventCoupon:GenerateNewCoupon')->cron('0 */3 * * *'); // every 3 hour
+
+        $schedule->command('generatenumber:record')->cron('*/10 * * * *'); // every 10 minutes
     }
 
     /**

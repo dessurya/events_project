@@ -190,5 +190,16 @@ Route::middleware('users')->group(function() {
         Route::post('/banned', 'CouponController@banned')->name('banned');
     });
 
+    Route::name('generate-number.')->prefix('generate-number/')->group(function(){
+        Route::get('/index', 'GenerateNumberController@index')->name('index');
+        Route::post('/flag_use', 'GenerateNumberController@flaguse')->name('flaguse');
+        Route::post('/history', 'GenerateNumberController@history')->name('history');
+        Route::post('/set/config', 'GenerateNumberController@setconfig')->name('setconfig');
+        Route::post('/next/result', 'GenerateNumberController@nextresult')->name('nextresult');
+        Route::post('/add/next/numb', 'GenerateNumberController@addnextnumb')->name('addnextnumb');
+        Route::post('/up/queue/next/numb', 'GenerateNumberController@upqueuenextnumb')->name('upqueuenextnumb');
+        Route::post('/delete/queue/next/numb', 'GenerateNumberController@deletequeuenextnumb')->name('deletequeuenextnumb');
+    });
+
     Route::get('/sign-out', 'AuthController@logout')->name('signout');
 });

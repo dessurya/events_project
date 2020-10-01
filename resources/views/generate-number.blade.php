@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>generate number</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800&display=swap" rel="stylesheet">
     <style>
@@ -127,58 +128,86 @@
             </div>
 
         </div>
-        <form onsubmit="generate()">
-            <div class="flex-wrap">
-                <div class="form-group">
-                    <label for="digits">Digits</label>
-                    <input required class="form-control" type="number" name="digits" id="digits" min="1" max="4" value="4">
-                </div>
-                <div class="form-group">
-                    <label for="min">Min Number</label>
-                    <input required  class="form-control" type="number" name="min" id="min" min="1" max="9998">
-                </div>
-                <div class="form-group">
-                    <label for="max">Max Number</label>
-                    <input required  class="form-control" type="number" name="max" id="max" min="1" max="9999">
-                </div>
+        <div class="flex-wrap">
+            <div class="form-group">
+                <label for="digits">Digits</label>
+                <input readonly class="form-control" type="number" name="digits" id="digits" min="1" max="4" value="{{ $setting['digits'] }}">
             </div>
             <div class="form-group">
-                <button>Generate New Number</button>
+                <label for="min">Min Number</label>
+                <input readonly  class="form-control" type="number" name="min" id="min" min="1" max="9998" value="{{ $setting['min'] }}">
             </div>
-        </form>
+            <div class="form-group">
+                <label for="max">Max Number</label>
+                <input readonly  class="form-control" type="number" name="max" id="max" min="1" max="9999" value="{{ $setting['max'] }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <button onclick="generate()">Generate New Number</button>
+        </div>
      </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+        $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+
         var number = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         var degree = 0, timer;
         var run = false;
+        var min = "{{ $setting['min'] }}";
+        var max = "{{ $setting['max'] }}";
+        var digits = "{{ $setting['digits'] }}";
+
+        function sendRequest(target,input) {
+            var responseData = null;
+            $.ajax({
+                url: target,
+                type: 'post',
+                dataType: 'json',
+                data: input,
+                success: function(data) { 
+                    responseRequest(data);
+                }
+            });
+            return responseData;
+        }
+
+        function responseRequest(data) {
+            if (data.generate_animate == true) { animate(data.generate_animate_data) }
+        }
+
+        function checkGenerateCache() { sendRequest('{{ route("generate.cache") }}',null); }
 
         function procesingGenerate() {
             run = true;
-            $('form').hide();
+            $('button').hide();
         }
         function endGenerate() {
             run = false;
-            $('form').show();
+            $('button').show();
         }
         function generate() {
             procesingGenerate();
-            var min = parseInt($('input[name=min]').val());
-            var max = parseInt($('input[name=max]').val());
-            var digits = $('input[name=digits]').val();
-            if (min > max) {
-                endGenerate();
-                alert('minimal number tidak boleh lebih besar dari maksimal number');
-                return false;
-            }
-            if (digits < max.toString().length) {
-                max = '';
-                for (i = 0; i <= digits; i++) { max += '9'; }
-                max = parseInt(max);
-            }
-            var randomValue = Math.floor(Math.random() * (max - min + 1) + min);
+            // var min = parseInt($('input[name=min]').val());
+            // var max = parseInt($('input[name=max]').val());
+            // var digits = $('input[name=digits]').val();
+            // if (min > max) {
+            //     endGenerate();
+            //     alert('minimal number tidak boleh lebih besar dari maksimal number');
+            //     return false;
+            // }
+            // if (digits < max.toString().length) {
+            //     max = '';
+            //     for (i = 0; i <= digits; i++) { max += '9'; }
+            //     max = parseInt(max);
+            // }
+            checkGenerateCache();
+        }
+        
+        function animate(data) {
+            var randomValue = data.new_numb;
+            // var randomValue = Math.floor(Math.random() * (max - min + 1) + min);
             randomValue = randomValue.toString();
             if (randomValue.length < digits) {
                 for (i = 0; i <= digits-randomValue.length; i++){
@@ -205,6 +234,7 @@
             }
             rand($(findElem[countElem]), countElem, countElem, valuElem, 1);
             event.preventDefault();
+            
         }
 
         function rand(selector, countElem, currentElem, valuElem, valQue) {

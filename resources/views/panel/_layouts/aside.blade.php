@@ -200,6 +200,12 @@
     					</li>
     				</ul>
     			</li>
+				<li class="nav-item">
+    				<a href="{{ route('panel.generate-number.index') }}" class="nav-link {{ Route::is('panel.generate-number.index') ? 'active' : '' }} ">
+    					<i class="nav-icon fas fa-stopwatch-20"></i>
+    					<p>Generate Number Config</p>
+    				</a>
+    			</li>
     		</ul>
     	</nav>
     </div>
