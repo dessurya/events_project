@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('tourneTo:leaderboard_rank')->cron('0 */3 * * *'); // every 3 hour
         $schedule->command('EventCoupon:GenerateNewCoupon')->cron('0 */3 * * *'); // every 3 hour
 
-        $schedule->command('generatenumber:record')->cron('*/10 * * * *'); // every 10 minutes
+        $schedule->command('generatenumber:record')->everyFiveMinutes();
     }
 
     /**
