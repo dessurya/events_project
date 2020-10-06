@@ -40,7 +40,6 @@ class GenerateNumberPeriodeRecord extends Command
      */
     public function handle()
     {
-        Log::notice('generatenumber:record || running');
         if (Cache::has('generate_number_setting') and Cache::has('generate_number_result')) {
             $setting = json_decode(Cache::get('generate_number_setting'),true);
             $getTimeOfPeriode = $setting['periode'];
@@ -48,12 +47,14 @@ class GenerateNumberPeriodeRecord extends Command
             $expairedPeriod = strtotime(date('Y-m-d H:i:s', strtotime('+'.$getTimeOfPeriode.' minutes', $cache['live_time'])));
             $now = strtotime(now());
             if ($expairedPeriod <= $now) {
+                $from = date('Y-m-d H:i:s', $cache['live_time']);
+                $to = date('Y-m-d H:i:s', $expairedPeriod);
                 DB::table('history_generate_number')->insert([
-                    'periode_from' => date('Y-m-d H:i:s', $cache['live_time']),
-                    'periode_to' => date('Y-m-d H:i:s', $expairedPeriod),
+                    'periode_from' => $from,
+                    'periode_to' => $to,
                     'resault' => json_encode($cache)
                 ]);
-                Log::notice('generatenumber:record || store periode and cleared');
+                Log::notice('generatenumber:record || store periode and cleared '.$from.' '.$to);
                 Cache::forget('generate_number_result');
             }
         }
