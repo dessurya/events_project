@@ -428,7 +428,8 @@ class EventCouponController extends Controller
         }
         $data = $data->orderBy('id', 'asc')->get();
         $couponcode = ParticipantsCoupon::where('event_coupon_id', $input->id)->orderBy('coupon_code', 'asc')->pluck('coupon_code')->toArray();
-        $couponcode = ['min'=>$couponcode[0], 'max'=>$couponcode[count($couponcode)-1]];
+        if (count($couponcode) > 0) { $couponcode = ['min'=>$couponcode[0], 'max'=>$couponcode[count($couponcode)-1]]; }
+        else{ $couponcode = ['min'=>0, 'max'=>0]; }
     	return [
     		'show_tab' => true,
             'show_tab_target' => $tab_show,
@@ -638,7 +639,21 @@ class EventCouponController extends Controller
     public function exchangecode(Request $input)
     {
         $code1 = ParticipantsCoupon::where('event_coupon_id', $input->id)->where('coupon_code', $input->code1)->first();
+        if (!$code1) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Fail, coupon code 1 not found!'
+            ];
+        }
         $code2 = ParticipantsCoupon::where('event_coupon_id', $input->id)->where('coupon_code', $input->code2)->first();
+        if (!$code2) {
+            return [
+                'pnotify' => true,
+                'pnotify_type' => 'error',
+                'pnotify_text' => 'Fail, coupon code 2 not found!'
+            ];
+        }
         $code1->coupon_code = $input->code2;
         $code1->save();
         $code2->coupon_code = $input->code1;
