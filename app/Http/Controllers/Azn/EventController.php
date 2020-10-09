@@ -13,6 +13,7 @@ use App\Models\EventTournamentRegistration;
 use App\Models\EventCouponRegistration;
 use App\Models\EventTournamentWebsite;
 use App\Models\EventTournament;
+use App\Models\EventCoupon;
 use App\Models\EventCouponWebsite;
 use App\Models\EventOtherWebsite;
 use App\Models\MasterWebsite;
@@ -198,16 +199,19 @@ class EventController extends Controller
 
     public function show($type,$encode)
     {   
+        $param = [];
         $data = ViewHistoryEvent::where([
             'event_id'=>base64_decode($type),
             'id'=>base64_decode($encode)
         ])->first();
         
         if ($data->event_id == 1) { $website = EventTournamentWebsite::with('website')->where('event_id',$data->id)->get(); }
-        else if ($data->event_id == 2) { $website = EventCouponWebsite::with('website')->where('event_id',$data->id)->get(); }
         else if ($data->event_id == 3) { $website = EventOtherWebsite::with('website')->where('event_id',$data->id)->get(); }
+        else if ($data->event_id == 2) { 
+            $website = EventCouponWebsite::with('website')->where('event_id',$data->id)->get(); 
+            $param['picture_result'] = EventCoupon::find(base64_decode($encode))->picture_result;
+        }
 
-        $param = [];
         $param['events'] = [
             [
                 'date' => 'start',

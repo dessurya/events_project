@@ -316,6 +316,27 @@ class EventCouponController extends Controller
             }
             $store->picture = $file_dir;
         }
+        if (!empty($input->picture_result)) {
+            $url = $this->getDirFile();
+        	if (!empty($store->picture_result) and !empty($input->id)) {
+        		$picture = explode($url, $store->picture_result);
+        		if (file_exists($url.$picture[1])) {
+	        		unlink($url.$picture[1]);
+        		}
+        	}
+            $extension = pathinfo($input->picture_result_path, PATHINFO_EXTENSION);
+            $fName = explode('.',$input->picture_result_path)[0];
+            $forFileName =Str::slug($fName,'_').'.'.$extension;
+            $input->picture_result_encode = base64_decode($input->picture_result_encode);
+            $file_name = Carbon::now()->format('Ymdhis').'_'.Str::random(4).'_result_'.$forFileName;
+            $file_dir = $url.$file_name;
+            try {
+                file_put_contents($file_dir, $input->picture_result_encode);
+            } catch (Exception $e) {
+                $response = $e->getMessage();
+            }
+            $store->picture_result = $file_dir;
+        }
         $store->flag_status = $input->flag_status;
         $store->title = $input->title;
         $store->max_coupon = $input->max_coupon;

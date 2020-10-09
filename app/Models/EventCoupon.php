@@ -19,6 +19,13 @@ class EventCoupon extends Model
         }
         return null;
     }
+    public function getPictureResultAttribute($pic)
+    {
+        if (!empty($pic)) {
+            return asset($pic);
+        }
+        return null;
+    }
     public function getStatus()
     {
         return $this->hasOne('App\Models\MasterStatusSelf', 'self_id', 'flag_status')->where('parent_id', 1);

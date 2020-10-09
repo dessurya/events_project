@@ -145,6 +145,18 @@
 						<img class="img-fluid picture" src="" style="display: none;">
 					</div>
 				</div>
+
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Picture Result</label>
+						<input name="picture_result" type="file" class="form-control input file" accept=".png,.jpg,jpeg,.gif">
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<div class="form-group" style="border: .5px solid gray; border-radius: 6px;">
+						<img class="img-fluid picture_result" src="" style="display: none;">
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="card-footer">

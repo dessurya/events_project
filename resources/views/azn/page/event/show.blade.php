@@ -112,6 +112,10 @@ if(data.fill_form) { fill_form(data.fill_form_data); }
 			            <div class="container gray-bg mb-20 pt-25 pb-20">{!! $data->terms_and_conditions !!}</div>
 						@endif
 
+						@if(isset($param['picture_result']) and !empty($param['picture_result']))
+						<img class="img-fluid" src="{{ asset($param['picture_result']) }}" title="Result Event {{ $data->title }}" alt="Result Event {{ $data->title }}">
+						@endif
+
 						@if(!in_array($data->status_id, [1,2,3]))
 							@if($data->event_id == 1)
 							<div class="board">
