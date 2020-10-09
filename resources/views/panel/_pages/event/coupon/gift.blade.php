@@ -40,6 +40,7 @@
         <div class="card-body p-0">
           <div class="container p-2">
             <div id="importWrapper" class="row">
+              <div id="renderPrepareForm" class="col-md-12"></div>
               <div id="errorReport" class="col-md-12">
               </div>
               <div class="col-md-4">
@@ -49,7 +50,7 @@
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <button onclick="render({'target':'#importWrapper #errorReport','content':null})" class="btn btn-default btn-block">Clear Error Report</button>
+                  <button onclick="clearTo('#importWrapper #renderPrepareForm')" class="btn btn-default btn-block">Clear Import Pages Form</button>
                 </div>
               </div>
               <div class="col-md-4">
@@ -89,7 +90,7 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>Turnover Point</label>
-                    <input disabled name="point" type="text" class="form-control input">
+                    <input disabled name="point" type="number" class="form-control input">
                   </div>
                 </div>
                 <div class="col-md-6">

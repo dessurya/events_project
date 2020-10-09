@@ -7,6 +7,11 @@
 @push('link')
 @include('panel._componen.summernote_link')
 @include('panel._componen.select2_link')
+<style>
+	.hide{
+		display:none;
+	}
+</style>
 @endpush
 
 @push('script')
@@ -15,6 +20,12 @@
 @include('panel._componen.dtables_script', ['config' => $config['dtable']])
 @include('panel._componen.read_excel_file')
 <script type="text/javascript">
+	var websiteOnEvent = null;
+
+	function toggleTo(target) { $(target).toggle() }
+	function removeTo(target) { $(target).remove() }
+	function clearTo(target) { $(target).html('') }
+
 	function toggleDateConfig() {
 		var newVal = $('[name=flag_gs_n_date]').val();
 		if (newVal == null || newVal == 1) { $('#gsndateConfig').show(); }
@@ -148,6 +159,7 @@
 		$('#formInputAddPerticipants [name=id]').val(eventid);
 		$('#formInputAddPerticipants button').removeAttr('disabled');
 		$('#formInputAddPerticipants [name=website]').html(null);
+		websiteOnEvent = website;
 		$.each(website,function(key,val){ $('#formInputAddPerticipants [name=website]').append("<option value='"+val+"'>"+val+"</option>") });
 	}
 
@@ -186,6 +198,91 @@
 		preparePostData(target,input);
 	}
 
+	function renderFormImport(data, id, page, sheetName) {
+		if (sheetName != 'import_participants' || data[0]['USERNAME'] == undefined || data[0]['TURNOVER POINT'] == undefined || data[0]['WEBSITE'] == undefined) {
+			pnotify({"title":"error","type":"dangger","text":"Your excel format its wrong"})
+			clearTo('#importWrapper #renderPrepareForm')
+			return false
+		}
+		var showBtn = '<ul class="pagination pagination-sm float-right"><li class="page-item"><button onclick="toggleTo(\'#importWrapper #renderPrepareForm #ifp'+page+'\')" class="page-link"><i class="fas fa-folder-open"></i></button></li></ul>'
+		var card = '<div id="cardifp'+page+'" class="container mt-3"><div class="card">'
+		card += '<div class="card-header"><h3 class="card-title">Import Page '+page+'</h3>'+showBtn+'</div>'
+		card += '<div id="ifp'+page+'" data-page="'+page+'" data-id="'+id+'" class="card-body p-2 hide"><div class="container p-2">'
+		card += '<div class="row"><div class="col-sm-3"><label>Website</label></div><div class="col-sm-3"><label>Username</label></div><div class="col-sm-3"><label>Turnover Point</label></div><div class="col-sm-3"><label>Tools</label></div></div>'
+		data.forEach(function (val, idx) {
+			card += '<div id="row'+idx+'" class="row p-1 rowVal">'
+
+			card += '<div class="col-sm-3">'
+			card += '<select name="website" class="form-control input">'
+			$.each(websiteOnEvent,function(wkey,wval){ 
+				card += "<option value='"+wval+"'"
+				if (wval == val['WEBSITE']) { card += 'selected' }
+				card += ">"+wval+"</option>"
+			});
+			card += '</select>'
+			card += '</div>'
+
+			card += '<div class="col-sm-3">'
+			card += '<input name="username" type="text" class="form-control input" value="'+val['USERNAME']+'">'
+			card += '</div>'
+
+			card += '<div class="col-sm-3">'
+			card += '<input name="point" type="number" class="form-control input" value="'+val['TURNOVER POINT']+'">'
+			card += '</div>'
+
+			card += '<div class="col-sm-3">'
+			card += '<button onclick="removeTo(\'#importWrapper #renderPrepareForm #ifp'+page+' #row'+idx+' \')" class="btn btn-danger">Remove</button>'
+			card += '<input type="hidden" name="idx" class="input" value="'+idx+'">'
+			card += '</div>'
+
+			card += '</div>'
+		});
+		card += '<div class="row">'
+		card += '<div class="col-sm-6"><button onclick="removeTo(\'#importWrapper #renderPrepareForm #cardifp'+page+' \')" class="btn btn-block btn-danger">Remove Import Page '+page+'</button></div>'
+		card += '<div class="col-sm-6"><button onclick="sendImportParticipan(\'#importWrapper #renderPrepareForm #ifp'+page+' \')" class="btn btn-block btn-success">Submit</button></div>'
+		card += '</div>'
+
+		card += '</div></div>'
+		card += '</div></div>'
+
+		$('#importWrapper #renderPrepareForm').append(card)
+		return true;
+	}
+
+	function sendImportParticipan(target) {
+		var input = {};
+		input['id'] = $(target).data('id')
+		input['import_page'] = $(target).data('page')
+		input['data'] = []
+		$.each($(target+' .rowVal'), function() {
+			var data = []
+			$.each($(this).find('.input'), function(){
+				if ($(this).hasClass('select')) { data[$(this).attr('name')] = $(this).find('option:selected').val() }
+				else{ data[$(this).attr('name')] = $(this).val() }
+				if (data['idx'] !== undefined) { input['data'][data['idx']] = data }
+			});
+		});
+		console.log(input['data'][0]['idx'])
+		var makeNew = []
+		$.each(input['data'], function(key, val) {
+			makeNew[key] = {
+				'username' : val.username,
+				'website' : val.website,
+				'point' : val.point,
+			}
+		});
+		input['data'] = makeNew
+		console.log(input['data'])
+		pnotifyConfirm({
+			"title": "Warning",
+			"type": "info",
+			"text": "Are You Sure Import Participants?",
+			"formData": false,
+			"data": input,
+			"url": "{{ route('panel.event.coupon.importaddparticipants') }}"
+		});
+	}
+
 	$(document).on('submit', 'form#formExchangeCode', function(){
 		var input = {};
 		input['form_id'] = $(this).attr('id');
@@ -220,13 +317,14 @@
 	});
 
 	$(document).on('change', '#importExcelFile', function (evt) {
+		clearTo('#importWrapper #renderPrepareForm')
 		if (checkPrepareId('#importExcelFile') == false) { 
 			$(this).val(null); 
 			return false; 
 		}
 		var readFile;
 		if(evt.target.files[0] != undefined) {
-			readExcelFile(evt.target.files[0],"{{ route('panel.event.coupon.importaddparticipants') }}",$(this).data('id'));
+			readExcelFile(evt.target.files[0],$(this).data('id'));
 			$(this).val(null);
 		}
 	});
