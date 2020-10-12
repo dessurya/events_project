@@ -586,7 +586,6 @@ class EventCouponController extends Controller
 
     public function importaddparticipants(Request $input)
     {
-        // return $input->all();
         $event = EventCoupon::find($input->id);
         if (in_array($event->flag_status,[6])) {
             return [
@@ -627,6 +626,9 @@ class EventCouponController extends Controller
             'content' => base64_encode($content)
         ];
         if ($success > 0) {
+            $ret['pnotify'] = true;
+            $ret['pnotify_type'] = 'success';
+            $ret['pnotify_text'] = 'Success! import participants!';
             $ret['rebuildTable'] = true;
             $ret['preparePostData'] = true;
             $ret['preparePostData_target'] = '.preparePostData.giftList';

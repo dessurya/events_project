@@ -114,12 +114,14 @@
 	function buildInGiftList(config) {
 		var result = '';
         if (config.data.length == 0) {
-            result += '<tr><td colspan="7" class="text-center">Not data found!</td></tr>';
+            result += '<tr><td colspan="8" class="text-center">Not data found!</td></tr>';
         }else{
         	var loop = 0;
             $.each(config.data, function(index, val){
             	loop++;
                 result += '<tr id='+val.id+'>';
+                result += '<td rowspan="2">'+loop+'</td>';
+                result += '<td>'+val.confirm_at+'</td>';
                 result += '<td>'+val.confirm_at+'</td>';
                 result += '<td>'+val.participants_website+'</td>';
                 result += '<td>'+val.participants_username+'</td>';
@@ -262,7 +264,6 @@
 				if (data['idx'] !== undefined) { input['data'][data['idx']] = data }
 			});
 		});
-		console.log(input['data'][0]['idx'])
 		var makeNew = []
 		$.each(input['data'], function(key, val) {
 			makeNew[key] = {
@@ -272,7 +273,6 @@
 			}
 		});
 		input['data'] = makeNew
-		console.log(input['data'])
 		pnotifyConfirm({
 			"title": "Warning",
 			"type": "info",

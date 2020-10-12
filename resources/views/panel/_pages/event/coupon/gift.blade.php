@@ -147,6 +147,7 @@
     <table id="render" class="table table-striped">
       <thead>
         <tr>
+          <th>#</th>
           <th>Confirm At</th>
           <th>Website</th>
           <th>Username</th>
@@ -156,7 +157,7 @@
           <th></th>
         </tr>
       </thead>
-      <tbody><tr><td colspan="7" class="text-center">-</td></tr></tbody>
+      <tbody><tr><td colspan="8" class="text-center">-</td></tr></tbody>
     </table>
 
   </div>

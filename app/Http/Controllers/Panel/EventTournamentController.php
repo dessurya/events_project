@@ -515,6 +515,7 @@ class EventTournamentController extends Controller
 
     private function addNewParticipants($username, $website)
     {
+        dd([$username, $website]);
         $store = new Participants;
         $store->username = $username;
         $store->name = $username;
@@ -576,45 +577,23 @@ class EventTournamentController extends Controller
 		        'pnotify_text' => 'Fail! this past event!'
     		];
         }
-        if (
-            !isset($input->read_file['import_participants'])
-            OR !isset($input->read_file['import_participants'][0]['USERNAME'])
-            OR !isset($input->read_file['import_participants'][0]['WEBSITE'])
-            OR !isset($input->read_file['import_participants'][0]['TURNOVER POINT'])
-        ) {
-            return [
-                'pnotify' => true,
-                'pnotify_type' => 'error',
-                'pnotify_text' => 'Fail! your excel format its wrong'
-            ];
-        }
         $pnotify_arr_data = [];
         $success = 0;
-        foreach ($input->read_file['import_participants'] as $row => $data) {
-            if (!in_array($data['WEBSITE'],$this->availWebOnEvent($input->id))) {
-                $pnotify_arr_data[] = [
-                    'type' => 'error',
-                    'text' => 'Fail! '.$data['WEBSITE'].' not avail in this event! ('.$data['USERNAME'].')'
-                ];
-            }else{
-                $Participants = Participants::where([
-                    'username' => $data['USERNAME'],
-                    'website' => $data['WEBSITE']
-                ])->get();
-                if (count($Participants) == 0) {
-                    $Participants = $this->addNewParticipants($data['USERNAME'], $data['WEBSITE']);
-                }else{
-                    $nObj = new stdClass();
-                    $nObj->id = $input->id;
-                    $nObj->participants = $Participants[0]->id;
-                    $nObj->point = $data['TURNOVER POINT'];
-                    $nObj->ip = $input->ip();
-                    $exec = new RegisterTournamentController;
-                    $run = $exec->formStore($nObj);
-                    if ($run['success_store'] == false) { $pnotify_arr_data[] = $run['pnotify_arr_data'][0]; }
-                    else{ $success++; }
-                }
-            }
+        foreach ($input->data as $row => $data) {
+            $Participants = Participants::where([
+                'username' => $data['username'],
+                'website' => $data['website']
+            ])->get();
+            if (count($Participants) == 0) { $Participants = $this->addNewParticipants($data['username'], $data['website']); }
+            $nObj = new stdClass();
+            $nObj->id = $input->id;
+            $nObj->participants = $Participants[0]->id;
+            $nObj->point = $data['point'];
+            $nObj->ip = $input->ip();
+            $exec = new RegisterTournamentController;
+            $run = $exec->formStore($nObj);
+            if ($run['success_store'] == false) { $pnotify_arr_data[] = $run['pnotify_arr_data'][0]; }
+            else{ $success++; }
         }
 
         $ret = [];
@@ -630,6 +609,9 @@ class EventTournamentController extends Controller
             'content' => base64_encode($content)
         ];
         if ($success > 0) {
+            $ret['pnotify'] = true;
+            $ret['pnotify_type'] = 'success';
+            $ret['pnotify_text'] = 'Success! import participants!';
             $ret['rebuildTable'] = true;
             $ret['preparePostData'] = true;
             $ret['preparePostData_target'] = '.preparePostData.leaderboard';
